@@ -1,9 +1,0 @@
-title: Quantum Mathematics
-lang: vi
-markdown: kramdown
-theme: minima
-exclude: [".github", "README.md"]
-collections:
-  days:
-    output: true
-    permalink: /:path/ 

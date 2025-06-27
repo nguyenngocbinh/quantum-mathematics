@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="vi"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>🧩 Ngày 6: Không gian Hilbert là gì? | Quantum Mathematics</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="🧩 Ngày 6: Không gian Hilbert là gì?" />
+<meta property="og:locale" content="vi" />
+<link rel="canonical" href="https://nguyenngocbinh.github.io/quantum-mathematics/Day6.html" />
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/Day6.html" />
+<meta property="og:site_name" content="Quantum Mathematics" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="🧩 Ngày 6: Không gian Hilbert là gì?" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"🧩 Ngày 6: Không gian Hilbert là gì?","url":"https://nguyenngocbinh.github.io/quantum-mathematics/Day6.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/quantum-mathematics/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://nguyenngocbinh.github.io/quantum-mathematics/feed.xml" title="Quantum Mathematics" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/quantum-mathematics/">Quantum Mathematics</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/quantum-mathematics/Day1.html">🧩 Ngày 1: Vector và Không gian Vector</a><a class="page-link" href="/quantum-mathematics/Day10.html">🌟 Ngày 10: Toán tử lượng tử và Biến đổi Trạng thái (Operator &amp;amp; State Transformation)</a><a class="page-link" href="/quantum-mathematics/Day11.html">🌟 Ngày 11: Toán tử Hadamard và Siêu vị mạnh</a><a class="page-link" href="/quantum-mathematics/Day12.html">🌟 Ngày 12: Entanglement — Rối lượng tử và Hiện tượng “Liên kết ma quái”</a><a class="page-link" href="/quantum-mathematics/Day13.html">🌟 Ngày 13: Ứng dụng Thực tế của Rối lượng tử (Entanglement Applications)</a><a class="page-link" href="/quantum-mathematics/Day14.html">🌟 Ngày 14: Toán học của Hệ Nhiều Qubit và Trạng thái Tổng hợp</a><a class="page-link" href="/quantum-mathematics/Day15.html">🌟 Ngày 15: Cổng lượng tử nhiều qubit — Tập trung vào Cổng CNOT</a><a class="page-link" href="/quantum-mathematics/Day2.html">🧩 Ngày 2: Tích vô hướng (Dot Product) và Ý nghĩa trong hình học</a><a class="page-link" href="/quantum-mathematics/Day3.html">🌟 Ngày 3: Ma Trận và Phép Nhân Ma Trận</a><a class="page-link" href="/quantum-mathematics/Day4.html">🧩 Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors)</a><a class="page-link" href="/quantum-mathematics/Day5.html">🌟 Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1</a><a class="page-link" href="/quantum-mathematics/Day6.html">🧩 Ngày 6: Không gian Hilbert là gì?</a><a class="page-link" href="/quantum-mathematics/Day7.html">🧩 Ngày 7: Trạng thái lượng tử và Hàm sóng</a><a class="page-link" href="/quantum-mathematics/Day8.html">🧩 Ngày 8: Siêu vị (Superposition) và Ý nghĩa Toán học</a><a class="page-link" href="/quantum-mathematics/Day9.html">🧩 Ngày 9: Phép đo trong Toán lượng tử (Measurement)</a><a class="page-link" href="/quantum-mathematics/Steps.html">📚 LỘ TRÌNH 15 NGÀY NHẬP MÔN QUANTUM MATHEMATICS</a><a class="page-link" href="/quantum-mathematics/">Quantum Mathematics</a><a class="page-link" href="/quantum-mathematics/overview.html">Quantum Mathematics là gì?</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">🧩 Ngày 6: Không gian Hilbert là gì?</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h1 id="-ngày-6-không-gian-hilbert-là-gì">🧩 <strong>Ngày 6: Không gian Hilbert là gì?</strong></h1>
+
+<hr />
+
+<h2 id="1-khái-niệm-đơn-giản"><strong>1. Khái niệm đơn giản:</strong></h2>
+
+<p>Không gian Hilbert là:</p>
+
+<p>✅ Một <strong>không gian vector</strong> (giống như vector trong toán học thông thường)
+✅ Có thể có <strong>vô hạn chiều</strong>, nhưng nhiều khi chúng ta chỉ xét vài chiều cụ thể
+✅ Đi kèm với khái niệm <strong>tích vô hướng</strong> (Dot Product) để tính khoảng cách, góc giữa các vector</p>
+
+<p>👉 Nói ngắn gọn: Không gian Hilbert là nơi chứa tất cả các trạng thái lượng tử có thể có.</p>
+
+<hr />
+
+<h2 id="2-ví-dụ-dễ-hiểu-nhất"><strong>2. Ví dụ dễ hiểu nhất:</strong></h2>
+
+<p>Trong lượng tử:</p>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Trạng thái $</td>
+          <td>0⟩$ = $\begin{bmatrix} 1 \ 0 \end{bmatrix}$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Trạng thái $</td>
+          <td>1⟩$ = $\begin{bmatrix} 0 \ 1 \end{bmatrix}$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<p>Hai trạng thái này:</p>
+
+<p>✅ Thuộc không gian Hilbert 2 chiều (Hilbert space of dimension 2)
+✅ Giống như trục Ox, Oy trong hình học phẳng</p>
+
+<hr />
+
+<h2 id="3-trạng-thái-tổng-quát-trong-không-gian-hilbert"><strong>3. Trạng thái tổng quát trong không gian Hilbert:</strong></h2>
+
+<p>Bất kỳ trạng thái lượng tử nào cũng được viết dưới dạng:</p>
+
+\[|\psi⟩ = a |0⟩ + b |1⟩\]
+
+<p>Trong đó:</p>
+
+<p>✅ <strong>a</strong> và <strong>b</strong> là số phức (trong ví dụ đơn giản, có thể coi là số thực)
+✅ Phải thỏa mãn điều kiện chuẩn hóa:</p>
+
+\[|a|^2 + |b|^2 = 1\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>Nghĩa là tổng xác suất tìm thấy hệ ở trạng thái $</td>
+      <td>0⟩$ hoặc $</td>
+      <td>1⟩$ bằng 1.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="4-ý-nghĩa-vật-lý"><strong>4. Ý nghĩa vật lý:</strong></h2>
+
+<ul>
+  <li>Không gian Hilbert lưu trữ mọi khả năng trạng thái hệ lượng tử có thể có</li>
+  <li>Vector trong không gian Hilbert chính là trạng thái lượng tử</li>
+  <li>Toán học trong Hilbert Space cho phép bạn tính xác suất, dự đoán kết quả đo đạc</li>
+</ul>
+
+<hr />
+
+<h2 id="5-bài-tập-ngày-6-cho-bạn"><strong>5. Bài tập Ngày 6 cho bạn:</strong></h2>
+
+<p>Giả sử trạng thái lượng tử:</p>
+
+\[|\psi⟩ = \sqrt{0.6} \, |0⟩ + \sqrt{0.4} \, |1⟩\]
+
+<ol>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Kiểm tra điều kiện chuẩn hóa: $</td>
+          <td>a</td>
+          <td>^2 +</td>
+          <td>b</td>
+          <td>^2 = 1$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Tính xác suất đo được trạng thái $</td>
+          <td>0⟩$ và $</td>
+          <td>1⟩$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<hr />
+
+<h1 id="-giải-bài-tập-ngày-6---không-gian-hilbert">📝 <strong>Giải bài tập Ngày 6 - Không gian Hilbert</strong></h1>
+
+<hr />
+
+<p><strong>Đề bài:</strong></p>
+
+<p>Trạng thái lượng tử:</p>
+
+\[|\psi⟩ = \sqrt{0.6} \, |0⟩ + \sqrt{0.4} \, |1⟩\]
+
+<p>Cần:</p>
+
+<ol>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Kiểm tra điều kiện chuẩn hóa: $</td>
+          <td>a</td>
+          <td>^2 +</td>
+          <td>b</td>
+          <td>^2 = 1$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Tính xác suất đo được $</td>
+          <td>0⟩$ và $</td>
+          <td>1⟩$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="1-kiểm-tra-chuẩn-hóa"><strong>1. Kiểm tra chuẩn hóa</strong></h2>
+
+<p>Trạng thái có:</p>
+
+<ul>
+  <li>$a = \sqrt{0.6}$</li>
+  <li>$b = \sqrt{0.4}$</li>
+</ul>
+
+<p>Tính:</p>
+
+\[|a|^2 + |b|^2 = (\sqrt{0.6})^2 + (\sqrt{0.4})^2 = 0.6 + 0.4 = 1\]
+
+<p>✅ <strong>Thỏa mãn điều kiện chuẩn hóa</strong> ⇒ Hợp lệ, đây là một trạng thái lượng tử hợp lý.</p>
+
+<hr />
+
+<h2 id="2-tính-xác-suất-đo-được-từng-trạng-thái"><strong>2. Tính xác suất đo được từng trạng thái</strong></h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>**Xác suất đo được $</td>
+      <td>0⟩$:**</td>
+    </tr>
+  </tbody>
+</table>
+
+\[P(0) = |a|^2 = (\sqrt{0.6})^2 = 0.6 = 60\%\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>**Xác suất đo được $</td>
+      <td>1⟩$:**</td>
+    </tr>
+  </tbody>
+</table>
+
+\[P(1) = |b|^2 = (\sqrt{0.4})^2 = 0.4 = 40\%\]
+
+<hr />
+
+<h1 id="-tóm-tắt-kết-quả">🎯 <strong>Tóm tắt kết quả:</strong></h1>
+
+<ul>
+  <li>Trạng thái được chuẩn hóa hợp lệ</li>
+  <li>
+    <p>Xác suất đo được:</p>
+
+    <ul>
+      <li>
+        <table>
+          <tbody>
+            <tr>
+              <td>$</td>
+              <td>0⟩$ là <strong>60%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+      <li>
+        <table>
+          <tbody>
+            <tr>
+              <td>$</td>
+              <td>1⟩$ là <strong>40%</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="-điểm-lưu-ý-cho-bạn">🔥 <strong>Điểm lưu ý cho bạn:</strong></h1>
+
+<ul>
+  <li>Dù trạng thái lượng tử có thể là tổ hợp phức tạp, kết quả đo lường luôn cho ra xác suất cụ thể</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Sau khi đo, hệ “sụp đổ” về một trạng thái cụ thể (hoặc $</td>
+          <td>0⟩$, hoặc $</td>
+          <td>1⟩$)</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<hr />
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/quantum-mathematics/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Quantum Mathematics</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Quantum Mathematics</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="vi"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>🌟 Ngày 11: Toán tử Hadamard và Siêu vị mạnh | Quantum Mathematics</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="🌟 Ngày 11: Toán tử Hadamard và Siêu vị mạnh" />
+<meta property="og:locale" content="vi" />
+<link rel="canonical" href="https://nguyenngocbinh.github.io/quantum-mathematics/Day11.html" />
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/Day11.html" />
+<meta property="og:site_name" content="Quantum Mathematics" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="🌟 Ngày 11: Toán tử Hadamard và Siêu vị mạnh" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"🌟 Ngày 11: Toán tử Hadamard và Siêu vị mạnh","url":"https://nguyenngocbinh.github.io/quantum-mathematics/Day11.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/quantum-mathematics/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://nguyenngocbinh.github.io/quantum-mathematics/feed.xml" title="Quantum Mathematics" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/quantum-mathematics/">Quantum Mathematics</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/quantum-mathematics/Day1.html">🧩 Ngày 1: Vector và Không gian Vector</a><a class="page-link" href="/quantum-mathematics/Day10.html">🌟 Ngày 10: Toán tử lượng tử và Biến đổi Trạng thái (Operator &amp;amp; State Transformation)</a><a class="page-link" href="/quantum-mathematics/Day11.html">🌟 Ngày 11: Toán tử Hadamard và Siêu vị mạnh</a><a class="page-link" href="/quantum-mathematics/Day12.html">🌟 Ngày 12: Entanglement — Rối lượng tử và Hiện tượng “Liên kết ma quái”</a><a class="page-link" href="/quantum-mathematics/Day13.html">🌟 Ngày 13: Ứng dụng Thực tế của Rối lượng tử (Entanglement Applications)</a><a class="page-link" href="/quantum-mathematics/Day14.html">🌟 Ngày 14: Toán học của Hệ Nhiều Qubit và Trạng thái Tổng hợp</a><a class="page-link" href="/quantum-mathematics/Day15.html">🌟 Ngày 15: Cổng lượng tử nhiều qubit — Tập trung vào Cổng CNOT</a><a class="page-link" href="/quantum-mathematics/Day2.html">🧩 Ngày 2: Tích vô hướng (Dot Product) và Ý nghĩa trong hình học</a><a class="page-link" href="/quantum-mathematics/Day3.html">🌟 Ngày 3: Ma Trận và Phép Nhân Ma Trận</a><a class="page-link" href="/quantum-mathematics/Day4.html">🧩 Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors)</a><a class="page-link" href="/quantum-mathematics/Day5.html">🌟 Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1</a><a class="page-link" href="/quantum-mathematics/Day6.html">🧩 Ngày 6: Không gian Hilbert là gì?</a><a class="page-link" href="/quantum-mathematics/Day7.html">🧩 Ngày 7: Trạng thái lượng tử và Hàm sóng</a><a class="page-link" href="/quantum-mathematics/Day8.html">🧩 Ngày 8: Siêu vị (Superposition) và Ý nghĩa Toán học</a><a class="page-link" href="/quantum-mathematics/Day9.html">🧩 Ngày 9: Phép đo trong Toán lượng tử (Measurement)</a><a class="page-link" href="/quantum-mathematics/Steps.html">📚 LỘ TRÌNH 15 NGÀY NHẬP MÔN QUANTUM MATHEMATICS</a><a class="page-link" href="/quantum-mathematics/">Quantum Mathematics</a><a class="page-link" href="/quantum-mathematics/overview.html">Quantum Mathematics là gì?</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">🌟 Ngày 11: Toán tử Hadamard và Siêu vị mạnh</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h1 id="-ngày-11-toán-tử-hadamard-và-siêu-vị-mạnh">🌟 <strong>Ngày 11: Toán tử Hadamard và Siêu vị mạnh</strong></h1>
+
+<hr />
+
+<h2 id="1-toán-tử-hadamard-là-gì"><strong>1. Toán tử Hadamard là gì?</strong></h2>
+
+<p>Toán tử Hadamard, ký hiệu là:</p>
+
+\[H = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 &amp; 1 \\ 1 &amp; -1 \end{bmatrix}\]
+
+<p>Đây là một trong những toán tử quan trọng nhất trong lượng tử học, có khả năng:</p>
+
+<p>✅ Biến trạng thái cơ bản thành trạng thái siêu vị (superposition)
+✅ Là nền tảng cho tính toán song song của máy tính lượng tử</p>
+
+<hr />
+
+<h2 id="2-tác-động-của-toán-tử-hadamard"><strong>2. Tác động của toán tử Hadamard</strong></h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>**Tác động lên $</td>
+      <td>0⟩$:**</td>
+    </tr>
+  </tbody>
+</table>
+
+\[H \, |0⟩ = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 &amp; 1 \\ 1 &amp; -1 \end{bmatrix} \times \begin{bmatrix} 1 \\ 0 \end{bmatrix} = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ 1 \end{bmatrix}\]
+
+<p>Vậy:</p>
+
+\[H \, |0⟩ = \frac{1}{\sqrt{2}} \, |0⟩ + \frac{1}{\sqrt{2}} \, |1⟩\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>✅ Đây là trạng thái siêu vị cân bằng, 50% $</td>
+      <td>0⟩$, 50% $</td>
+      <td>1⟩$.</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<table>
+  <tbody>
+    <tr>
+      <td>**Tác động lên $</td>
+      <td>1⟩$:**</td>
+    </tr>
+  </tbody>
+</table>
+
+\[H \, |1⟩ = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 &amp; 1 \\ 1 &amp; -1 \end{bmatrix} \times \begin{bmatrix} 0 \\ 1 \end{bmatrix} = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ -1 \end{bmatrix}\]
+
+<p>Viết lại:</p>
+
+\[H \, |1⟩ = \frac{1}{\sqrt{2}} \, |0⟩ - \frac{1}{\sqrt{2}} \, |1⟩\]
+
+<p>Cũng là trạng thái siêu vị nhưng có sự khác biệt về dấu.</p>
+
+<hr />
+
+<h2 id="3-ý-nghĩa-vật-lý-của-toán-tử-hadamard"><strong>3. Ý nghĩa vật lý của toán tử Hadamard</strong></h2>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Khi áp dụng lên $</td>
+          <td>0⟩$, tạo ra trạng thái siêu vị hoàn hảo — hạt vừa ở $</td>
+          <td>0⟩$ vừa ở $</td>
+          <td>1⟩$ với xác suất 50-50</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>Là cơ sở để tạo ra sự “song song tính toán” trong thuật toán lượng tử</li>
+  <li>Nếu áp dụng lần nữa, trạng thái sẽ trở về ban đầu (Hadamard là toán tử tự nghịch đảo)</li>
+</ul>
+
+<hr />
+
+<h2 id="4-ví-dụ-thực-tế"><strong>4. Ví dụ thực tế</strong></h2>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Cho hệ đang ở $</td>
+      <td>0⟩$:</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Áp dụng Hadamard:</p>
+
+\[H \, |0⟩ = \frac{1}{\sqrt{2}} \, |0⟩ + \frac{1}{\sqrt{2}} \, |1⟩\]
+
+<p>Trước khi đo:
+✅ Hệ tồn tại đồng thời ở $|0⟩$ và $|1⟩$
+✅ Khi đo:</p>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Xác suất đo $</td>
+          <td>0⟩$ là $\frac{1}{2}$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Xác suất đo $</td>
+          <td>1⟩$ là $\frac{1}{2}$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<hr />
+
+<h1 id="-bài-tập-ngày-11-cho-bạn">🎯 <strong>Bài tập Ngày 11 cho bạn</strong></h1>
+
+<ol>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Cho trạng thái ban đầu $</td>
+          <td>1⟩$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Áp dụng toán tử Hadamard lên $</td>
+          <td>1⟩$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>Viết lại trạng thái sau biến đổi</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Tính xác suất đo được $</td>
+          <td>0⟩$ và $</td>
+          <td>1⟩$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<hr />
+
+<h1 id="-giải-mẫu-bài-tập-ngày-11---toán-tử-hadamard-và-siêu-vị">📝 <strong>Giải mẫu Bài tập Ngày 11 - Toán tử Hadamard và Siêu vị</strong></h1>
+
+<hr />
+
+<h2 id="đề-bài"><strong>Đề bài:</strong></h2>
+
+<p>Cho trạng thái ban đầu:</p>
+
+\[|1⟩ = \begin{bmatrix} 0 \\ 1 \end{bmatrix}\]
+
+<p>Áp dụng toán tử Hadamard:</p>
+
+\[H = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 &amp; 1 \\ 1 &amp; -1 \end{bmatrix}\]
+
+<p>Yêu cầu:</p>
+
+<ol>
+  <li>Tính trạng thái sau biến đổi</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Viết rõ trạng thái mới theo $</td>
+          <td>0⟩$, $</td>
+          <td>1⟩$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Tính xác suất đo được $</td>
+          <td>0⟩$ và $</td>
+          <td>1⟩$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<hr />
+
+<h2 id="-bước-1-tác-động-toán-tử-hadamard-lên-1">✅ <strong>Bước 1: Tác động toán tử Hadamard lên $|1⟩$</strong></h2>
+
+<p>Tính:</p>
+
+\[H \, |1⟩ = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 &amp; 1 \\ 1 &amp; -1 \end{bmatrix} \times \begin{bmatrix} 0 \\ 1 \end{bmatrix} = \frac{1}{\sqrt{2}} \begin{bmatrix} 1 \\ -1 \end{bmatrix}\]
+
+<table>
+  <tbody>
+    <tr>
+      <td>Viết lại theo $</td>
+      <td>0⟩$ và $</td>
+      <td>1⟩$:</td>
+    </tr>
+  </tbody>
+</table>
+
+\[|\psi'⟩ = \frac{1}{\sqrt{2}} \, |0⟩ - \frac{1}{\sqrt{2}} \, |1⟩\]
+
+<hr />
+
+<h2 id="-bước-2-kiểm-tra-chuẩn-hóa">✅ <strong>Bước 2: Kiểm tra chuẩn hóa</strong></h2>
+
+<p>Tính tổng bình phương hệ số:</p>
+
+\[\left(\frac{1}{\sqrt{2}}\right)^2 + \left(-\frac{1}{\sqrt{2}}\right)^2 = \frac{1}{2} + \frac{1}{2} = 1\]
+
+<p>✅ Chuẩn hóa hợp lệ.</p>
+
+<hr />
+
+<h2 id="-bước-3-tính-xác-suất-đo-được-0-và-1">✅ <strong>Bước 3: Tính xác suất đo được $|0⟩$ và $|1⟩$</strong></h2>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Xác suất đo được $</td>
+          <td>0⟩$:</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+\[P(0) = \left( \frac{1}{\sqrt{2}} \right)^2 = \frac{1}{2} = 50\%\]
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Xác suất đo được $</td>
+          <td>1⟩$:</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+\[P(1) = \left( -\frac{1}{\sqrt{2}} \right)^2 = \frac{1}{2} = 50\%\]
+
+<p>✅ Dù có dấu trừ, bình phương lên vẫn là dương, nên xác suất hợp lệ.</p>
+
+<hr />
+
+<h1 id="-kết-luận-cuối-cùng">🎯 <strong>Kết luận cuối cùng</strong></h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Nội dung</th>
+      <th>Kết quả</th>
+      <th> </th>
+      <th> </th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Trạng thái sau biến đổi</td>
+      <td>(</td>
+      <td>\psi’⟩ = \frac{1}{\sqrt{2}}</td>
+      <td>0⟩ - \frac{1}{\sqrt{2}}</td>
+      <td>1⟩ )</td>
+    </tr>
+    <tr>
+      <td>Xác suất đo (</td>
+      <td>0⟩)</td>
+      <td>50%</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Xác suất đo (</td>
+      <td>1⟩)</td>
+      <td>50%</td>
+      <td> </td>
+      <td> </td>
+    </tr>
+    <tr>
+      <td>Trạng thái chuẩn hóa</td>
+      <td>Đúng</td>
+      <td> </td>
+      <td> </td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h1 id="-ý-nghĩa-vật-lý">💡 <strong>Ý nghĩa vật lý</strong></h1>
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Ban đầu hệ ở $</td>
+          <td>1⟩$ chắc chắn</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Sau khi áp dụng Hadamard, hệ trở thành siêu vị cân bằng: vừa $</td>
+          <td>0⟩$, vừa $</td>
+          <td>1⟩$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Khi đo, kết quả có thể là $</td>
+          <td>0⟩$ hoặc $</td>
+          <td>1⟩$ với xác suất 50% mỗi bên</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>Đây là cách máy tính lượng tử khai thác tính “song song” của hệ</li>
+</ul>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/quantum-mathematics/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Quantum Mathematics</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Quantum Mathematics</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

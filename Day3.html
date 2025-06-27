@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="vi"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>🌟 Ngày 3: Ma Trận và Phép Nhân Ma Trận | Quantum Mathematics</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="🌟 Ngày 3: Ma Trận và Phép Nhân Ma Trận" />
+<meta property="og:locale" content="vi" />
+<link rel="canonical" href="https://nguyenngocbinh.github.io/quantum-mathematics/Day3.html" />
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/Day3.html" />
+<meta property="og:site_name" content="Quantum Mathematics" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="🌟 Ngày 3: Ma Trận và Phép Nhân Ma Trận" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","headline":"🌟 Ngày 3: Ma Trận và Phép Nhân Ma Trận","url":"https://nguyenngocbinh.github.io/quantum-mathematics/Day3.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/quantum-mathematics/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://nguyenngocbinh.github.io/quantum-mathematics/feed.xml" title="Quantum Mathematics" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/quantum-mathematics/">Quantum Mathematics</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/quantum-mathematics/Day1.html">🧩 Ngày 1: Vector và Không gian Vector</a><a class="page-link" href="/quantum-mathematics/Day10.html">🌟 Ngày 10: Toán tử lượng tử và Biến đổi Trạng thái (Operator &amp;amp; State Transformation)</a><a class="page-link" href="/quantum-mathematics/Day11.html">🌟 Ngày 11: Toán tử Hadamard và Siêu vị mạnh</a><a class="page-link" href="/quantum-mathematics/Day12.html">🌟 Ngày 12: Entanglement — Rối lượng tử và Hiện tượng “Liên kết ma quái”</a><a class="page-link" href="/quantum-mathematics/Day13.html">🌟 Ngày 13: Ứng dụng Thực tế của Rối lượng tử (Entanglement Applications)</a><a class="page-link" href="/quantum-mathematics/Day14.html">🌟 Ngày 14: Toán học của Hệ Nhiều Qubit và Trạng thái Tổng hợp</a><a class="page-link" href="/quantum-mathematics/Day15.html">🌟 Ngày 15: Cổng lượng tử nhiều qubit — Tập trung vào Cổng CNOT</a><a class="page-link" href="/quantum-mathematics/Day2.html">🧩 Ngày 2: Tích vô hướng (Dot Product) và Ý nghĩa trong hình học</a><a class="page-link" href="/quantum-mathematics/Day3.html">🌟 Ngày 3: Ma Trận và Phép Nhân Ma Trận</a><a class="page-link" href="/quantum-mathematics/Day4.html">🧩 Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors)</a><a class="page-link" href="/quantum-mathematics/Day5.html">🌟 Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1</a><a class="page-link" href="/quantum-mathematics/Day6.html">🧩 Ngày 6: Không gian Hilbert là gì?</a><a class="page-link" href="/quantum-mathematics/Day7.html">🧩 Ngày 7: Trạng thái lượng tử và Hàm sóng</a><a class="page-link" href="/quantum-mathematics/Day8.html">🧩 Ngày 8: Siêu vị (Superposition) và Ý nghĩa Toán học</a><a class="page-link" href="/quantum-mathematics/Day9.html">🧩 Ngày 9: Phép đo trong Toán lượng tử (Measurement)</a><a class="page-link" href="/quantum-mathematics/Steps.html">📚 LỘ TRÌNH 15 NGÀY NHẬP MÔN QUANTUM MATHEMATICS</a><a class="page-link" href="/quantum-mathematics/">Quantum Mathematics</a><a class="page-link" href="/quantum-mathematics/overview.html">Quantum Mathematics là gì?</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">🌟 Ngày 3: Ma Trận và Phép Nhân Ma Trận</h1>
+  </header>
+
+  <div class="post-content">
+    
+<h1 id="-ngày-3-ma-trận-và-phép-nhân-ma-trận">🌟 <strong>Ngày 3: Ma Trận và Phép Nhân Ma Trận</strong></h1>
+
+<hr />
+
+<h2 id="1-ma-trận-là-gì"><strong>1. Ma trận là gì?</strong></h2>
+
+<p>✅ Ma trận là bảng gồm các số (hoặc biến) được sắp xếp theo hàng và cột.</p>
+
+<p><strong>Ví dụ đơn giản:</strong> Ma trận 2x2:</p>
+
+\[A = \begin{bmatrix} 1 &amp; 2 \\ 3 &amp; 4 \end{bmatrix}\]
+
+<p><strong>Ứng dụng:</strong></p>
+
+<ul>
+  <li>Biểu diễn phép biến đổi tuyến tính trong không gian</li>
+  <li>Trong lượng tử, ma trận được dùng để mô tả các toán tử tác động lên trạng thái lượng tử</li>
+</ul>
+
+<hr />
+
+<h2 id="2-phép-nhân-ma-trận"><strong>2. Phép Nhân Ma Trận</strong></h2>
+
+<p>Muốn nhân hai ma trận:</p>
+
+<ul>
+  <li>Số cột của ma trận thứ nhất phải bằng số hàng của ma trận thứ hai</li>
+  <li>Kết quả là ma trận có số hàng của ma trận đầu và số cột của ma trận sau</li>
+</ul>
+
+<h3 id="công-thức"><strong>Công thức:</strong></h3>
+
+<p>Cho hai ma trận:</p>
+
+\[A = \begin{bmatrix} a_{11} &amp; a_{12} \\ a_{21} &amp; a_{22} \end{bmatrix}, \quad B = \begin{bmatrix} b_{11} &amp; b_{12} \\ b_{21} &amp; b_{22} \end{bmatrix}\]
+
+<p>Tích $C = A \times B$:</p>
+
+\[C_{ij} = \sum_k a_{ik} \times b_{kj}\]
+
+<hr />
+
+<h2 id="3-ví-dụ-cụ-thể"><strong>3. Ví dụ cụ thể</strong></h2>
+
+<p>Cho:</p>
+
+\[A = \begin{bmatrix} 1 &amp; 2 \\ 3 &amp; 4 \end{bmatrix}, \quad B = \begin{bmatrix} 0 &amp; 1 \\ 1 &amp; 0 \end{bmatrix}\]
+
+<p>Tính:</p>
+
+\[C = A \times B = \begin{bmatrix} 1 &amp; 2 \\ 3 &amp; 4 \end{bmatrix} \times \begin{bmatrix} 0 &amp; 1 \\ 1 &amp; 0 \end{bmatrix}\]
+
+<p>Từng phần tử:</p>
+
+<ul>
+  <li>$C_{11} = (1 \times 0) + (2 \times 1) = 2$</li>
+  <li>$C_{12} = (1 \times 1) + (2 \times 0) = 1$</li>
+  <li>$C_{21} = (3 \times 0) + (4 \times 1) = 4$</li>
+  <li>$C_{22} = (3 \times 1) + (4 \times 0) = 3$</li>
+</ul>
+
+<p>Vậy kết quả:</p>
+
+\[C = \begin{bmatrix} 2 &amp; 1 \\ 4 &amp; 3 \end{bmatrix}\]
+
+<hr />
+
+<h2 id="4-ý-nghĩa-trong-lượng-tử"><strong>4. Ý nghĩa trong lượng tử</strong></h2>
+
+<ul>
+  <li>Trạng thái lượng tử được viết dạng vector cột</li>
+  <li>Các toán tử lượng tử được biểu diễn bởi ma trận</li>
+  <li>Phép nhân ma trận chính là cách toán tử tác động lên trạng thái lượng tử</li>
+</ul>
+
+<hr />
+
+<h1 id="-bài-tập-ngày-3-cho-bạn">🎯 <strong>Bài tập Ngày 3 cho bạn</strong></h1>
+
+<p>Cho:</p>
+
+\[A = \begin{bmatrix} 2 &amp; 0 \\ 0 &amp; 3 \end{bmatrix}, \quad B = \begin{bmatrix} 1 &amp; 1 \\ 0 &amp; 1 \end{bmatrix}\]
+
+<p>Tính tích $C = A \times B$.</p>
+
+
+  </div>
+
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/quantum-mathematics/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">Quantum Mathematics</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">Quantum Mathematics</li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p></p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
