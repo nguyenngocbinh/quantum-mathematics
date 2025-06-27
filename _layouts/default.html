@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="{{ page.lang | default: site.lang | default: "vi" }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% if page.title %}{{ page.title }} - {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
+    <meta name="description" content="{{ page.description | default: site.description }}">
+    <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+    {% include head.html %}
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">{{ site.title }}</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="{{ '/' | relative_url }}">Trang chủ</a></li>
+                <li><a href="{{ '/Overview.html' | relative_url }}">Tổng quan</a></li>
+                <li><a href="{{ '/Steps.html' | relative_url }}">Lộ trình</a></li>
+                <li><a href="{{ '/Day1.html' | relative_url }}">Ngày 1</a></li>
+                <li><a href="{{ '/Day2.html' | relative_url }}">Ngày 2</a></li>
+                <li><a href="{{ '/Day3.html' | relative_url }}">Ngày 3</a></li>
+                <li><a href="{{ '/Day4.html' | relative_url }}">Ngày 4</a></li>
+                <li><a href="{{ '/Day5.html' | relative_url }}">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            {{ content }}
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; {{ site.time | date: '%Y' }} {{ site.author }}. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: {{ site.email }}</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

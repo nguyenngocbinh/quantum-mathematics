@@ -6,4 +6,25 @@ exclude: [".github", "README.md"]
 collections:
   days:
     output: true
-    permalink: /:path/ 
+    permalink: /:path/
+
+# Custom CSS
+sass:
+  load_paths:
+    - assets/css
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Site settings
+description: "Lộ trình 15 ngày nhập môn Toán học Lượng tử"
+author: "Nguyen Ngoc Binh"
+email: "nguyenngocbinhneu@gmail.com"
+url: "https://nguyenngocbinh.github.io/quantum-mathematics"
+
+# Social media
+social_media:
+  - name: GitHub
+    url: https://github.com/nguyenngocbinh 
