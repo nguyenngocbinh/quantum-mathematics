@@ -19,7 +19,7 @@ plugins:
   - jekyll-seo-tag
 
 # Site settings
-description: "Lộ trình 15 ngày nhập môn Toán học Lượng tử"
+description: "Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit"
 author: "Nguyen Ngoc Binh"
 email: "nguyenngocbinhneu@gmail.com"
 url: "https://nguyenngocbinh.github.io/quantum-mathematics"
