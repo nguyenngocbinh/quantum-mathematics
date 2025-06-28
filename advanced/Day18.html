@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 18: Cổng Điều Khiển và Đa Qubit - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 18: Cổng Điều Khiển và Đa Qubit">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day18.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 18: Cổng Điều Khiển và Đa Qubit">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 18: Cổng Điều Khiển và Đa Qubit</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-18-cổng-điều-khiển-và-đa-qubit">Day 18: Cổng Điều Khiển và Đa Qubit</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Hiểu và sử dụng các cổng điều khiển (CNOT, CZ, etc.)</li>
+  <li>Làm việc với hệ thống đa qubit</li>
+  <li>Tạo các trạng thái rối lượng tử phức tạp</li>
+</ul>
+
+<h2 id="-các-cổng-điều-khiển-cơ-bản">🔧 Các Cổng Điều Khiển Cơ Bản</h2>
+
+<h3 id="1-cnot-gate-controlled-not">1. CNOT Gate (Controlled-NOT)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="k">def</span> <span class="nf">cnot_demo</span><span class="p">():</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Tạo trạng thái |10⟩
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Qubit đầu tiên thành |1⟩
+</span>    
+    <span class="c1"># Áp dụng CNOT
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Control qubit 0, target qubit 1
+</span>    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Thử nghiệm với các trạng thái đầu vào khác nhau
+</span><span class="k">def</span> <span class="nf">cnot_truth_table</span><span class="p">():</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="s">'00'</span><span class="p">,</span> <span class="s">'01'</span><span class="p">,</span> <span class="s">'10'</span><span class="p">,</span> <span class="s">'11'</span><span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">input_state</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Tạo trạng thái đầu vào
+</span>        <span class="k">if</span> <span class="n">input_state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">input_state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        
+        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">input_state</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div></div>
+
+<h3 id="2-cz-gate-controlled-z">2. CZ Gate (Controlled-Z)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">cz_demo</span><span class="p">():</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Tạo siêu vị trên cả hai qubit
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Áp dụng CZ
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">cz_vs_cnot</span><span class="p">():</span>
+    <span class="c1"># So sánh tác dụng của CZ và CNOT
+</span>    <span class="n">qc_cz</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc_cz</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc_cz</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc_cz</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc_cz</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="n">qc_cnot</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc_cnot</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc_cnot</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc_cnot</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc_cnot</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc_cz</span><span class="p">,</span> <span class="n">qc_cnot</span>
+</code></pre></div></div>
+
+<h3 id="3-ccx-gate-toffoli---controlled-controlled-x">3. CCX Gate (Toffoli - Controlled-Controlled-X)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">toffoli_demo</span><span class="p">():</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    
+    <span class="c1"># Tạo trạng thái |110⟩
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Áp dụng Toffoli gate
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">ccx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># Control qubits 0,1; target qubit 2
+</span>    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h2 id="-tạo-trạng-thái-rối-lượng-tử">🔗 Tạo Trạng Thái Rối Lượng Tử</h2>
+
+<h3 id="1-bell-states-4-trạng-thái-bell">1. Bell States (4 trạng thái Bell)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">bell_states</span><span class="p">():</span>
+    <span class="c1"># |Φ⁺⟩ = (|00⟩ + |11⟩)/√2
+</span>    <span class="k">def</span> <span class="nf">bell_phi_plus</span><span class="p">():</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">qc</span>
+    
+    <span class="c1"># |Φ⁻⟩ = (|00⟩ - |11⟩)/√2
+</span>    <span class="k">def</span> <span class="nf">bell_phi_minus</span><span class="p">():</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">qc</span>
+    
+    <span class="c1"># |Ψ⁺⟩ = (|01⟩ + |10⟩)/√2
+</span>    <span class="k">def</span> <span class="nf">bell_psi_plus</span><span class="p">():</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">qc</span>
+    
+    <span class="c1"># |Ψ⁻⟩ = (|01⟩ - |10⟩)/√2
+</span>    <span class="k">def</span> <span class="nf">bell_psi_minus</span><span class="p">():</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">qc</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">'|Φ⁺⟩'</span><span class="p">:</span> <span class="n">bell_phi_plus</span><span class="p">(),</span>
+        <span class="s">'|Φ⁻⟩'</span><span class="p">:</span> <span class="n">bell_phi_minus</span><span class="p">(),</span>
+        <span class="s">'|Ψ⁺⟩'</span><span class="p">:</span> <span class="n">bell_psi_plus</span><span class="p">(),</span>
+        <span class="s">'|Ψ⁻⟩'</span><span class="p">:</span> <span class="n">bell_psi_minus</span><span class="p">()</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="2-ghz-state-greenberger-horne-zeilinger">2. GHZ State (Greenberger-Horne-Zeilinger)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">ghz_state</span><span class="p">(</span><span class="n">n_qubits</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Tạo siêu vị trên qubit đầu
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Áp dụng CNOT từ qubit đầu đến tất cả qubit khác
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Tạo GHZ state với 4 qubit
+</span><span class="n">ghz_4</span> <span class="o">=</span> <span class="n">ghz_state</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="3-w-state">3. W State</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">w_state</span><span class="p">(</span><span class="n">n_qubits</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Tạo W state: (|100⟩ + |010⟩ + |001⟩)/√3
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">arccos</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h2 id="-thực-hành-và-thí-nghiệm">🔬 Thực hành và Thí nghiệm</h2>
+
+<h3 id="bài-tập-1-phân-tích-cnot">Bài tập 1: Phân tích CNOT</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">analyze_cnot</span><span class="p">():</span>
+    <span class="c1"># Tạo tất cả trạng thái đầu vào có thể
+</span>    <span class="n">input_states</span> <span class="o">=</span> <span class="p">[</span><span class="s">'00'</span><span class="p">,</span> <span class="s">'01'</span><span class="p">,</span> <span class="s">'10'</span><span class="p">,</span> <span class="s">'11'</span><span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">input_states</span><span class="p">:</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Tạo trạng thái đầu vào
+</span>        <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-2-tạo-trạng-thái-rối-tùy-chỉnh">Bài tập 2: Tạo trạng thái rối tùy chỉnh</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">custom_entangled_state</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Tạo trạng thái: cos(θ)|00⟩ + e^(iφ)sin(θ)|11⟩
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">theta</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">p</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Thử nghiệm với các góc khác nhau
+</span><span class="n">angles</span> <span class="o">=</span> <span class="p">[(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">)]</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-3-quantum-teleportation-circuit">Bài tập 3: Quantum Teleportation Circuit</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_teleportation</span><span class="p">():</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    
+    <span class="c1"># Qubit 0: trạng thái cần teleport
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Qubit 1,2: Bell pair
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Teleportation protocol
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Đo lường
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="c1"># Classical correction
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h2 id="-ứng-dụng-thực-tế">🎯 Ứng dụng thực tế</h2>
+
+<h3 id="1-quantum-error-correction-3-qubit-code">1. Quantum Error Correction (3-qubit code)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">three_qubit_code</span><span class="p">():</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    
+    <span class="c1"># Encode logical |0⟩
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Simulate error (bit flip on qubit 1)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Syndrome measurement
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h3 id="2-quantum-fourier-transform-qft">2. Quantum Fourier Transform (QFT)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">qft_2_qubit</span><span class="p">():</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Apply QFT
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-về-nhà">📚 Bài tập về nhà</h2>
+
+<ol>
+  <li><strong>Tạo cổng điều khiển tùy chỉnh</strong>: Viết hàm tạo controlled-RY gate</li>
+  <li><strong>Phân tích rối lượng tử</strong>: Tính toán độ rối (entanglement) của Bell states</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Quantum Circuit Design</strong>: Thiết kế mạch tạo trạng thái</td>
+          <td>ψ⟩ = (</td>
+          <td>000⟩ +</td>
+          <td>111⟩)/√2</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li><strong>Error Detection</strong>: Tạo mạch phát hiện lỗi bit-flip trên 3 qubit</li>
+</ol>
+
+<h2 id="-kết-quả-mong-đợi">🎯 Kết quả mong đợi</h2>
+<ul>
+  <li>Hiểu rõ cách hoạt động của các cổng điều khiển</li>
+  <li>Có thể tạo và phân tích các trạng thái rối lượng tử</li>
+  <li>Biết cách thiết kế mạch lượng tử phức tạp</li>
+</ul>
+
+<h2 id="-tài-liệu-tham-khảo">📖 Tài liệu tham khảo</h2>
+<ul>
+  <li><a href="https://qiskit.org/textbook/ch-gates/multiple-qubits-entangled-states.html">Qiskit Multi-Qubit Gates</a></li>
+  <li><a href="https://qiskit.org/textbook/ch-gates/entanglement.html">Entanglement in Qiskit</a></li>
+</ul>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

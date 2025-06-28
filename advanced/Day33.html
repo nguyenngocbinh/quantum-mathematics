@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 33: Quantum Simulation Projects - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 33: Quantum Simulation Projects">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day33.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 33: Quantum Simulation Projects">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 33: Quantum Simulation Projects</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-33-quantum-simulation-projects">Day 33: Quantum Simulation Projects</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Triển khai các dự án simulation lượng tử thực tế</li>
+  <li>Mô phỏng hệ thống hóa học và vật liệu</li>
+  <li>Giải quyết bài toán tối ưu hóa phức tạp</li>
+  <li>Xử lý dữ liệu thực tế với quantum algorithms</li>
+</ul>
+
+<h2 id="-quantum-simulation-projects---tổng-quan">🧪 Quantum Simulation Projects - Tổng Quan</h2>
+
+<h3 id="tại-sao-quantum-simulation">Tại sao Quantum Simulation?</h3>
+<ul>
+  <li><strong>Quantum advantage</strong>: Mô phỏng hệ thống lượng tử hiệu quả hơn</li>
+  <li><strong>Chemistry simulation</strong>: Tính toán cấu trúc phân tử và phản ứng</li>
+  <li><strong>Material science</strong>: Thiết kế vật liệu mới với tính chất đặc biệt</li>
+  <li><strong>Optimization</strong>: Giải quyết bài toán tối ưu hóa phức tạp</li>
+  <li><strong>Real-world applications</strong>: Áp dụng vào các vấn đề thực tế</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms</span> <span class="kn">import</span> <span class="n">VQE</span><span class="p">,</span> <span class="n">QAOA</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span><span class="p">,</span> <span class="n">COBYLA</span><span class="p">,</span> <span class="n">ADAM</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">TwoLocal</span><span class="p">,</span> <span class="n">EfficientSU2</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">Pauli</span><span class="p">,</span> <span class="n">SparsePauliOp</span>
+<span class="kn">from</span> <span class="nn">qiskit.opflow</span> <span class="kn">import</span> <span class="n">I</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span>
+<span class="kn">from</span> <span class="nn">qiskit_nature.second_q.drivers</span> <span class="kn">import</span> <span class="n">PySCFDriver</span>
+<span class="kn">from</span> <span class="nn">qiskit_nature.second_q.mappers</span> <span class="kn">import</span> <span class="n">JordanWignerMapper</span>
+<span class="kn">from</span> <span class="nn">qiskit_nature.second_q.algorithms</span> <span class="kn">import</span> <span class="n">GroundStateEigensolver</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+</code></pre></div></div>
+
+<h2 id="-project-1-quantum-chemistry-simulation">🔬 Project 1: Quantum Chemistry Simulation</h2>
+
+<h3 id="1-molecular-energy-calculation">1. Molecular Energy Calculation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">QuantumChemistrySimulator</span><span class="p">:</span>
+    <span class="s">"""
+    Simulator hóa học lượng tử sử dụng VQE
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s">'qasm_simulator'</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">create_molecular_hamiltonian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">molecule</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SparsePauliOp</span><span class="p">:</span>
+        <span class="s">"""
+        Tạo Hamiltonian cho phân tử
+        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># Sử dụng PySCF driver
+</span>            <span class="n">driver</span> <span class="o">=</span> <span class="n">PySCFDriver</span><span class="p">(</span><span class="n">atom</span><span class="o">=</span><span class="n">molecule</span><span class="p">)</span>
+            <span class="n">problem</span> <span class="o">=</span> <span class="n">driver</span><span class="p">.</span><span class="n">run</span><span class="p">()</span>
+            
+            <span class="c1"># Map sang qubits
+</span>            <span class="n">mapper</span> <span class="o">=</span> <span class="n">JordanWignerMapper</span><span class="p">()</span>
+            <span class="n">qubit_op</span> <span class="o">=</span> <span class="n">mapper</span><span class="p">.</span><span class="nb">map</span><span class="p">(</span><span class="n">problem</span><span class="p">.</span><span class="n">second_q_ops</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+            
+            <span class="k">return</span> <span class="n">qubit_op</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error creating Hamiltonian: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+            <span class="c1"># Fallback: tạo Hamiltonian đơn giản
+</span>            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">_create_simple_hamiltonian</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">_create_simple_hamiltonian</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SparsePauliOp</span><span class="p">:</span>
+        <span class="s">"""
+        Tạo Hamiltonian đơn giản cho demo
+        """</span>
+        <span class="c1"># H2 molecule Hamiltonian (simplified)
+</span>        <span class="n">coeffs</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.011280</span><span class="p">,</span> <span class="mf">0.171201</span><span class="p">,</span> <span class="mf">0.171201</span><span class="p">,</span> <span class="mf">0.171201</span><span class="p">,</span> <span class="mf">0.171201</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.222796</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.222796</span><span class="p">,</span> <span class="mf">0.174348</span><span class="p">]</span>
+        <span class="n">paulis</span> <span class="o">=</span> <span class="p">[</span><span class="s">'II'</span><span class="p">,</span> <span class="s">'IZ'</span><span class="p">,</span> <span class="s">'ZI'</span><span class="p">,</span> <span class="s">'ZZ'</span><span class="p">,</span> <span class="s">'XX'</span><span class="p">,</span> <span class="s">'YY'</span><span class="p">,</span> <span class="s">'YY'</span><span class="p">,</span> <span class="s">'ZZ'</span><span class="p">]</span>
+        
+        <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">SparsePauliOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">paulis</span><span class="p">,</span> <span class="n">coeffs</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">hamiltonian</span>
+    
+    <span class="k">def</span> <span class="nf">create_ansatz</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">depth</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuantumCircuit</span><span class="p">:</span>
+        <span class="s">"""
+        Tạo ansatz circuit cho VQE
+        """</span>
+        <span class="n">ansatz</span> <span class="o">=</span> <span class="n">TwoLocal</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="p">[</span><span class="s">'ry'</span><span class="p">,</span> <span class="s">'rz'</span><span class="p">],</span> <span class="s">'cz'</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="n">depth</span><span class="p">,</span> <span class="n">entanglement</span><span class="o">=</span><span class="s">'linear'</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">ansatz</span>
+    
+    <span class="k">def</span> <span class="nf">run_vqe_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">molecule</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="s">"""
+        Chạy VQE simulation cho phân tử
+        """</span>
+        <span class="c1"># Tạo Hamiltonian
+</span>        <span class="n">hamiltonian</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_molecular_hamiltonian</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span>
+        
+        <span class="c1"># Tạo ansatz
+</span>        <span class="n">ansatz</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_ansatz</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Khởi tạo VQE
+</span>        <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span><span class="n">ansatz</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">)</span>
+        
+        <span class="c1"># Chạy VQE
+</span>        <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'ground_state_energy'</span><span class="p">:</span> <span class="n">result</span><span class="p">.</span><span class="n">eigenvalue</span><span class="p">.</span><span class="n">real</span><span class="p">,</span>
+            <span class="s">'optimal_parameters'</span><span class="p">:</span> <span class="n">result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="p">,</span>
+            <span class="s">'optimization_history'</span><span class="p">:</span> <span class="n">result</span><span class="p">.</span><span class="n">optimizer_history</span><span class="p">,</span>
+            <span class="s">'hamiltonian'</span><span class="p">:</span> <span class="n">hamiltonian</span><span class="p">,</span>
+            <span class="s">'ansatz'</span><span class="p">:</span> <span class="n">ansatz</span>
+        <span class="p">}</span>
+
+<span class="c1"># Test quantum chemistry simulation
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Quantum Chemistry Simulation Demo:"</span><span class="p">)</span>
+<span class="n">chem_sim</span> <span class="o">=</span> <span class="n">QuantumChemistrySimulator</span><span class="p">()</span>
+
+<span class="c1"># Simulate H2 molecule
+</span><span class="n">h2_result</span> <span class="o">=</span> <span class="n">chem_sim</span><span class="p">.</span><span class="n">run_vqe_simulation</span><span class="p">(</span><span class="s">"H .0 .0 .0; H .0 .0 0.74"</span><span class="p">,</span> <span class="n">n_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"H2 Ground State Energy: </span><span class="si">{</span><span class="n">h2_result</span><span class="p">[</span><span class="s">'ground_state_energy'</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s"> Hartree"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal Parameters: </span><span class="si">{</span><span class="n">h2_result</span><span class="p">[</span><span class="s">'optimal_parameters'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-potential-energy-surface">2. Potential Energy Surface</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">calculate_potential_energy_surface</span><span class="p">(</span><span class="n">molecule_base</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">bond_lengths</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+    <span class="s">"""
+    Tính toán potential energy surface
+    """</span>
+    <span class="n">energies</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">chem_sim</span> <span class="o">=</span> <span class="n">QuantumChemistrySimulator</span><span class="p">()</span>
+    
+    <span class="k">for</span> <span class="n">bond_length</span> <span class="ow">in</span> <span class="n">bond_lengths</span><span class="p">:</span>
+        <span class="c1"># Tạo phân tử với bond length khác nhau
+</span>        <span class="k">if</span> <span class="s">"H"</span> <span class="ow">in</span> <span class="n">molecule_base</span><span class="p">:</span>
+            <span class="n">molecule</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"H .0 .0 .0; H .0 .0 </span><span class="si">{</span><span class="n">bond_length</span><span class="si">}</span><span class="s">"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">molecule</span> <span class="o">=</span> <span class="n">molecule_base</span>  <span class="c1"># Placeholder for other molecules
+</span>        
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">chem_sim</span><span class="p">.</span><span class="n">run_vqe_simulation</span><span class="p">(</span><span class="n">molecule</span><span class="p">)</span>
+            <span class="n">energies</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s">'ground_state_energy'</span><span class="p">])</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">energies</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">nan</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">'bond_lengths'</span><span class="p">:</span> <span class="n">bond_lengths</span><span class="p">,</span>
+        <span class="s">'energies'</span><span class="p">:</span> <span class="n">energies</span><span class="p">,</span>
+        <span class="s">'molecule'</span><span class="p">:</span> <span class="n">molecule_base</span>
+    <span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">plot_potential_energy_surface</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+    <span class="s">"""
+    Vẽ potential energy surface
+    """</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'bond_lengths'</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s">'energies'</span><span class="p">],</span> <span class="s">'bo-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Bond Length (Å)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Energy (Hartree)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s">'Potential Energy Surface for </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s">"molecule"</span><span class="p">]</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Calculate and plot potential energy surface
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Potential Energy Surface Calculation:"</span><span class="p">)</span>
+<span class="n">bond_lengths</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">pes_data</span> <span class="o">=</span> <span class="n">calculate_potential_energy_surface</span><span class="p">(</span><span class="s">"H2"</span><span class="p">,</span> <span class="n">bond_lengths</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Bond Lengths vs Energies:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">pes_data</span><span class="p">[</span><span class="s">'bond_lengths'</span><span class="p">],</span> <span class="n">pes_data</span><span class="p">[</span><span class="s">'energies'</span><span class="p">])):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">np</span><span class="p">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">energy</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  </span><span class="si">{</span><span class="n">length</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s"> Å: </span><span class="si">{</span><span class="n">energy</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s"> Hartree"</span><span class="p">)</span>
+
+<span class="c1"># Plot the surface
+</span><span class="n">plot_potential_energy_surface</span><span class="p">(</span><span class="n">pes_data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="️-project-2-material-science-simulation">🏗️ Project 2: Material Science Simulation</h2>
+
+<h3 id="1-crystal-structure-optimization">1. Crystal Structure Optimization</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">QuantumMaterialSimulator</span><span class="p">:</span>
+    <span class="s">"""
+    Simulator vật liệu lượng tử
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s">'qasm_simulator'</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">create_lattice_hamiltonian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lattice_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_sites</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SparsePauliOp</span><span class="p">:</span>
+        <span class="s">"""
+        Tạo Hamiltonian cho crystal lattice
+        """</span>
+        <span class="k">if</span> <span class="n">lattice_type</span> <span class="o">==</span> <span class="s">"1D_chain"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">_create_1d_chain_hamiltonian</span><span class="p">(</span><span class="n">n_sites</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">lattice_type</span> <span class="o">==</span> <span class="s">"2D_square"</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">_create_2d_square_hamiltonian</span><span class="p">(</span><span class="n">n_sites</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s">"Unknown lattice type: </span><span class="si">{</span><span class="n">lattice_type</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_create_1d_chain_hamiltonian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_sites</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SparsePauliOp</span><span class="p">:</span>
+        <span class="s">"""
+        Tạo Hamiltonian cho 1D chain
+        """</span>
+        <span class="c1"># Heisenberg model: H = J∑ᵢⱼ Sᵢ·Sⱼ
+</span>        <span class="n">J</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># Coupling strength
+</span>        
+        <span class="n">hamiltonian_terms</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_sites</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Nearest neighbor interactions
+</span>            <span class="c1"># XX term
+</span>            <span class="n">xx_term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_sites</span>
+            <span class="n">xx_term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'X'</span>
+            <span class="n">xx_term</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">'X'</span>
+            <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">xx_term</span><span class="p">),</span> <span class="n">J</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+            
+            <span class="c1"># YY term
+</span>            <span class="n">yy_term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_sites</span>
+            <span class="n">yy_term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Y'</span>
+            <span class="n">yy_term</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Y'</span>
+            <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">yy_term</span><span class="p">),</span> <span class="n">J</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+            
+            <span class="c1"># ZZ term
+</span>            <span class="n">zz_term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_sites</span>
+            <span class="n">zz_term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+            <span class="n">zz_term</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+            <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">zz_term</span><span class="p">),</span> <span class="n">J</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">SparsePauliOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">(</span><span class="n">hamiltonian_terms</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_create_2d_square_hamiltonian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_sites</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SparsePauliOp</span><span class="p">:</span>
+        <span class="s">"""
+        Tạo Hamiltonian cho 2D square lattice
+        """</span>
+        <span class="c1"># Simplified 2D model (4 sites)
+</span>        <span class="k">if</span> <span class="n">n_sites</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"2D simulation currently supports only 4 sites"</span><span class="p">)</span>
+        
+        <span class="n">J</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">hamiltonian_terms</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># Horizontal bonds
+</span>        <span class="n">bonds</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)]</span>
+        
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">bonds</span><span class="p">:</span>
+            <span class="c1"># XX term
+</span>            <span class="n">xx_term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_sites</span>
+            <span class="n">xx_term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'X'</span>
+            <span class="n">xx_term</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s">'X'</span>
+            <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">xx_term</span><span class="p">),</span> <span class="n">J</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+            
+            <span class="c1"># YY term
+</span>            <span class="n">yy_term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_sites</span>
+            <span class="n">yy_term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Y'</span>
+            <span class="n">yy_term</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Y'</span>
+            <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">yy_term</span><span class="p">),</span> <span class="n">J</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+            
+            <span class="c1"># ZZ term
+</span>            <span class="n">zz_term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_sites</span>
+            <span class="n">zz_term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+            <span class="n">zz_term</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+            <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">zz_term</span><span class="p">),</span> <span class="n">J</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">SparsePauliOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">(</span><span class="n">hamiltonian_terms</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">optimize_crystal_structure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lattice_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_sites</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="s">"""
+        Tối ưu hóa cấu trúc tinh thể
+        """</span>
+        <span class="c1"># Tạo Hamiltonian
+</span>        <span class="n">hamiltonian</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_lattice_hamiltonian</span><span class="p">(</span><span class="n">lattice_type</span><span class="p">,</span> <span class="n">n_sites</span><span class="p">)</span>
+        
+        <span class="c1"># Tạo ansatz
+</span>        <span class="n">ansatz</span> <span class="o">=</span> <span class="n">EfficientSU2</span><span class="p">(</span><span class="n">n_sites</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Chạy VQE
+</span>        <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span><span class="n">ansatz</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'ground_state_energy'</span><span class="p">:</span> <span class="n">result</span><span class="p">.</span><span class="n">eigenvalue</span><span class="p">.</span><span class="n">real</span><span class="p">,</span>
+            <span class="s">'optimal_parameters'</span><span class="p">:</span> <span class="n">result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="p">,</span>
+            <span class="s">'lattice_type'</span><span class="p">:</span> <span class="n">lattice_type</span><span class="p">,</span>
+            <span class="s">'n_sites'</span><span class="p">:</span> <span class="n">n_sites</span><span class="p">,</span>
+            <span class="s">'hamiltonian'</span><span class="p">:</span> <span class="n">hamiltonian</span>
+        <span class="p">}</span>
+
+<span class="c1"># Test material science simulation
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Material Science Simulation Demo:"</span><span class="p">)</span>
+<span class="n">material_sim</span> <span class="o">=</span> <span class="n">QuantumMaterialSimulator</span><span class="p">()</span>
+
+<span class="c1"># 1D chain simulation
+</span><span class="n">chain_result</span> <span class="o">=</span> <span class="n">material_sim</span><span class="p">.</span><span class="n">optimize_crystal_structure</span><span class="p">(</span><span class="s">"1D_chain"</span><span class="p">,</span> <span class="n">n_sites</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"1D Chain Ground State Energy: </span><span class="si">{</span><span class="n">chain_result</span><span class="p">[</span><span class="s">'ground_state_energy'</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># 2D square lattice simulation
+</span><span class="n">square_result</span> <span class="o">=</span> <span class="n">material_sim</span><span class="p">.</span><span class="n">optimize_crystal_structure</span><span class="p">(</span><span class="s">"2D_square"</span><span class="p">,</span> <span class="n">n_sites</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"2D Square Lattice Ground State Energy: </span><span class="si">{</span><span class="n">square_result</span><span class="p">[</span><span class="s">'ground_state_energy'</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-phase-transition-detection">2. Phase Transition Detection</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">detect_phase_transitions</span><span class="p">(</span><span class="n">material_sim</span><span class="p">:</span> <span class="n">QuantumMaterialSimulator</span><span class="p">,</span> 
+                           <span class="n">coupling_range</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+    <span class="s">"""
+    Phát hiện phase transitions
+    """</span>
+    <span class="n">energies</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">order_parameters</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">J</span> <span class="ow">in</span> <span class="n">coupling_range</span><span class="p">:</span>
+        <span class="c1"># Tạo Hamiltonian với coupling strength J
+</span>        <span class="n">hamiltonian_terms</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">n_sites</span> <span class="o">=</span> <span class="mi">4</span>
+        
+        <span class="n">bonds</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">bonds</span><span class="p">:</span>
+            <span class="c1"># XX term
+</span>            <span class="n">xx_term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_sites</span>
+            <span class="n">xx_term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'X'</span>
+            <span class="n">xx_term</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s">'X'</span>
+            <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">xx_term</span><span class="p">),</span> <span class="n">J</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+            
+            <span class="c1"># YY term
+</span>            <span class="n">yy_term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_sites</span>
+            <span class="n">yy_term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Y'</span>
+            <span class="n">yy_term</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Y'</span>
+            <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">yy_term</span><span class="p">),</span> <span class="n">J</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+            
+            <span class="c1"># ZZ term
+</span>            <span class="n">zz_term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_sites</span>
+            <span class="n">zz_term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+            <span class="n">zz_term</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+            <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">zz_term</span><span class="p">),</span> <span class="n">J</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+        
+        <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">SparsePauliOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">(</span><span class="n">hamiltonian_terms</span><span class="p">)</span>
+        
+        <span class="c1"># Tính ground state energy
+</span>        <span class="n">ansatz</span> <span class="o">=</span> <span class="n">EfficientSU2</span><span class="p">(</span><span class="n">n_sites</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span><span class="n">ansatz</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">material_sim</span><span class="p">.</span><span class="n">optimizer</span><span class="p">,</span> 
+                 <span class="n">quantum_instance</span><span class="o">=</span><span class="n">material_sim</span><span class="p">.</span><span class="n">backend</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+        
+        <span class="n">energies</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">eigenvalue</span><span class="p">.</span><span class="n">real</span><span class="p">)</span>
+        
+        <span class="c1"># Tính order parameter (simplified)
+</span>        <span class="n">order_param</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">J</span><span class="p">)</span>  <span class="c1"># Simplified order parameter
+</span>        <span class="n">order_parameters</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">order_param</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">'coupling_strengths'</span><span class="p">:</span> <span class="n">coupling_range</span><span class="p">,</span>
+        <span class="s">'energies'</span><span class="p">:</span> <span class="n">energies</span><span class="p">,</span>
+        <span class="s">'order_parameters'</span><span class="p">:</span> <span class="n">order_parameters</span>
+    <span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">plot_phase_transitions</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">Dict</span><span class="p">):</span>
+    <span class="s">"""
+    Vẽ phase transition
+    """</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    
+    <span class="c1"># Energy vs coupling strength
+</span>    <span class="n">ax1</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'coupling_strengths'</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s">'energies'</span><span class="p">],</span> <span class="s">'bo-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'Coupling Strength J'</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'Ground State Energy'</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Energy vs Coupling Strength'</span><span class="p">)</span>
+    <span class="n">ax1</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="c1"># Order parameter vs coupling strength
+</span>    <span class="n">ax2</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'coupling_strengths'</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s">'order_parameters'</span><span class="p">],</span> <span class="s">'ro-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="p">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'Coupling Strength J'</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="p">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'Order Parameter'</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="p">.</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Order Parameter vs Coupling Strength'</span><span class="p">)</span>
+    <span class="n">ax2</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Detect phase transitions
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Phase Transition Detection:"</span><span class="p">)</span>
+<span class="n">coupling_range</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">phase_data</span> <span class="o">=</span> <span class="n">detect_phase_transitions</span><span class="p">(</span><span class="n">material_sim</span><span class="p">,</span> <span class="n">coupling_range</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Coupling Strength vs Energy:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">J</span><span class="p">,</span> <span class="n">energy</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">phase_data</span><span class="p">[</span><span class="s">'coupling_strengths'</span><span class="p">],</span> <span class="n">phase_data</span><span class="p">[</span><span class="s">'energies'</span><span class="p">])):</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  J = </span><span class="si">{</span><span class="n">J</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">: E = </span><span class="si">{</span><span class="n">energy</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># Plot phase transitions
+</span><span class="n">plot_phase_transitions</span><span class="p">(</span><span class="n">phase_data</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-project-3-optimization-problems">🎯 Project 3: Optimization Problems</h2>
+
+<h3 id="1-traveling-salesman-problem-tsp">1. Traveling Salesman Problem (TSP)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">QuantumTSPSolver</span><span class="p">:</span>
+    <span class="s">"""
+    Giải bài toán TSP sử dụng QAOA
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s">'qasm_simulator'</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">create_tsp_hamiltonian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">SparsePauliOp</span><span class="p">:</span>
+        <span class="s">"""
+        Tạo Hamiltonian cho TSP
+        """</span>
+        <span class="n">n_cities</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+        
+        <span class="c1"># Simplified TSP Hamiltonian
+</span>        <span class="c1"># H = ∑ᵢⱼ dᵢⱼ xᵢ xⱼ + λ(∑ᵢ xᵢ - 1)²
+</span>        <span class="n">hamiltonian_terms</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># Distance terms
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cities</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_cities</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">distances</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># Create term for cities i and j
+</span>                    <span class="n">term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_cities</span>
+                    <span class="n">term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+                    <span class="n">term</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+                    <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">term</span><span class="p">),</span> <span class="n">distances</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span><span class="o">/</span><span class="mi">4</span><span class="p">))</span>
+        
+        <span class="c1"># Constraint terms (simplified)
+</span>        <span class="n">lambda_constraint</span> <span class="o">=</span> <span class="mf">10.0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_cities</span><span class="p">):</span>
+            <span class="n">term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_cities</span>
+            <span class="n">term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+            <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">term</span><span class="p">),</span> <span class="n">lambda_constraint</span><span class="o">/</span><span class="mi">2</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">SparsePauliOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">(</span><span class="n">hamiltonian_terms</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">solve_tsp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">distances</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="s">"""
+        Giải TSP sử dụng QAOA
+        """</span>
+        <span class="c1"># Tạo Hamiltonian
+</span>        <span class="n">hamiltonian</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_tsp_hamiltonian</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+        
+        <span class="c1"># Chạy QAOA
+</span>        <span class="n">qaoa</span> <span class="o">=</span> <span class="n">QAOA</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">qaoa</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'optimal_cost'</span><span class="p">:</span> <span class="n">result</span><span class="p">.</span><span class="n">eigenvalue</span><span class="p">.</span><span class="n">real</span><span class="p">,</span>
+            <span class="s">'optimal_parameters'</span><span class="p">:</span> <span class="n">result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="p">,</span>
+            <span class="s">'solution'</span><span class="p">:</span> <span class="n">result</span><span class="p">.</span><span class="n">eigenstate</span><span class="p">,</span>
+            <span class="s">'n_cities'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+        <span class="p">}</span>
+
+<span class="c1"># Test TSP solver
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Traveling Salesman Problem Demo:"</span><span class="p">)</span>
+<span class="n">tsp_solver</span> <span class="o">=</span> <span class="n">QuantumTSPSolver</span><span class="p">()</span>
+
+<span class="c1"># Create sample TSP instance
+</span><span class="n">distances</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">25</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+    <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="p">]</span>
+
+<span class="n">tsp_result</span> <span class="o">=</span> <span class="n">tsp_solver</span><span class="p">.</span><span class="n">solve_tsp</span><span class="p">(</span><span class="n">distances</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"TSP Optimal Cost: </span><span class="si">{</span><span class="n">tsp_result</span><span class="p">[</span><span class="s">'optimal_cost'</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Number of Cities: </span><span class="si">{</span><span class="n">tsp_result</span><span class="p">[</span><span class="s">'n_cities'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-portfolio-optimization">2. Portfolio Optimization</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">QuantumPortfolioOptimizer</span><span class="p">:</span>
+    <span class="s">"""
+    Tối ưu hóa portfolio sử dụng quantum algorithms
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s">'qasm_simulator'</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">create_portfolio_hamiltonian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">returns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> 
+                                   <span class="n">risk_matrix</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> 
+                                   <span class="n">target_return</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SparsePauliOp</span><span class="p">:</span>
+        <span class="s">"""
+        Tạo Hamiltonian cho portfolio optimization
+        """</span>
+        <span class="n">n_assets</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+        
+        <span class="c1"># Portfolio Hamiltonian: H = λ₁(μ - μₜ)² + λ₂σ²
+</span>        <span class="n">hamiltonian_terms</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># Return constraint
+</span>        <span class="n">lambda_return</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_assets</span><span class="p">):</span>
+            <span class="n">term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_assets</span>
+            <span class="n">term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+            <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">term</span><span class="p">),</span> <span class="n">lambda_return</span> <span class="o">*</span> <span class="n">returns</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">))</span>
+        
+        <span class="c1"># Risk terms
+</span>        <span class="n">lambda_risk</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_assets</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_assets</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">risk_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">term</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_assets</span>
+                    <span class="n">term</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+                    <span class="n">term</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+                    <span class="n">hamiltonian_terms</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">term</span><span class="p">),</span> <span class="n">lambda_risk</span> <span class="o">*</span> <span class="n">risk_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">/</span> <span class="mi">4</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">SparsePauliOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">(</span><span class="n">hamiltonian_terms</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">optimize_portfolio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">returns</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> 
+                         <span class="n">risk_matrix</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]],</span> 
+                         <span class="n">target_return</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="s">"""
+        Tối ưu hóa portfolio
+        """</span>
+        <span class="c1"># Tạo Hamiltonian
+</span>        <span class="n">hamiltonian</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_portfolio_hamiltonian</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">risk_matrix</span><span class="p">,</span> <span class="n">target_return</span><span class="p">)</span>
+        
+        <span class="c1"># Tạo ansatz
+</span>        <span class="n">n_assets</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+        <span class="n">ansatz</span> <span class="o">=</span> <span class="n">EfficientSU2</span><span class="p">(</span><span class="n">n_assets</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Chạy VQE
+</span>        <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span><span class="n">ansatz</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">quantum_instance</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'optimal_value'</span><span class="p">:</span> <span class="n">result</span><span class="p">.</span><span class="n">eigenvalue</span><span class="p">.</span><span class="n">real</span><span class="p">,</span>
+            <span class="s">'optimal_parameters'</span><span class="p">:</span> <span class="n">result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="p">,</span>
+            <span class="s">'n_assets'</span><span class="p">:</span> <span class="n">n_assets</span><span class="p">,</span>
+            <span class="s">'target_return'</span><span class="p">:</span> <span class="n">target_return</span>
+        <span class="p">}</span>
+
+<span class="c1"># Test portfolio optimization
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Portfolio Optimization Demo:"</span><span class="p">)</span>
+<span class="n">portfolio_opt</span> <span class="o">=</span> <span class="n">QuantumPortfolioOptimizer</span><span class="p">()</span>
+
+<span class="c1"># Sample data
+</span><span class="n">returns</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.12</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">]</span>  <span class="c1"># Expected returns
+</span><span class="n">risk_matrix</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.09</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
+    <span class="p">[</span><span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.12</span><span class="p">]</span>
+<span class="p">]</span>  <span class="c1"># Risk covariance matrix
+</span>
+<span class="n">target_return</span> <span class="o">=</span> <span class="mf">0.10</span>
+
+<span class="n">portfolio_result</span> <span class="o">=</span> <span class="n">portfolio_opt</span><span class="p">.</span><span class="n">optimize_portfolio</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">risk_matrix</span><span class="p">,</span> <span class="n">target_return</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Portfolio Optimal Value: </span><span class="si">{</span><span class="n">portfolio_result</span><span class="p">[</span><span class="s">'optimal_value'</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Number of Assets: </span><span class="si">{</span><span class="n">portfolio_result</span><span class="p">[</span><span class="s">'n_assets'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Target Return: </span><span class="si">{</span><span class="n">portfolio_result</span><span class="p">[</span><span class="s">'target_return'</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="o">%</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-real-world-data-processing">📊 Real-world Data Processing</h2>
+
+<h3 id="1-financial-data-analysis">1. Financial Data Analysis</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_financial_analysis</span><span class="p">():</span>
+    <span class="s">"""
+    Phân tích dữ liệu tài chính sử dụng quantum algorithms
+    """</span>
+    <span class="c1"># Generate synthetic financial data
+</span>    <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">n_days</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">n_stocks</span> <span class="o">=</span> <span class="mi">4</span>
+    
+    <span class="c1"># Generate price data
+</span>    <span class="n">prices</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_days</span><span class="p">,</span> <span class="n">n_stocks</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.02</span> <span class="o">+</span> <span class="mf">1.0</span>
+    <span class="n">prices</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">cumprod</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate returns
+</span>    <span class="n">returns</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">diff</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="n">prices</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="c1"># Calculate correlation matrix
+</span>    <span class="n">correlation_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">returns</span><span class="p">.</span><span class="n">T</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate volatility
+</span>    <span class="n">volatility</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">returns</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Financial Data Analysis:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Number of days: </span><span class="si">{</span><span class="n">n_days</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Number of stocks: </span><span class="si">{</span><span class="n">n_stocks</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Average volatility: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">volatility</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Create correlation heatmap
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">sns</span><span class="p">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">correlation_matrix</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'coolwarm'</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Stock Correlation Matrix'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">'returns'</span><span class="p">:</span> <span class="n">returns</span><span class="p">,</span>
+        <span class="s">'correlation_matrix'</span><span class="p">:</span> <span class="n">correlation_matrix</span><span class="p">,</span>
+        <span class="s">'volatility'</span><span class="p">:</span> <span class="n">volatility</span><span class="p">,</span>
+        <span class="s">'prices'</span><span class="p">:</span> <span class="n">prices</span>
+    <span class="p">}</span>
+
+<span class="c1"># Run financial analysis
+</span><span class="n">financial_data</span> <span class="o">=</span> <span class="n">quantum_financial_analysis</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-climate-data-processing">2. Climate Data Processing</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_climate_analysis</span><span class="p">():</span>
+    <span class="s">"""
+    Phân tích dữ liệu khí hậu sử dụng quantum algorithms
+    """</span>
+    <span class="c1"># Generate synthetic climate data
+</span>    <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">n_years</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">n_months</span> <span class="o">=</span> <span class="mi">12</span>
+    
+    <span class="c1"># Temperature data with trend and seasonality
+</span>    <span class="n">base_temp</span> <span class="o">=</span> <span class="mf">15.0</span>
+    <span class="n">trend</span> <span class="o">=</span> <span class="mf">0.02</span>  <span class="c1"># Warming trend
+</span>    <span class="n">seasonal_amplitude</span> <span class="o">=</span> <span class="mf">10.0</span>
+    
+    <span class="n">temperatures</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_years</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">month</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_months</span><span class="p">):</span>
+            <span class="c1"># Add trend, seasonality, and noise
+</span>            <span class="n">temp</span> <span class="o">=</span> <span class="p">(</span><span class="n">base_temp</span> <span class="o">+</span> <span class="n">trend</span> <span class="o">*</span> <span class="n">year</span> <span class="o">+</span> 
+                   <span class="n">seasonal_amplitude</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">month</span> <span class="o">/</span> <span class="mi">12</span><span class="p">)</span> <span class="o">+</span>
+                   <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="n">temperatures</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp</span><span class="p">)</span>
+    
+    <span class="n">temperatures</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">temperatures</span><span class="p">)</span>
+    
+    <span class="c1"># Analyze trends
+</span>    <span class="n">years</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_years</span> <span class="o">*</span> <span class="n">n_months</span><span class="p">)</span> <span class="o">/</span> <span class="mi">12</span>
+    
+    <span class="c1"># Fit linear trend
+</span>    <span class="n">coeffs</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">temperatures</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">trend_line</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">coeffs</span><span class="p">,</span> <span class="n">years</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Climate Data Analysis:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Number of years: </span><span class="si">{</span><span class="n">n_years</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Temperature trend: </span><span class="si">{</span><span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">°C/year"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Average temperature: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">temperatures</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">°C"</span><span class="p">)</span>
+    
+    <span class="c1"># Plot temperature data
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">temperatures</span><span class="p">,</span> <span class="s">'b-'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Temperature'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="n">trend_line</span><span class="p">,</span> <span class="s">'r-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Trend'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Year'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Temperature (°C)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Climate Temperature Data'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">'temperatures'</span><span class="p">:</span> <span class="n">temperatures</span><span class="p">,</span>
+        <span class="s">'years'</span><span class="p">:</span> <span class="n">years</span><span class="p">,</span>
+        <span class="s">'trend'</span><span class="p">:</span> <span class="n">coeffs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+        <span class="s">'trend_line'</span><span class="p">:</span> <span class="n">trend_line</span>
+    <span class="p">}</span>
+
+<span class="c1"># Run climate analysis
+</span><span class="n">climate_data</span> <span class="o">=</span> <span class="n">quantum_climate_analysis</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-thực-hành">🎯 Bài tập thực hành</h2>
+
+<h3 id="bài-tập-1-protein-folding-simulation">Bài tập 1: Protein Folding Simulation</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_protein_folding</span><span class="p">():</span>
+    <span class="s">"""
+    Mô phỏng protein folding sử dụng quantum algorithms
+    """</span>
+    <span class="c1"># TODO: Implement protein folding simulation
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-2-drug-discovery-pipeline">Bài tập 2: Drug Discovery Pipeline</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_drug_discovery</span><span class="p">():</span>
+    <span class="s">"""
+    Pipeline khám phá thuốc sử dụng quantum simulation
+    """</span>
+    <span class="c1"># TODO: Implement drug discovery pipeline
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-3-quantum-machine-learning-for-materials">Bài tập 3: Quantum Machine Learning for Materials</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_ml_materials</span><span class="p">():</span>
+    <span class="s">"""
+    Machine learning lượng tử cho vật liệu
+    """</span>
+    <span class="c1"># TODO: Implement quantum ML for materials
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h2 id="-tài-liệu-tham-khảo">📚 Tài liệu tham khảo</h2>
+
+<ol>
+  <li><strong>Quantum Chemistry</strong>: McArdle, S., Endo, S., Aspuru-Guzik, A. et al. (2020). Quantum computational chemistry.</li>
+  <li><strong>Material Science</strong>: Ceperley, D.M. &amp; Alder, B.J. (1980). Ground state of the electron gas by a stochastic method.</li>
+  <li><strong>Optimization</strong>: Farhi, E., Goldstone, J. &amp; Gutmann, S. (2014). A quantum approximate optimization algorithm.</li>
+  <li><strong>Financial Applications</strong>: Orús, R., Mugel, S. &amp; Lizaso, E. (2019). Quantum computing for finance: Overview and prospects.</li>
+</ol>
+
+<h2 id="-hướng-dẫn-tiếp-theo">🔮 Hướng dẫn tiếp theo</h2>
+
+<ul>
+  <li><strong>Day 34</strong>: Quantum Computing on Real Hardware</li>
+  <li><strong>Day 35</strong>: Capstone Project và Portfolio Building</li>
+</ul>
+
+<hr />
+
+<p><em>“Quantum simulation will be one of the most important applications of quantum computers.”</em> - Richard Feynman</p>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

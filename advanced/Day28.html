@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 28: Quantum Approximate Optimization Algorithm (QAOA) - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 28: Quantum Approximate Optimization Algorithm (QAOA)">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day28.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 28: Quantum Approximate Optimization Algorithm (QAOA)">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 28: Quantum Approximate Optimization Algorithm (QAOA)</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-28-quantum-approximate-optimization-algorithm-qaoa">Day 28: Quantum Approximate Optimization Algorithm (QAOA)</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Hiểu nguyên lý hoạt động của QAOA</li>
+  <li>Triển khai QAOA cho bài toán MaxCut</li>
+  <li>Thiết kế cost function và parameter optimization</li>
+  <li>Áp dụng hybrid quantum-classical optimization</li>
+</ul>
+
+<h2 id="-qaoa---tổng-quan">🧠 QAOA - Tổng Quan</h2>
+
+<h3 id="tại-sao-qaoa">Tại sao QAOA?</h3>
+<ul>
+  <li><strong>Combinatorial optimization</strong>: Giải quyết các bài toán tối ưu hóa tổ hợp</li>
+  <li><strong>Quantum advantage</strong>: Tận dụng quantum superposition và entanglement</li>
+  <li><strong>Hybrid approach</strong>: Kết hợp quantum và classical optimization</li>
+  <li><strong>Near-term quantum</strong>: Phù hợp với NISQ (Noisy Intermediate-Scale Quantum) devices</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms</span> <span class="kn">import</span> <span class="n">QAOA</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms.optimizers</span> <span class="kn">import</span> <span class="n">COBYLA</span><span class="p">,</span> <span class="n">SPSA</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">Pauli</span>
+<span class="kn">from</span> <span class="nn">qiskit.opflow</span> <span class="kn">import</span> <span class="n">PauliSumOp</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">Z</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="n">nx</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
+</code></pre></div></div>
+
+<h2 id="-qaoa-fundamentals">🔧 QAOA Fundamentals</h2>
+
+<h3 id="1-qaoa-circuit-structure">1. QAOA Circuit Structure</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">qaoa_circuit_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo cấu trúc QAOA circuit cơ bản
+    """</span>
+    <span class="c1"># Parameters
+</span>    <span class="n">n_qubits</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="mi">2</span>  <span class="c1"># Number of layers
+</span>    
+    <span class="c1"># Create parameters
+</span>    <span class="n">gamma</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'γ'</span><span class="p">)</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'β'</span><span class="p">)</span>
+    
+    <span class="c1"># Create QAOA circuit
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Initial state: |+⟩^⊗n
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># QAOA layers
+</span>    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="c1"># Cost Hamiltonian layer (U_C)
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Mixing Hamiltonian layer (U_M)
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Measure
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"QAOA Circuit Structure:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Tạo QAOA circuit
+</span><span class="n">qaoa_qc</span> <span class="o">=</span> <span class="n">qaoa_circuit_demo</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-cost-hamiltonian-construction">2. Cost Hamiltonian Construction</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">create_cost_hamiltonian</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="s">"""
+    Tạo cost Hamiltonian cho MaxCut problem
+    """</span>
+    <span class="c1"># Cost function: maximize sum of edge weights across cut
+</span>    <span class="c1"># H_C = -∑(i,j)∈E w_ij * Z_i * Z_j
+</span>    
+    <span class="n">cost_operators</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">.</span><span class="n">edges</span><span class="p">():</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">edge</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">].</span><span class="n">get</span><span class="p">(</span><span class="s">'weight'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        
+        <span class="c1"># Create Z_i * Z_j operator
+</span>        <span class="n">pauli_string</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">pauli_string</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+        <span class="n">pauli_string</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+        
+        <span class="c1"># Convert to PauliSumOp
+</span>        <span class="n">pauli_op</span> <span class="o">=</span> <span class="n">PauliSumOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">([(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">pauli_string</span><span class="p">),</span> <span class="o">-</span><span class="n">weight</span><span class="p">)])</span>
+        <span class="n">cost_operators</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">pauli_op</span><span class="p">)</span>
+    
+    <span class="c1"># Sum all operators
+</span>    <span class="n">cost_hamiltonian</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cost_operators</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">cost_hamiltonian</span>
+
+<span class="k">def</span> <span class="nf">create_mixing_hamiltonian</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+    <span class="s">"""
+    Tạo mixing Hamiltonian: H_M = -∑_i X_i
+    """</span>
+    <span class="n">mixing_operators</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">pauli_string</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_qubits</span>
+        <span class="n">pauli_string</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'X'</span>
+        
+        <span class="n">pauli_op</span> <span class="o">=</span> <span class="n">PauliSumOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">([(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">pauli_string</span><span class="p">),</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)])</span>
+        <span class="n">mixing_operators</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">pauli_op</span><span class="p">)</span>
+    
+    <span class="n">mixing_hamiltonian</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">mixing_operators</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">mixing_hamiltonian</span>
+
+<span class="c1"># Test với graph đơn giản
+</span><span class="n">test_graph</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">test_graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">test_graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">test_graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">test_graph</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="n">cost_ham</span> <span class="o">=</span> <span class="n">create_cost_hamiltonian</span><span class="p">(</span><span class="n">test_graph</span><span class="p">)</span>
+<span class="n">mixing_ham</span> <span class="o">=</span> <span class="n">create_mixing_hamiltonian</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Cost Hamiltonian:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">cost_ham</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Mixing Hamiltonian:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">mixing_ham</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-maxcut-problem-với-qaoa">🎯 MaxCut Problem với QAOA</h2>
+
+<h3 id="1-maxcut-problem-setup">1. MaxCut Problem Setup</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">maxcut_problem_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo QAOA cho MaxCut problem
+    """</span>
+    <span class="c1"># Tạo graph
+</span>    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+    
+    <span class="c1"># Visualize graph
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">spring_layout</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">nx</span><span class="p">.</span><span class="n">draw</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s">'lightblue'</span><span class="p">,</span> 
+            <span class="n">node_size</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">font_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">font_weight</span><span class="o">=</span><span class="s">'bold'</span><span class="p">)</span>
+    
+    <span class="c1"># Draw edge weights
+</span>    <span class="n">edge_labels</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">get_edge_attributes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s">'weight'</span><span class="p">)</span>
+    <span class="n">nx</span><span class="p">.</span><span class="n">draw_networkx_edge_labels</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">edge_labels</span><span class="o">=</span><span class="n">edge_labels</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'MaxCut Problem Graph'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">G</span>
+
+<span class="c1"># Tạo MaxCut problem
+</span><span class="n">maxcut_graph</span> <span class="o">=</span> <span class="n">maxcut_problem_demo</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-qaoa-implementation-cho-maxcut">2. QAOA Implementation cho MaxCut</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">qaoa_maxcut_implementation</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="s">"""
+    Triển khai QAOA cho MaxCut
+    """</span>
+    <span class="n">n_qubits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">.</span><span class="n">nodes</span><span class="p">())</span>
+    
+    <span class="c1"># Create cost and mixing Hamiltonians
+</span>    <span class="n">cost_hamiltonian</span> <span class="o">=</span> <span class="n">create_cost_hamiltonian</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="n">mixing_hamiltonian</span> <span class="o">=</span> <span class="n">create_mixing_hamiltonian</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Create QAOA
+</span>    <span class="n">qaoa</span> <span class="o">=</span> <span class="n">QAOA</span><span class="p">(</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+        <span class="n">quantum_instance</span><span class="o">=</span><span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">),</span>
+        <span class="n">reps</span><span class="o">=</span><span class="n">p</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Solve
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">qaoa</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">cost_hamiltonian</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal parameters: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal value: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal point: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_point</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">qaoa</span>
+
+<span class="c1"># Chạy QAOA cho MaxCut
+</span><span class="n">qaoa_result</span><span class="p">,</span> <span class="n">qaoa_algorithm</span> <span class="o">=</span> <span class="n">qaoa_maxcut_implementation</span><span class="p">(</span><span class="n">maxcut_graph</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="3-classical-solution-comparison">3. Classical Solution Comparison</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">classical_maxcut_solution</span><span class="p">(</span><span class="n">graph</span><span class="p">):</span>
+    <span class="s">"""
+    Giải MaxCut bằng classical algorithm để so sánh
+    """</span>
+    <span class="c1"># Simple greedy algorithm
+</span>    <span class="n">nodes</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="p">.</span><span class="n">nodes</span><span class="p">())</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span>
+    
+    <span class="n">best_cut</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">best_partition</span> <span class="o">=</span> <span class="bp">None</span>
+    
+    <span class="c1"># Try all possible partitions
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)):</span>  <span class="c1"># Only need to check half due to symmetry
+</span>        <span class="n">partition</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;&gt;</span> <span class="n">j</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">partition</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">nodes</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        
+        <span class="c1"># Calculate cut value
+</span>        <span class="n">cut_value</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">.</span><span class="n">edges</span><span class="p">():</span>
+            <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">edge</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">u</span> <span class="ow">in</span> <span class="n">partition</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">v</span> <span class="ow">in</span> <span class="n">partition</span><span class="p">):</span>  <span class="c1"># Different sides
+</span>                <span class="n">cut_value</span> <span class="o">+=</span> <span class="n">graph</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">][</span><span class="s">'weight'</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">cut_value</span> <span class="o">&gt;</span> <span class="n">best_cut</span><span class="p">:</span>
+            <span class="n">best_cut</span> <span class="o">=</span> <span class="n">cut_value</span>
+            <span class="n">best_partition</span> <span class="o">=</span> <span class="n">partition</span>
+    
+    <span class="k">return</span> <span class="n">best_cut</span><span class="p">,</span> <span class="n">best_partition</span>
+
+<span class="c1"># So sánh classical vs quantum
+</span><span class="n">classical_cut</span><span class="p">,</span> <span class="n">classical_partition</span> <span class="o">=</span> <span class="n">classical_maxcut_solution</span><span class="p">(</span><span class="n">maxcut_graph</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Classical MaxCut value: </span><span class="si">{</span><span class="n">classical_cut</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Classical partition: </span><span class="si">{</span><span class="n">classical_partition</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"QAOA MaxCut value: </span><span class="si">{</span><span class="o">-</span><span class="n">qaoa_result</span><span class="p">.</span><span class="n">optimal_value</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>  <span class="c1"># Note: QAOA minimizes, so we negate
+</span></code></pre></div></div>
+
+<h2 id="-parameter-optimization">🔄 Parameter Optimization</h2>
+
+<h3 id="1-manual-parameter-optimization">1. Manual Parameter Optimization</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">manual_parameter_optimization</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="s">"""
+    Tối ưu hóa parameters thủ công
+    """</span>
+    <span class="n">n_qubits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">.</span><span class="n">nodes</span><span class="p">())</span>
+    <span class="n">cost_hamiltonian</span> <span class="o">=</span> <span class="n">create_cost_hamiltonian</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">objective_function</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+        <span class="c1"># Split parameters into gamma and beta
+</span>        <span class="n">gamma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[:</span><span class="n">p</span><span class="p">]</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">p</span><span class="p">:]</span>
+        
+        <span class="c1"># Create QAOA circuit
+</span>        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Initial state
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># QAOA layers
+</span>        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+            <span class="c1"># Cost layer
+</span>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">gamma</span><span class="p">[</span><span class="n">layer</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+            
+            <span class="c1"># Mixing layer
+</span>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">beta</span><span class="p">[</span><span class="n">layer</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="c1"># Execute
+</span>        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Calculate expectation value
+</span>        <span class="n">expectation</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">bitstring</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># Convert bitstring to measurement result
+</span>            <span class="n">measurement</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">bitstring</span><span class="p">]</span>
+            
+            <span class="c1"># Calculate cost for this measurement
+</span>            <span class="n">cost</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">.</span><span class="n">edges</span><span class="p">():</span>
+                <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">edge</span>
+                <span class="k">if</span> <span class="n">measurement</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">measurement</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>  <span class="c1"># Different sides
+</span>                    <span class="n">cost</span> <span class="o">+=</span> <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="s">'weight'</span><span class="p">]</span>
+            
+            <span class="n">expectation</span> <span class="o">+=</span> <span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">*</span> <span class="n">cost</span>
+        
+        <span class="k">return</span> <span class="o">-</span><span class="n">expectation</span>  <span class="c1"># Minimize negative of expectation
+</span>    
+    <span class="c1"># Initial parameters
+</span>    <span class="n">initial_params</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span>
+    
+    <span class="c1"># Optimize
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span><span class="n">objective_function</span><span class="p">,</span> <span class="n">initial_params</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s">'COBYLA'</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal parameters: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">x</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal value: </span><span class="si">{</span><span class="o">-</span><span class="n">result</span><span class="p">.</span><span class="n">fun</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Chạy manual optimization
+</span><span class="n">manual_result</span> <span class="o">=</span> <span class="n">manual_parameter_optimization</span><span class="p">(</span><span class="n">maxcut_graph</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-parameter-landscape-visualization">2. Parameter Landscape Visualization</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">visualize_parameter_landscape</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="s">"""
+    Trực quan hóa parameter landscape
+    """</span>
+    <span class="n">n_qubits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">.</span><span class="n">nodes</span><span class="p">())</span>
+    <span class="n">cost_hamiltonian</span> <span class="o">=</span> <span class="n">create_cost_hamiltonian</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">objective_2d</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+        <span class="c1"># For p=1, we have 2 parameters: gamma and beta
+</span>        <span class="n">gamma</span><span class="p">,</span> <span class="n">beta</span> <span class="o">=</span> <span class="n">params</span>
+        
+        <span class="c1"># Create circuit
+</span>        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Initial state
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Single QAOA layer
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">gamma</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="c1"># Execute
+</span>        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Calculate expectation
+</span>        <span class="n">expectation</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">bitstring</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">measurement</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">bitstring</span><span class="p">]</span>
+            <span class="n">cost</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">.</span><span class="n">edges</span><span class="p">():</span>
+                <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">edge</span>
+                <span class="k">if</span> <span class="n">measurement</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">measurement</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+                    <span class="n">cost</span> <span class="o">+=</span> <span class="n">graph</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="s">'weight'</span><span class="p">]</span>
+            <span class="n">expectation</span> <span class="o">+=</span> <span class="p">(</span><span class="n">count</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">*</span> <span class="n">cost</span>
+        
+        <span class="k">return</span> <span class="o">-</span><span class="n">expectation</span>
+    
+    <span class="c1"># Create parameter grid
+</span>    <span class="n">gamma_range</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">beta_range</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">gamma_grid</span><span class="p">,</span> <span class="n">beta_grid</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">gamma_range</span><span class="p">,</span> <span class="n">beta_range</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate objective values
+</span>    <span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">gamma_grid</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gamma_range</span><span class="p">)):</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">beta_range</span><span class="p">)):</span>
+            <span class="n">Z</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">objective_2d</span><span class="p">([</span><span class="n">gamma_grid</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">beta_grid</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]])</span>
+    
+    <span class="c1"># Plot
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="n">contour</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">gamma_grid</span><span class="p">,</span> <span class="n">beta_grid</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'viridis'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">contour</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Objective Value'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'γ (gamma)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'β (beta)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'QAOA Parameter Landscape (p=1)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">gamma_grid</span><span class="p">,</span> <span class="n">beta_grid</span><span class="p">,</span> <span class="n">Z</span>
+
+<span class="c1"># Visualize parameter landscape
+</span><span class="n">gamma_g</span><span class="p">,</span> <span class="n">beta_g</span><span class="p">,</span> <span class="n">obj_values</span> <span class="o">=</span> <span class="n">visualize_parameter_landscape</span><span class="p">(</span><span class="n">maxcut_graph</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-performance-analysis">📊 Performance Analysis</h2>
+
+<h3 id="1-qaoa-vs-classical-comparison">1. QAOA vs Classical Comparison</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">qaoa_performance_analysis</span><span class="p">():</span>
+    <span class="s">"""
+    Phân tích hiệu suất QAOA vs classical algorithms
+    """</span>
+    <span class="c1"># Test trên nhiều graph sizes
+</span>    <span class="n">graph_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+    <span class="n">p_values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">graph_sizes</span><span class="p">:</span>
+        <span class="c1"># Create random graph
+</span>        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">random_regular_graph</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>  <span class="c1"># 3-regular graph
+</span>        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">G</span><span class="p">.</span><span class="n">edges</span><span class="p">():</span>
+            <span class="n">G</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s">'weight'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">()</span>
+        
+        <span class="c1"># Classical solution
+</span>        <span class="n">classical_cut</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">classical_maxcut_solution</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+        
+        <span class="n">results</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">'classical'</span><span class="p">:</span> <span class="n">classical_cut</span><span class="p">,</span> <span class="s">'qaoa'</span><span class="p">:</span> <span class="p">{}}</span>
+        
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">p_values</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">qaoa_maxcut_implementation</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+                <span class="n">qaoa_cut</span> <span class="o">=</span> <span class="o">-</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">size</span><span class="p">][</span><span class="s">'qaoa'</span><span class="p">][</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">qaoa_cut</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">size</span><span class="p">][</span><span class="s">'qaoa'</span><span class="p">][</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+    
+    <span class="c1"># Plot results
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+    
+    <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">graph_sizes</span><span class="p">:</span>
+        <span class="n">classical</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="n">size</span><span class="p">][</span><span class="s">'classical'</span><span class="p">]</span>
+        <span class="n">qaoa_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">results</span><span class="p">[</span><span class="n">size</span><span class="p">][</span><span class="s">'qaoa'</span><span class="p">].</span><span class="n">get</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">p_values</span><span class="p">]</span>
+        
+        <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">graph_sizes</span><span class="p">.</span><span class="n">index</span><span class="p">(</span><span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">bar</span><span class="p">([</span><span class="s">'Classical'</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s">'QAOA p=</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s">'</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">p_values</span><span class="p">],</span> 
+                <span class="p">[</span><span class="n">classical</span><span class="p">]</span> <span class="o">+</span> <span class="n">qaoa_values</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s">'Graph Size </span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'MaxCut Value'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Chạy performance analysis
+</span><span class="n">performance_results</span> <span class="o">=</span> <span class="n">qaoa_performance_analysis</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-approximation-ratio-analysis">2. Approximation Ratio Analysis</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">approximation_ratio_analysis</span><span class="p">():</span>
+    <span class="s">"""
+    Phân tích approximation ratio của QAOA
+    """</span>
+    <span class="c1"># Test trên nhiều instances
+</span>    <span class="n">n_instances</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">graph_size</span> <span class="o">=</span> <span class="mi">6</span>
+    
+    <span class="n">approximation_ratios</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_instances</span><span class="p">):</span>
+        <span class="c1"># Create random graph
+</span>        <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">random_regular_graph</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">graph_size</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">G</span><span class="p">.</span><span class="n">edges</span><span class="p">():</span>
+            <span class="n">G</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]][</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="s">'weight'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">()</span>
+        
+        <span class="c1"># Classical optimal
+</span>        <span class="n">classical_cut</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">classical_maxcut_solution</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+        
+        <span class="c1"># QAOA solution
+</span>        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">qaoa_maxcut_implementation</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">qaoa_cut</span> <span class="o">=</span> <span class="o">-</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span>
+            
+            <span class="c1"># Approximation ratio
+</span>            <span class="n">ratio</span> <span class="o">=</span> <span class="n">qaoa_cut</span> <span class="o">/</span> <span class="n">classical_cut</span>
+            <span class="n">approximation_ratios</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">ratio</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">continue</span>
+    
+    <span class="c1"># Plot distribution
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">hist</span><span class="p">(</span><span class="n">approximation_ratios</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s">'black'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">approximation_ratios</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="s">'red'</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s">'--'</span><span class="p">,</span> 
+                <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s">'Mean: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">approximation_ratios</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Approximation Ratio'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Frequency'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'QAOA Approximation Ratio Distribution'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Average approximation ratio: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">approximation_ratios</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Standard deviation: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">approximation_ratios</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">approximation_ratios</span>
+
+<span class="c1"># Chạy approximation ratio analysis
+</span><span class="n">approx_ratios</span> <span class="o">=</span> <span class="n">approximation_ratio_analysis</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-thực-hành">📚 Bài Tập Thực Hành</h2>
+
+<h3 id="bài-tập-1-qaoa-cho-graph-coloring">Bài tập 1: QAOA cho Graph Coloring</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">qaoa_graph_coloring</span><span class="p">():</span>
+    <span class="s">"""
+    Áp dụng QAOA cho Graph Coloring problem
+    """</span>
+    <span class="c1"># Graph coloring: minimize number of colors needed
+</span>    <span class="c1"># Cost function: penalize adjacent vertices with same color
+</span>    
+    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Create cost Hamiltonian for graph coloring
+</span>    <span class="c1"># H_C = ∑(i,j)∈E δ(c_i, c_j) where δ is Kronecker delta
+</span>    
+    <span class="n">n_qubits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">G</span><span class="p">.</span><span class="n">nodes</span><span class="p">())</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># 2 qubits per node for 4 colors
+</span>    
+    <span class="k">def</span> <span class="nf">create_coloring_cost_hamiltonian</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">n_colors</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="n">cost_operators</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">graph</span><span class="p">.</span><span class="n">edges</span><span class="p">():</span>
+            <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">edge</span>
+            
+            <span class="c1"># For each color, penalize if both vertices have same color
+</span>            <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_colors</span><span class="p">):</span>
+                <span class="c1"># Create operator that checks if both vertices have same color
+</span>                <span class="n">pauli_string</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">.</span><span class="n">nodes</span><span class="p">())</span> <span class="o">*</span> <span class="n">n_colors</span><span class="p">)</span>
+                
+                <span class="c1"># Set qubits for color 'color' for both vertices
+</span>                <span class="n">pauli_string</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="n">n_colors</span> <span class="o">+</span> <span class="n">color</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+                <span class="n">pauli_string</span><span class="p">[</span><span class="n">j</span> <span class="o">*</span> <span class="n">n_colors</span> <span class="o">+</span> <span class="n">color</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Z'</span>
+                
+                <span class="c1"># This operator gives +1 if both vertices have same color
+</span>                <span class="n">pauli_op</span> <span class="o">=</span> <span class="n">PauliSumOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">([(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">pauli_string</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)])</span>
+                <span class="n">cost_operators</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">pauli_op</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">cost_operators</span><span class="p">)</span>
+    
+    <span class="n">cost_ham</span> <span class="o">=</span> <span class="n">create_coloring_cost_hamiltonian</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    
+    <span class="c1"># Implement QAOA for graph coloring
+</span>    <span class="c1"># (This is a simplified version - full implementation would be more complex)
+</span>    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Graph Coloring Cost Hamiltonian created"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">G</span><span class="p">,</span> <span class="n">cost_ham</span>
+
+<span class="c1"># Chạy graph coloring QAOA
+</span><span class="n">coloring_graph</span><span class="p">,</span> <span class="n">coloring_cost</span> <span class="o">=</span> <span class="n">qaoa_graph_coloring</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-2-qaoa-với-custom-mixing-hamiltonian">Bài tập 2: QAOA với Custom Mixing Hamiltonian</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">custom_mixing_hamiltonian_qaoa</span><span class="p">():</span>
+    <span class="s">"""
+    QAOA với custom mixing Hamiltonian
+    """</span>
+    <span class="c1"># Create custom mixing Hamiltonian: H_M = -∑_i (X_i + Y_i)
+</span>    
+    <span class="k">def</span> <span class="nf">create_custom_mixing_hamiltonian</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">mixing_operators</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="c1"># X operator
+</span>            <span class="n">pauli_string_x</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_qubits</span>
+            <span class="n">pauli_string_x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'X'</span>
+            <span class="n">pauli_op_x</span> <span class="o">=</span> <span class="n">PauliSumOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">([(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">pauli_string_x</span><span class="p">),</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)])</span>
+            
+            <span class="c1"># Y operator
+</span>            <span class="n">pauli_string_y</span> <span class="o">=</span> <span class="p">[</span><span class="s">'I'</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_qubits</span>
+            <span class="n">pauli_string_y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s">'Y'</span>
+            <span class="n">pauli_op_y</span> <span class="o">=</span> <span class="n">PauliSumOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">([(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">pauli_string_y</span><span class="p">),</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)])</span>
+            
+            <span class="n">mixing_operators</span><span class="p">.</span><span class="n">extend</span><span class="p">([</span><span class="n">pauli_op_x</span><span class="p">,</span> <span class="n">pauli_op_y</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">mixing_operators</span><span class="p">)</span>
+    
+    <span class="c1"># Test với simple graph
+</span>    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    
+    <span class="n">cost_ham</span> <span class="o">=</span> <span class="n">create_cost_hamiltonian</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="n">custom_mixing_ham</span> <span class="o">=</span> <span class="n">create_custom_mixing_hamiltonian</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Custom mixing Hamiltonian created"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">custom_mixing_ham</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">G</span><span class="p">,</span> <span class="n">cost_ham</span><span class="p">,</span> <span class="n">custom_mixing_ham</span>
+
+<span class="c1"># Chạy custom mixing QAOA
+</span><span class="n">custom_graph</span><span class="p">,</span> <span class="n">custom_cost</span><span class="p">,</span> <span class="n">custom_mixing</span> <span class="o">=</span> <span class="n">custom_mixing_hamiltonian_qaoa</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-3-qaoa-parameter-scheduling">Bài tập 3: QAOA Parameter Scheduling</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">qaoa_parameter_scheduling</span><span class="p">():</span>
+    <span class="s">"""
+    Tối ưu hóa parameter scheduling cho QAOA
+    """</span>
+    <span class="c1"># Implement different parameter initialization strategies
+</span>    
+    <span class="k">def</span> <span class="nf">linear_schedule</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="s">"""Linear parameter schedule"""</span>
+        <span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">gamma</span><span class="p">,</span> <span class="n">beta</span><span class="p">])</span>
+    
+    <span class="k">def</span> <span class="nf">random_schedule</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="s">"""Random parameter initialization"""</span>
+        <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span>
+    
+    <span class="k">def</span> <span class="nf">optimal_schedule</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+        <span class="s">"""Optimal parameter schedule based on theory"""</span>
+        <span class="c1"># For MaxCut, optimal parameters follow specific patterns
+</span>        <span class="n">gamma</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">4</span>
+        <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">gamma</span><span class="p">,</span> <span class="n">beta</span><span class="p">])</span>
+    
+    <span class="c1"># Test different schedules
+</span>    <span class="n">G</span> <span class="o">=</span> <span class="n">nx</span><span class="p">.</span><span class="n">Graph</span><span class="p">()</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">G</span><span class="p">.</span><span class="n">add_edge</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    
+    <span class="n">p</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">schedules</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'Linear'</span><span class="p">:</span> <span class="n">linear_schedule</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+        <span class="s">'Random'</span><span class="p">:</span> <span class="n">random_schedule</span><span class="p">(</span><span class="n">p</span><span class="p">),</span>
+        <span class="s">'Optimal'</span><span class="p">:</span> <span class="n">optimal_schedule</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="n">schedules</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Testing </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s"> schedule: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="c1"># Here you would run QAOA with these parameters
+</span>        <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Chạy parameter scheduling
+</span><span class="n">schedule_results</span> <span class="o">=</span> <span class="n">qaoa_parameter_scheduling</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-kết-quả-mong-đợi">🎯 Kết Quả Mong Đợi</h2>
+<ul>
+  <li>Hiểu rõ nguyên lý QAOA và ứng dụng cho optimization problems</li>
+  <li>Có thể triển khai QAOA cho MaxCut và các bài toán khác</li>
+  <li>Tối ưu hóa parameters hiệu quả</li>
+  <li>So sánh hiệu suất với classical algorithms</li>
+</ul>
+
+<h2 id="-tài-liệu-tham-khảo">📖 Tài Liệu Tham Khảo</h2>
+<ul>
+  <li><a href="https://arxiv.org/abs/1411.4028">QAOA Paper</a></li>
+  <li><a href="https://qiskit.org/documentation/stubs/qiskit.algorithms.QAOA.html">Qiskit QAOA</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Maximum_cut">MaxCut Problem</a></li>
+  <li><a href="https://qiskit.org/textbook/ch-applications/qaoa.html">Quantum Optimization</a></li>
+</ul>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

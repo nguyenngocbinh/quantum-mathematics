@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 30: Quantum Neural Networks - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 30: Quantum Neural Networks">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day30.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 30: Quantum Neural Networks">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 30: Quantum Neural Networks</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-30-quantum-neural-networks">Day 30: Quantum Neural Networks</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Hiểu nguyên lý hoạt động của Quantum Neural Networks (QNN)</li>
+  <li>Triển khai quantum perceptron và quantum layers</li>
+  <li>Áp dụng quantum gradient descent và backpropagation</li>
+  <li>Xây dựng hybrid quantum-classical neural networks</li>
+</ul>
+
+<h2 id="-quantum-neural-networks---tổng-quan">🧠 Quantum Neural Networks - Tổng Quan</h2>
+
+<h3 id="tại-sao-quantum-neural-networks">Tại sao Quantum Neural Networks?</h3>
+<ul>
+  <li><strong>Quantum advantage</strong>: Tận dụng quantum superposition và entanglement</li>
+  <li><strong>Parameter space</strong>: Khám phá không gian tham số lớn hơn</li>
+  <li><strong>Feature mapping</strong>: Quantum feature maps cho machine learning</li>
+  <li><strong>Hybrid approach</strong>: Kết hợp quantum và classical neural networks</li>
+  <li><strong>Expressivity</strong>: Khả năng biểu diễn phức tạp hơn classical networks</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span><span class="p">,</span> <span class="n">ADAM</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">Pauli</span>
+<span class="kn">from</span> <span class="nn">qiskit.opflow</span> <span class="kn">import</span> <span class="n">PauliSumOp</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="n">nn</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_classification</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+</code></pre></div></div>
+
+<h2 id="-quantum-neural-network-fundamentals">🔧 Quantum Neural Network Fundamentals</h2>
+
+<h3 id="1-quantum-perceptron">1. Quantum Perceptron</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_perceptron_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo quantum perceptron cơ bản
+    """</span>
+    <span class="c1"># Quantum perceptron với 2 input qubits
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># 2 input + 1 output
+</span>    
+    <span class="c1"># Input encoding
+</span>    <span class="n">x1</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'x₁'</span><span class="p">)</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'x₂'</span><span class="p">)</span>
+    
+    <span class="c1"># Weights
+</span>    <span class="n">w1</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'w₁'</span><span class="p">)</span>
+    <span class="n">w2</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'w₂'</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'b'</span><span class="p">)</span>
+    
+    <span class="c1"># Quantum perceptron circuit
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Encode input 1
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Encode input 2
+</span>    
+    <span class="c1"># Apply weights
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">w1</span> <span class="o">*</span> <span class="n">x1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">w2</span> <span class="o">*</span> <span class="n">x2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Bias
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Entangling layer
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Output measurement
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test quantum perceptron
+</span><span class="n">qnn_perceptron</span> <span class="o">=</span> <span class="n">quantum_perceptron_demo</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Quantum Perceptron Circuit:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qnn_perceptron</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-quantum-feature-maps">2. Quantum Feature Maps</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_feature_maps</span><span class="p">():</span>
+    <span class="s">"""
+    Các loại quantum feature maps khác nhau
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">zz_feature_map</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">data_reps</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="s">"""
+        ZZ feature map: exp(i∑ᵢⱼ xᵢxⱼZᵢZⱼ)
+        """</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Data parameters
+</span>        <span class="n">x_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="sa">f</span><span class="s">'x_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)]</span>
+        
+        <span class="c1"># Apply Hadamard to all qubits
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># ZZ interactions
+</span>        <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">data_reps</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">):</span>
+                    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+                    <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">x_params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">x_params</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">j</span><span class="p">)</span>
+                    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="n">x_params</span>
+    
+    <span class="k">def</span> <span class="nf">rotation_feature_map</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="s">"""
+        Rotation feature map: Rz(x)Ry(x)
+        """</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="n">x_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="sa">f</span><span class="s">'x_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)]</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">x_params</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">x_params</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="n">x_params</span>
+    
+    <span class="k">return</span> <span class="n">zz_feature_map</span><span class="p">,</span> <span class="n">rotation_feature_map</span>
+
+<span class="c1"># Test feature maps
+</span><span class="n">zz_map</span><span class="p">,</span> <span class="n">rot_map</span> <span class="o">=</span> <span class="n">quantum_feature_maps</span><span class="p">()</span>
+<span class="n">zz_circuit</span><span class="p">,</span> <span class="n">zz_params</span> <span class="o">=</span> <span class="n">zz_map</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">rot_circuit</span><span class="p">,</span> <span class="n">rot_params</span> <span class="o">=</span> <span class="n">rot_map</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"ZZ Feature Map:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">zz_circuit</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Parameters: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">zz_params</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Rotation Feature Map:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">rot_circuit</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Parameters: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rot_params</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-quantum-neural-network-implementation">🧪 Quantum Neural Network Implementation</h2>
+
+<h3 id="1-simple-qnn-cho-classification">1. Simple QNN cho Classification</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">simple_qnn_classifier</span><span class="p">():</span>
+    <span class="s">"""
+    QNN đơn giản cho bài toán classification
+    """</span>
+    <span class="k">def</span> <span class="nf">create_qnn_circuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Feature encoding
+</span>        <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'x₁'</span><span class="p">),</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'x₂'</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Variational layers
+</span>        <span class="n">theta1</span><span class="p">,</span> <span class="n">theta2</span><span class="p">,</span> <span class="n">theta3</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₁'</span><span class="p">),</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₂'</span><span class="p">),</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₃'</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">theta3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Measurement
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">qc</span>
+    
+    <span class="k">return</span> <span class="n">create_qnn_circuit</span>
+
+<span class="k">def</span> <span class="nf">qnn_training_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo training QNN
+    """</span>
+    <span class="c1"># Generate synthetic data
+</span>    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_redundant</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+                             <span class="n">n_informative</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">n_clusters_per_class</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Normalize data
+</span>    <span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">X</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">X</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Split data
+</span>    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    
+    <span class="c1"># Create QNN circuit
+</span>    <span class="n">qnn_circuit</span> <span class="o">=</span> <span class="n">simple_qnn_classifier</span><span class="p">()(</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"QNN Circuit for Classification:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">qnn_circuit</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">qnn_circuit</span>
+
+<span class="c1"># QNN training demo
+</span><span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span><span class="p">,</span> <span class="n">qnn_circ</span> <span class="o">=</span> <span class="n">qnn_training_demo</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-quantum-gradient-descent">2. Quantum Gradient Descent</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_gradient_descent</span><span class="p">():</span>
+    <span class="s">"""
+    Triển khai quantum gradient descent
+    """</span>
+    <span class="k">def</span> <span class="nf">parameter_shift_gradient</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">param_idx</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+        <span class="s">"""
+        Parameter shift rule cho quantum gradient
+        """</span>
+        <span class="c1"># Forward shift
+</span>        <span class="n">params_plus</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">params_plus</span><span class="p">[</span><span class="n">param_idx</span><span class="p">]</span> <span class="o">+=</span> <span class="n">epsilon</span>
+        
+        <span class="c1"># Backward shift
+</span>        <span class="n">params_minus</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">params_minus</span><span class="p">[</span><span class="n">param_idx</span><span class="p">]</span> <span class="o">-=</span> <span class="n">epsilon</span>
+        
+        <span class="c1"># Calculate gradients using parameter shift rule
+</span>        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        
+        <span class="c1"># Forward evaluation
+</span>        <span class="n">circuit_plus</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">params_plus</span><span class="p">)</span>
+        <span class="n">job_plus</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit_plus</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result_plus</span> <span class="o">=</span> <span class="n">job_plus</span><span class="p">.</span><span class="n">result</span><span class="p">().</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Backward evaluation
+</span>        <span class="n">circuit_minus</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">params_minus</span><span class="p">)</span>
+        <span class="n">job_minus</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit_minus</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result_minus</span> <span class="o">=</span> <span class="n">job_minus</span><span class="p">.</span><span class="n">result</span><span class="p">().</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Calculate expectation values
+</span>        <span class="n">exp_plus</span> <span class="o">=</span> <span class="p">(</span><span class="n">result_plus</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'00'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">result_plus</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'11'</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>
+        <span class="n">exp_minus</span> <span class="o">=</span> <span class="p">(</span><span class="n">result_minus</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'00'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">result_minus</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'11'</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>
+        
+        <span class="c1"># Gradient
+</span>        <span class="n">gradient</span> <span class="o">=</span> <span class="p">(</span><span class="n">exp_plus</span> <span class="o">-</span> <span class="n">exp_minus</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">epsilon</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">gradient</span>
+    
+    <span class="k">return</span> <span class="n">parameter_shift_gradient</span>
+
+<span class="c1"># Test quantum gradient
+</span><span class="n">q_gradient</span> <span class="o">=</span> <span class="n">quantum_gradient_descent</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="3-hybrid-quantum-classical-neural-network">3. Hybrid Quantum-Classical Neural Network</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">HybridQNN</span><span class="p">(</span><span class="n">nn</span><span class="p">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="s">"""
+    Hybrid Quantum-Classical Neural Network
+    """</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">,</span> <span class="n">n_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">HybridQNN</span><span class="p">,</span> <span class="bp">self</span><span class="p">).</span><span class="n">__init__</span><span class="p">()</span>
+        
+        <span class="c1"># Classical layers
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">classical_layer1</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">classical_layer2</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">output_layer</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span>
+        
+        <span class="c1"># Quantum circuit
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">qnn_circuit</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_quantum_circuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Quantum parameters
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">quantum_params</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">Parameter</span><span class="p">(</span><span class="n">torch</span><span class="p">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>  <span class="c1"># 3 variational parameters
+</span>        
+    <span class="k">def</span> <span class="nf">create_quantum_circuit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">):</span>
+        <span class="s">"""
+        Tạo quantum circuit cho QNN
+        """</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Input encoding
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">Parameter</span><span class="p">(</span><span class="sa">f</span><span class="s">'x_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">),</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Variational layers
+</span>        <span class="n">theta1</span><span class="p">,</span> <span class="n">theta2</span><span class="p">,</span> <span class="n">theta3</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₁'</span><span class="p">),</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₂'</span><span class="p">),</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₃'</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">theta3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Measurement
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">qc</span>
+    
+    <span class="k">def</span> <span class="nf">quantum_forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="s">"""
+        Quantum forward pass
+        """</span>
+        <span class="c1"># Convert classical input to quantum parameters
+</span>        <span class="n">x_quantum</span> <span class="o">=</span> <span class="n">x</span><span class="p">.</span><span class="n">detach</span><span class="p">().</span><span class="n">numpy</span><span class="p">()</span>
+        
+        <span class="c1"># Bind parameters to circuit
+</span>        <span class="n">param_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x_quantum</span><span class="p">)):</span>
+            <span class="n">param_dict</span><span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="sa">f</span><span class="s">'x_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">)]</span> <span class="o">=</span> <span class="n">x_quantum</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        
+        <span class="c1"># Add variational parameters
+</span>        <span class="n">param_dict</span><span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₁'</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">quantum_params</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">param_dict</span><span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₂'</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">quantum_params</span><span class="p">[</span><span class="mi">1</span><span class="p">].</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">param_dict</span><span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₃'</span><span class="p">)]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">quantum_params</span><span class="p">[</span><span class="mi">2</span><span class="p">].</span><span class="n">item</span><span class="p">()</span>
+        
+        <span class="c1"># Execute quantum circuit
+</span>        <span class="n">bound_circuit</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">qnn_circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">param_dict</span><span class="p">)</span>
+        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">bound_circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">().</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Convert measurement results to expectation values
+</span>        <span class="n">exp_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'00'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">result</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'11'</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>
+        
+        <span class="k">return</span> <span class="n">torch</span><span class="p">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">exp_val</span><span class="p">],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="s">"""
+        Forward pass của hybrid network
+        """</span>
+        <span class="c1"># Classical layers
+</span>        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">classical_layer1</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">relu</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">classical_layer2</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        
+        <span class="c1"># Quantum layer
+</span>        <span class="n">quantum_output</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">quantum_forward</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        
+        <span class="c1"># Output layer
+</span>        <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">output_layer</span><span class="p">(</span><span class="n">quantum_output</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">output</span>
+
+<span class="k">def</span> <span class="nf">hybrid_qnn_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo hybrid quantum-classical neural network
+    """</span>
+    <span class="c1"># Create model
+</span>    <span class="n">model</span> <span class="o">=</span> <span class="n">HybridQNN</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Generate data
+</span>    <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="mi">100</span><span class="p">,))</span>
+    
+    <span class="c1"># Loss function and optimizer
+</span>    <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">CrossEntropyLoss</span><span class="p">()</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">optim</span><span class="p">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="p">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Hybrid QNN Model:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">criterion</span><span class="p">,</span> <span class="n">optimizer</span>
+
+<span class="c1"># Hybrid QNN demo
+</span><span class="n">hybrid_model</span><span class="p">,</span> <span class="n">X_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">loss_fn</span><span class="p">,</span> <span class="n">opt</span> <span class="o">=</span> <span class="n">hybrid_qnn_demo</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-advanced-qnn-architectures">🧬 Advanced QNN Architectures</h2>
+
+<h3 id="1-quantum-convolutional-neural-network-qcnn">1. Quantum Convolutional Neural Network (QCNN)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_convolutional_layer</span><span class="p">():</span>
+    <span class="s">"""
+    Quantum convolutional layer
+    """</span>
+    <span class="k">def</span> <span class="nf">create_qconv_circuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Convolutional parameters
+</span>        <span class="n">conv_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="sa">f</span><span class="s">'conv_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">kernel_size</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)]</span>
+        
+        <span class="c1"># Apply convolutional operations
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">-</span> <span class="n">kernel_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Kernel application
+</span>            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">kernel_size</span><span class="p">):</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">conv_params</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">conv_params</span><span class="p">[</span><span class="n">kernel_size</span> <span class="o">+</span> <span class="n">j</span><span class="p">],</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">)</span>
+            
+            <span class="c1"># Entangling within kernel
+</span>            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">kernel_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="n">conv_params</span>
+    
+    <span class="k">return</span> <span class="n">create_qconv_circuit</span>
+
+<span class="k">def</span> <span class="nf">qcnn_architecture</span><span class="p">():</span>
+    <span class="s">"""
+    QCNN architecture demo
+    """</span>
+    <span class="c1"># Create QCNN layers
+</span>    <span class="n">qconv</span> <span class="o">=</span> <span class="n">quantum_convolutional_layer</span><span class="p">()</span>
+    
+    <span class="c1"># Layer 1: 4 qubits, kernel size 2
+</span>    <span class="n">layer1</span><span class="p">,</span> <span class="n">params1</span> <span class="o">=</span> <span class="n">qconv</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Layer 2: 3 qubits, kernel size 2
+</span>    <span class="n">layer2</span><span class="p">,</span> <span class="n">params2</span> <span class="o">=</span> <span class="n">qconv</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"QCNN Architecture:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Layer 1:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">layer1</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Parameters: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">params1</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Layer 2:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">layer2</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Parameters: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">params2</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">layer1</span><span class="p">,</span> <span class="n">layer2</span><span class="p">,</span> <span class="n">params1</span><span class="p">,</span> <span class="n">params2</span>
+
+<span class="c1"># QCNN demo
+</span><span class="n">qcnn_layer1</span><span class="p">,</span> <span class="n">qcnn_layer2</span><span class="p">,</span> <span class="n">qcnn_params1</span><span class="p">,</span> <span class="n">qcnn_params2</span> <span class="o">=</span> <span class="n">qcnn_architecture</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-quantum-recurrent-neural-network-qrnn">2. Quantum Recurrent Neural Network (QRNN)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_recurrent_cell</span><span class="p">():</span>
+    <span class="s">"""
+    Quantum recurrent cell
+    """</span>
+    <span class="k">def</span> <span class="nf">create_qrnn_circuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">hidden_size</span><span class="p">):</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">+</span> <span class="n">hidden_size</span><span class="p">)</span>
+        
+        <span class="c1"># Input qubits
+</span>        <span class="n">input_qubits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">))</span>
+        <span class="n">hidden_qubits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">n_qubits</span> <span class="o">+</span> <span class="n">hidden_size</span><span class="p">))</span>
+        
+        <span class="c1"># Input encoding
+</span>        <span class="n">input_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="sa">f</span><span class="s">'input_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">input_params</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">input_qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        
+        <span class="c1"># Hidden state parameters
+</span>        <span class="n">hidden_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="sa">f</span><span class="s">'hidden_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">hidden_params</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">hidden_qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        
+        <span class="c1"># Recurrent connections
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">):</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">input_qubits</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">hidden_qubits</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        
+        <span class="c1"># Hidden state update
+</span>        <span class="n">update_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="sa">f</span><span class="s">'update_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">hidden_size</span><span class="p">)]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">update_params</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">hidden_qubits</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="n">input_params</span> <span class="o">+</span> <span class="n">hidden_params</span> <span class="o">+</span> <span class="n">update_params</span>
+    
+    <span class="k">return</span> <span class="n">create_qrnn_circuit</span>
+
+<span class="k">def</span> <span class="nf">qrnn_demo</span><span class="p">():</span>
+    <span class="s">"""
+    QRNN demo
+    """</span>
+    <span class="n">qrnn_cell</span> <span class="o">=</span> <span class="n">quantum_recurrent_cell</span><span class="p">()</span>
+    <span class="n">circuit</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">qrnn_cell</span><span class="p">(</span><span class="n">n_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">hidden_size</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"QRNN Cell:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">circuit</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Total parameters: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">params</span>
+
+<span class="c1"># QRNN demo
+</span><span class="n">qrnn_circuit</span><span class="p">,</span> <span class="n">qrnn_params</span> <span class="o">=</span> <span class="n">qrnn_demo</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-qnn-training-và-optimization">📊 QNN Training và Optimization</h2>
+
+<h3 id="1-quantum-natural-gradient">1. Quantum Natural Gradient</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_natural_gradient</span><span class="p">():</span>
+    <span class="s">"""
+    Quantum Natural Gradient optimization
+    """</span>
+    <span class="k">def</span> <span class="nf">fisher_information_matrix</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">0.01</span><span class="p">):</span>
+        <span class="s">"""
+        Tính Fisher Information Matrix
+        """</span>
+        <span class="n">n_params</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+        <span class="n">fim</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_params</span><span class="p">,</span> <span class="n">n_params</span><span class="p">))</span>
+        
+        <span class="c1"># Calculate FIM using parameter shift
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_params</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_params</span><span class="p">):</span>
+                <span class="c1"># Forward shifts
+</span>                <span class="n">params_plus_i</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">params_plus_i</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">epsilon</span>
+                <span class="n">params_plus_j</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">params_plus_j</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">epsilon</span>
+                <span class="n">params_plus_ij</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">params_plus_ij</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">epsilon</span>
+                <span class="n">params_plus_ij</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">epsilon</span>
+                
+                <span class="c1"># Backward shifts
+</span>                <span class="n">params_minus_i</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">params_minus_i</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">epsilon</span>
+                <span class="n">params_minus_j</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">params_minus_j</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-=</span> <span class="n">epsilon</span>
+                <span class="n">params_minus_ij</span> <span class="o">=</span> <span class="n">params</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+                <span class="n">params_minus_ij</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-=</span> <span class="n">epsilon</span>
+                <span class="n">params_minus_ij</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-=</span> <span class="n">epsilon</span>
+                
+                <span class="c1"># Calculate FIM element
+</span>                <span class="c1"># F_ij = Cov[∂ᵢlog p(x|θ), ∂ⱼlog p(x|θ)]
+</span>                <span class="c1"># Simplified calculation for demo
+</span>                <span class="n">fim</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># Placeholder
+</span>        
+        <span class="k">return</span> <span class="n">fim</span>
+    
+    <span class="k">return</span> <span class="n">fisher_information_matrix</span>
+
+<span class="c1"># Quantum Natural Gradient
+</span><span class="n">qng_fim</span> <span class="o">=</span> <span class="n">quantum_natural_gradient</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-qnn-với-error-mitigation">2. QNN với Error Mitigation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">qnn_error_mitigation</span><span class="p">():</span>
+    <span class="s">"""
+    Error mitigation techniques cho QNN
+    """</span>
+    <span class="k">def</span> <span class="nf">zero_noise_extrapolation</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">noise_levels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]):</span>
+        <span class="s">"""
+        Zero Noise Extrapolation
+        """</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">noise_level</span> <span class="ow">in</span> <span class="n">noise_levels</span><span class="p">:</span>
+            <span class="c1"># Simulate with different noise levels
+</span>            <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+            <span class="n">bound_circuit</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+            
+            <span class="c1"># Add noise (simplified)
+</span>            <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">bound_circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">().</span><span class="n">get_counts</span><span class="p">()</span>
+            
+            <span class="c1"># Calculate expectation value
+</span>            <span class="n">exp_val</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'00'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">result</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'11'</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="mi">1000</span>
+            <span class="n">results</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">exp_val</span><span class="p">)</span>
+        
+        <span class="c1"># Extrapolate to zero noise
+</span>        <span class="c1"># Linear extrapolation for demo
+</span>        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">zero_noise_result</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="n">noise_levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="n">noise_levels</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">noise_levels</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">zero_noise_result</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">zero_noise_result</span>
+    
+    <span class="k">return</span> <span class="n">zero_noise_extrapolation</span>
+
+<span class="c1"># Error mitigation
+</span><span class="n">qnn_zne</span> <span class="o">=</span> <span class="n">qnn_error_mitigation</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-thực-hành">🎯 Bài tập thực hành</h2>
+
+<h3 id="bài-tập-1-qnn-cho-xor-problem">Bài tập 1: QNN cho XOR Problem</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">xor_qnn_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Bài tập: Implement QNN cho XOR problem
+    """</span>
+    <span class="c1"># XOR data
+</span>    <span class="n">X_xor</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>
+    <span class="n">y_xor</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    
+    <span class="c1"># TODO: Design QNN circuit for XOR
+</span>    <span class="c1"># TODO: Implement training loop
+</span>    <span class="c1"># TODO: Achieve 100% accuracy
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-2-quantum-autoencoder">Bài tập 2: Quantum Autoencoder</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_autoencoder_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Bài tập: Quantum Autoencoder
+    """</span>
+    <span class="c1"># TODO: Design quantum encoder circuit
+</span>    <span class="c1"># TODO: Implement quantum decoder
+</span>    <span class="c1"># TODO: Train autoencoder for data compression
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-3-quantum-generative-adversarial-network-qgan">Bài tập 3: Quantum Generative Adversarial Network (QGAN)</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">qgan_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Bài tập: Quantum GAN
+    """</span>
+    <span class="c1"># TODO: Design quantum generator
+</span>    <span class="c1"># TODO: Implement quantum discriminator
+</span>    <span class="c1"># TODO: Train QGAN for data generation
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h2 id="-tài-liệu-tham-khảo">📚 Tài liệu tham khảo</h2>
+
+<h3 id="papers-và-research">Papers và Research:</h3>
+<ul>
+  <li>“Quantum Neural Networks” - Beer et al.</li>
+  <li>“Quantum Machine Learning” - Biamonte et al.</li>
+  <li>“Variational Quantum Algorithms” - Cerezo et al.</li>
+</ul>
+
+<h3 id="frameworks">Frameworks:</h3>
+<ul>
+  <li>PennyLane</li>
+  <li>TensorFlow Quantum</li>
+  <li>Qiskit Machine Learning</li>
+</ul>
+
+<h3 id="applications">Applications:</h3>
+<ul>
+  <li>Quantum chemistry</li>
+  <li>Financial modeling</li>
+  <li>Drug discovery</li>
+  <li>Image recognition</li>
+</ul>
+
+<hr />
+
+<h2 id="-tổng-kết-day-30">🎯 Tổng kết Day 30</h2>
+
+<h3 id="kỹ-năng-đạt-được">Kỹ năng đạt được:</h3>
+<ul>
+  <li>✅ Hiểu nguyên lý Quantum Neural Networks</li>
+  <li>✅ Thiết kế quantum perceptron và feature maps</li>
+  <li>✅ Triển khai quantum gradient descent</li>
+  <li>✅ Xây dựng hybrid quantum-classical networks</li>
+  <li>✅ Áp dụng advanced QNN architectures</li>
+</ul>
+
+<h3 id="kiến-thức-quan-trọng">Kiến thức quan trọng:</h3>
+<ul>
+  <li><strong>Quantum feature maps</strong>: Encoding classical data into quantum states</li>
+  <li><strong>Parameter shift rule</strong>: Calculating quantum gradients</li>
+  <li><strong>Hybrid architectures</strong>: Combining quantum and classical components</li>
+  <li><strong>Quantum advantage</strong>: When QNNs outperform classical NNs</li>
+</ul>
+
+<h3 id="chuẩn-bị-cho-giai-đoạn-tiếp-theo">Chuẩn bị cho giai đoạn tiếp theo:</h3>
+<ul>
+  <li>Quantum machine learning applications</li>
+  <li>Real-world quantum computing projects</li>
+  <li>Career preparation in quantum computing</li>
+</ul>
+
+<hr />
+
+<h2 id="-kết-thúc-lộ-trình-nâng-cao">🚀 Kết thúc Lộ trình Nâng cao</h2>
+
+<p>Chúc mừng! Bạn đã hoàn thành lộ trình 30 ngày về Quantum Mathematics với Python &amp; Qiskit.</p>
+
+<h3 id="những-gì-bạn-đã-đạt-được">Những gì bạn đã đạt được:</h3>
+<ul>
+  <li><strong>Lập trình lượng tử</strong>: Thành thạo Python, Qiskit, và quantum algorithms</li>
+  <li><strong>Lý thuyết nâng cao</strong>: Hiểu sâu các thuật toán Grover, Shor, VQE, QAOA</li>
+  <li><strong>Ứng dụng thực tế</strong>: Quantum chemistry, machine learning, cryptography</li>
+  <li><strong>Kỹ năng chuyên nghiệp</strong>: Dự án hoàn chỉnh và portfolio</li>
+</ul>
+
+<h3 id="bước-tiếp-theo">Bước tiếp theo:</h3>
+<ol>
+  <li><strong>Capstone Project</strong>: Xây dựng dự án cuối khóa</li>
+  <li><strong>Portfolio</strong>: Tạo portfolio online</li>
+  <li><strong>Cộng đồng</strong>: Tham gia quantum computing communities</li>
+  <li><strong>Sự nghiệp</strong>: Tìm việc làm trong lĩnh vực lượng tử</li>
+</ol>
+
+<p><em>“The future of computing is quantum, and you’re now part of that future!”</em> 🎉</p>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

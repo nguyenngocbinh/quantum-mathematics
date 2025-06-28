@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>📚 Day 22: Quantum Phase Estimation - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="📚 Day 22: Quantum Phase Estimation">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day22.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="📚 Day 22: Quantum Phase Estimation">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">📚 Day 22: Quantum Phase Estimation</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="-day-22-quantum-phase-estimation">📚 <strong>Day 22: Quantum Phase Estimation</strong></h1>
+
+<hr />
+
+<h2 id="-mục-tiêu-học-tập">🎯 <strong>Mục tiêu học tập:</strong></h2>
+<ul>
+  <li>Hiểu sâu về quantum phase estimation</li>
+  <li>Triển khai phase kickback technique</li>
+  <li>Áp dụng eigenvalue estimation</li>
+  <li>Thực hiện quantum counting algorithms</li>
+</ul>
+
+<hr />
+
+<h2 id="-lý-thuyết-cơ-bản">📖 <strong>Lý thuyết cơ bản:</strong></h2>
+
+<h3 id="1-phase-kickback"><strong>1. Phase Kickback:</strong></h3>
+<p>Khi áp dụng controlled unitary operation $U$ lên eigenstate $|\psi\rangle$:</p>
+
+\[U|\psi\rangle = e^{2\pi i \phi}|\psi\rangle\]
+
+<p>Controlled operation tạo ra phase kickback:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>$$</td>
+      <td>0\rangle</td>
+      <td>\psi\rangle \rightarrow</td>
+      <td>0\rangle</td>
+      <td>\psi\rangle$$</td>
+    </tr>
+    <tr>
+      <td>$$</td>
+      <td>1\rangle</td>
+      <td>\psi\rangle \rightarrow e^{2\pi i \phi}</td>
+      <td>1\rangle</td>
+      <td>\psi\rangle$$</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="2-quantum-phase-estimation"><strong>2. Quantum Phase Estimation:</strong></h3>
+<p>Thuật toán để ước tính phase $\phi$ của eigenvalue $e^{2\pi i \phi}$:</p>
+
+<ol>
+  <li><strong>Preparation:</strong> Tạo superposition trên precision qubits</li>
+  <li><strong>Controlled operations:</strong> Áp dụng $U^{2^j}$ với controlled qubits</li>
+  <li><strong>Inverse QFT:</strong> Chuyển đổi phase thành bit string</li>
+  <li><strong>Measurement:</strong> Đọc kết quả phase</li>
+</ol>
+
+<h3 id="3-độ-chính-xác"><strong>3. Độ chính xác:</strong></h3>
+<p>Với $t$ precision qubits, độ chính xác là $2^{-t}$.</p>
+
+<hr />
+
+<h2 id="-thực-hành-với-qiskit">💻 <strong>Thực hành với Qiskit:</strong></h2>
+
+<h3 id="bài-1-phase-estimation-cơ-bản"><strong>Bài 1: Phase Estimation cơ bản</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="k">def</span> <span class="nf">controlled_phase_rotation</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="n">control_qubit</span><span class="p">,</span> <span class="n">target_qubit</span><span class="p">):</span>
+    <span class="s">"""Controlled phase rotation"""</span>
+    <span class="n">circuit</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">angle</span><span class="p">,</span> <span class="n">control_qubit</span><span class="p">,</span> <span class="n">target_qubit</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">phase_estimation_circuit</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">precision_qubits</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+    <span class="s">"""Triển khai phase estimation hoàn chỉnh"""</span>
+    
+    <span class="c1"># Số qubit cho precision và eigenstate
+</span>    <span class="n">n_precision</span> <span class="o">=</span> <span class="n">precision_qubits</span>
+    <span class="n">n_eigenstate</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">total_qubits</span> <span class="o">=</span> <span class="n">n_precision</span> <span class="o">+</span> <span class="n">n_eigenstate</span>
+    
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">total_qubits</span><span class="p">,</span> <span class="n">n_precision</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 1: Preparation - Hadamard trên precision qubits
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 2: Controlled operations
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">):</span>
+        <span class="c1"># Áp dụng U^(2^i) với controlled qubit i
+</span>        <span class="n">controlled_phase_rotation</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">angle</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">),</span> <span class="n">i</span><span class="p">,</span> <span class="n">n_precision</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 3: Inverse QFT
+</span>    <span class="c1"># Hoán đổi qubits trước
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n_precision</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Inverse QFT rotations
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_precision</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">i</span><span class="p">)),</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 4: Measurement
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test với phase = 0.25 (1/4)
+</span><span class="n">target_phase</span> <span class="o">=</span> <span class="mf">0.25</span>
+<span class="n">qc_pe</span> <span class="o">=</span> <span class="n">phase_estimation_circuit</span><span class="p">(</span><span class="n">target_phase</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Phase Estimation Circuit:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qc_pe</span><span class="p">)</span>
+
+<span class="c1"># Chạy mạch
+</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_pe</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Target phase: </span><span class="si">{</span><span class="n">target_phase</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Results: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># Chuyển đổi kết quả thành phase
+</span><span class="k">for</span> <span class="n">bitstring</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>  <span class="c1"># Chỉ xem kết quả có tần suất cao
+</span>        <span class="n">phase_estimate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bitstring</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Bitstring </span><span class="si">{</span><span class="n">bitstring</span><span class="si">}</span><span class="s"> -&gt; Phase estimate: </span><span class="si">{</span><span class="n">phase_estimate</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="bài-2-eigenvalue-estimation"><strong>Bài 2: Eigenvalue Estimation</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">eigenvalue_estimation</span><span class="p">(</span><span class="n">unitary_matrix</span><span class="p">,</span> <span class="n">eigenvector</span><span class="p">,</span> <span class="n">precision_qubits</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+    <span class="s">"""Ước tính eigenvalue của unitary matrix"""</span>
+    
+    <span class="c1"># Tạo mạch để encode eigenvector
+</span>    <span class="n">n_eigenstate</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">log2</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">eigenvector</span><span class="p">)))</span>
+    <span class="n">n_precision</span> <span class="o">=</span> <span class="n">precision_qubits</span>
+    <span class="n">total_qubits</span> <span class="o">=</span> <span class="n">n_precision</span> <span class="o">+</span> <span class="n">n_eigenstate</span>
+    
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">total_qubits</span><span class="p">,</span> <span class="n">n_precision</span><span class="p">)</span>
+    
+    <span class="c1"># Encode eigenvector (giả sử đơn giản)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">n_precision</span><span class="p">)</span>  <span class="c1"># |1⟩ state
+</span>    
+    <span class="c1"># Hadamard trên precision qubits
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Controlled unitary operations
+</span>    <span class="c1"># Trong thực tế, cần decompose unitary matrix
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">):</span>
+        <span class="c1"># Giả sử U = phase rotation
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">),</span> <span class="n">i</span><span class="p">,</span> <span class="n">n_precision</span><span class="p">)</span>
+    
+    <span class="c1"># Inverse QFT
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n_precision</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_precision</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">i</span><span class="p">)),</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test eigenvalue estimation
+</span><span class="n">eigenvector</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>  <span class="c1"># |0⟩ state
+</span><span class="n">unitary</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">*</span><span class="mf">1j</span><span class="o">*</span><span class="mf">0.3</span><span class="p">)]])</span>
+<span class="n">qc_ee</span> <span class="o">=</span> <span class="n">eigenvalue_estimation</span><span class="p">(</span><span class="n">unitary</span><span class="p">,</span> <span class="n">eigenvector</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_ee</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Eigenvalue Estimation Results:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="bài-3-quantum-counting"><strong>Bài 3: Quantum Counting</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_counting_oracle</span><span class="p">(</span><span class="n">marked_states</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">):</span>
+    <span class="s">"""Oracle cho quantum counting"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># +1 cho ancilla
+</span>    
+    <span class="c1"># Đánh dấu các trạng thái được chọn
+</span>    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">marked_states</span><span class="p">:</span>
+        <span class="c1"># Chuyển đổi state thành binary string
+</span>        <span class="n">binary</span> <span class="o">=</span> <span class="nb">format</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="sa">f</span><span class="s">'0</span><span class="si">{</span><span class="n">n_qubits</span><span class="si">}</span><span class="s">b'</span><span class="p">)</span>
+        
+        <span class="c1"># Tạo controlled operation để flip ancilla
+</span>        <span class="n">controls</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">binary</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="s">'0'</span><span class="p">:</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="n">controls</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">controls</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Multi-controlled NOT
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">mct</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Reset controls
+</span>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">binary</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="s">'0'</span><span class="p">:</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">quantum_counting</span><span class="p">(</span><span class="n">marked_states</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">,</span> <span class="n">precision_qubits</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+    <span class="s">"""Quantum counting algorithm"""</span>
+    
+    <span class="c1"># Tạo oracle
+</span>    <span class="n">oracle</span> <span class="o">=</span> <span class="n">quantum_counting_oracle</span><span class="p">(</span><span class="n">marked_states</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Phase estimation circuit
+</span>    <span class="n">n_precision</span> <span class="o">=</span> <span class="n">precision_qubits</span>
+    <span class="n">total_qubits</span> <span class="o">=</span> <span class="n">n_precision</span> <span class="o">+</span> <span class="n">n_qubits</span> <span class="o">+</span> <span class="mi">1</span>
+    
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">total_qubits</span><span class="p">,</span> <span class="n">n_precision</span><span class="p">)</span>
+    
+    <span class="c1"># Hadamard trên precision qubits
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Controlled Grover iterations
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">):</span>
+        <span class="c1"># Áp dụng Grover operator 2^i lần
+</span>        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">):</span>
+            <span class="c1"># Oracle
+</span>            <span class="n">qc</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">oracle</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="c1"># Diffusion
+</span>            <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">))</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">))</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">mct</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">),</span> <span class="n">n_qubits</span><span class="p">)</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">))</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">))</span>
+    
+    <span class="c1"># Inverse QFT
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n_precision</span><span class="o">-</span><span class="mi">1</span><span class="o">-</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_precision</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="n">i</span><span class="p">)),</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test quantum counting
+</span><span class="n">n_qubits</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">marked_states</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>  <span class="c1"># 3 trạng thái được đánh dấu
+</span><span class="n">qc_qc</span> <span class="o">=</span> <span class="n">quantum_counting</span><span class="p">(</span><span class="n">marked_states</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Quantum Counting Results:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Expected marked states: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">marked_states</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-bài-tập-thực-hành">🔬 <strong>Bài tập thực hành:</strong></h2>
+
+<h3 id="bài-tập-1-phase-estimation-với-độ-chính-xác-khác-nhau"><strong>Bài tập 1: Phase Estimation với độ chính xác khác nhau</strong></h3>
+<p>So sánh độ chính xác của phase estimation với:</p>
+<ul>
+  <li>3 precision qubits</li>
+  <li>4 precision qubits</li>
+  <li>5 precision qubits</li>
+  <li>6 precision qubits</li>
+</ul>
+
+<h3 id="bài-tập-2-eigenvalue-estimation-cho-các-matrix-khác-nhau"><strong>Bài tập 2: Eigenvalue Estimation cho các matrix khác nhau</strong></h3>
+<p>Triển khai eigenvalue estimation cho:</p>
+<ul>
+  <li>Pauli matrices (X, Y, Z)</li>
+  <li>Hadamard matrix</li>
+  <li>Rotation matrices</li>
+</ul>
+
+<h3 id="bài-tập-3-quantum-counting-với-noise"><strong>Bài tập 3: Quantum Counting với noise</strong></h3>
+<p>Thêm noise vào quantum counting và phân tích:</p>
+<ul>
+  <li>Bit flip errors</li>
+  <li>Phase errors</li>
+  <li>Measurement errors</li>
+</ul>
+
+<h3 id="bài-tập-4-phase-estimation-với-real-hardware"><strong>Bài tập 4: Phase Estimation với real hardware</strong></h3>
+<p>Chạy phase estimation trên:</p>
+<ul>
+  <li>IBM Quantum Experience</li>
+  <li>Qiskit Aer với noise models</li>
+  <li>So sánh kết quả với simulator</li>
+</ul>
+
+<hr />
+
+<h2 id="-tài-liệu-tham-khảo">📚 <strong>Tài liệu tham khảo:</strong></h2>
+
+<h3 id="papers"><strong>Papers:</strong></h3>
+<ul>
+  <li>“Quantum Phase Estimation” - Kitaev (1995)</li>
+  <li>“Quantum Counting” - Brassard et al. (1998)</li>
+  <li>“Eigenvalue Estimation” - Abrams &amp; Lloyd (1999)</li>
+</ul>
+
+<h3 id="online-resources"><strong>Online Resources:</strong></h3>
+<ul>
+  <li>Qiskit Textbook: Quantum Phase Estimation</li>
+  <li>IBM Quantum Experience: Phase Estimation Tutorial</li>
+</ul>
+
+<hr />
+
+<h2 id="-kiểm-tra-kiến-thức">🎯 <strong>Kiểm tra kiến thức:</strong></h2>
+
+<ol>
+  <li><strong>Câu hỏi:</strong> Giải thích phase kickback mechanism?</li>
+  <li><strong>Câu hỏi:</strong> Tại sao cần inverse QFT trong phase estimation?</li>
+  <li><strong>Câu hỏi:</strong> Làm thế nào để cải thiện độ chính xác?</li>
+  <li><strong>Câu hỏi:</strong> Ứng dụng của quantum counting?</li>
+</ol>
+
+<hr />
+
+<h2 id="-chuẩn-bị-cho-day-23">🚀 <strong>Chuẩn bị cho Day 23:</strong></h2>
+<ul>
+  <li>Ôn lại Bell states</li>
+  <li>Hiểu quantum teleportation protocol</li>
+  <li>Chuẩn bị cho classical communication</li>
+</ul>
+
+<hr />
+
+<p><em>“Quantum Phase Estimation is a fundamental algorithm that allows us to estimate the eigenvalues of unitary operators, which is crucial for many quantum algorithms.”</em> - IBM Research</p>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

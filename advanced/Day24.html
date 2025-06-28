@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>📚 Day 24: Quantum Error Correction Codes - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="📚 Day 24: Quantum Error Correction Codes">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day24.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="📚 Day 24: Quantum Error Correction Codes">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">📚 Day 24: Quantum Error Correction Codes</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="-day-24-quantum-error-correction-codes">📚 <strong>Day 24: Quantum Error Correction Codes</strong></h1>
+
+<hr />
+
+<h2 id="-mục-tiêu-học-tập">🎯 <strong>Mục tiêu học tập:</strong></h2>
+<ul>
+  <li>Hiểu nguyên lý quantum error correction</li>
+  <li>Triển khai 3-qubit code và 5-qubit code</li>
+  <li>Thực hiện syndrome measurement</li>
+  <li>Áp dụng error detection và correction</li>
+  <li>Hiểu surface codes và topological codes</li>
+</ul>
+
+<hr />
+
+<h2 id="-lý-thuyết-cơ-bản">📖 <strong>Lý thuyết cơ bản:</strong></h2>
+
+<h3 id="1-types-of-quantum-errors"><strong>1. Types of Quantum Errors:</strong></h3>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Bit flip errors (X):</strong> $</td>
+          <td>0\rangle \leftrightarrow</td>
+          <td>1\rangle$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Phase flip errors (Z):</strong> $</td>
+          <td>0\rangle \rightarrow</td>
+          <td>0\rangle,</td>
+          <td>1\rangle \rightarrow -</td>
+          <td>1\rangle$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li><strong>Combined errors (Y):</strong> $Y = iXZ$</li>
+</ul>
+
+<h3 id="2-3-qubit-code"><strong>2. 3-Qubit Code:</strong></h3>
+<p>Bảo vệ chống bit flip errors:</p>
+
+<p><strong>Encoding:</strong>
+$|0\rangle \rightarrow |000\rangle$
+$|1\rangle \rightarrow |111\rangle$</p>
+
+<p><strong>Syndrome measurement:</strong>
+$M_1 = Z_1 Z_2$
+$M_2 = Z_2 Z_3$</p>
+
+<h3 id="3-5-qubit-code"><strong>3. 5-Qubit Code:</strong></h3>
+<p>Bảo vệ chống cả bit flip và phase flip:</p>
+
+<p><strong>Stabilizers:</strong>
+$S_1 = X_1 Z_2 Z_3 X_4$
+$S_2 = X_2 Z_3 Z_4 X_5$
+$S_3 = X_1 X_3 Z_4 Z_5$
+$S_4 = Z_1 X_2 X_4 Z_5$</p>
+
+<hr />
+
+<h2 id="-thực-hành-với-qiskit">💻 <strong>Thực hành với Qiskit:</strong></h2>
+
+<h3 id="bài-1-3-qubit-code-implementation"><strong>Bài 1: 3-Qubit Code Implementation</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="k">def</span> <span class="nf">three_qubit_encoding</span><span class="p">():</span>
+    <span class="s">"""3-qubit code encoding"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 3 data qubits, 2 syndrome qubits
+</span>    
+    <span class="c1"># Encoding: |ψ⟩ → |ψ⟩|00⟩
+</span>    <span class="c1"># CNOT từ qubit 0 đến qubit 1 và 2
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">three_qubit_syndrome_measurement</span><span class="p">():</span>
+    <span class="s">"""Syndrome measurement cho 3-qubit code"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 3 data + 2 syndrome qubits
+</span>    
+    <span class="c1"># Syndrome qubits bắt đầu ở |0⟩
+</span>    <span class="c1"># M1 = Z1 Z2
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># CNOT từ qubit 0 đến syndrome qubit 0
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># CNOT từ qubit 1 đến syndrome qubit 0
+</span>    
+    <span class="c1"># M2 = Z2 Z3
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># CNOT từ qubit 1 đến syndrome qubit 1
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># CNOT từ qubit 2 đến syndrome qubit 1
+</span>    
+    <span class="c1"># Measure syndrome qubits
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">three_qubit_error_correction</span><span class="p">():</span>
+    <span class="s">"""3-qubit code với error correction"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Encoding
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Introduce error (bit flip on qubit 1)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Syndrome measurement
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    
+    <span class="c1"># Measure syndrome
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test 3-qubit code
+</span><span class="k">print</span><span class="p">(</span><span class="s">"3-Qubit Code Test:"</span><span class="p">)</span>
+<span class="n">qc_3bit</span> <span class="o">=</span> <span class="n">three_qubit_error_correction</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qc_3bit</span><span class="p">)</span>
+
+<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_3bit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Syndrome measurement results: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="c1"># Syndrome '01' indicates error on qubit 1
+# Syndrome '10' indicates error on qubit 0
+# Syndrome '11' indicates error on qubit 2
+</span></code></pre></div></div>
+
+<h3 id="bài-2-5-qubit-code-implementation"><strong>Bài 2: 5-Qubit Code Implementation</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">five_qubit_encoding</span><span class="p">():</span>
+    <span class="s">"""5-qubit code encoding"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># 5 data qubits, 4 syndrome qubits
+</span>    
+    <span class="c1"># 5-qubit code encoding circuit
+</span>    <span class="c1"># This is a simplified version
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">five_qubit_stabilizers</span><span class="p">():</span>
+    <span class="s">"""5-qubit code stabilizer measurements"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># 5 data + 4 syndrome qubits
+</span>    
+    <span class="c1"># Stabilizer S1 = X1 Z2 Z3 X4
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># Syndrome qubit 0
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># X1
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Z2
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># Z3
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># X4
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    
+    <span class="c1"># Stabilizer S2 = X2 Z3 Z4 X5
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>  <span class="c1"># Syndrome qubit 1
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># X2
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># Z3
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># Z4
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># X5
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    
+    <span class="c1"># Stabilizer S3 = X1 X3 Z4 Z5
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>  <span class="c1"># Syndrome qubit 2
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># X1
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># X3
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># Z4
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># Z5
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+    
+    <span class="c1"># Stabilizer S4 = Z1 X2 X4 Z5
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>  <span class="c1"># Syndrome qubit 3
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Z1
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># X2
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># X4
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># Z5
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+    
+    <span class="c1"># Measure syndrome qubits
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">five_qubit_error_correction</span><span class="p">():</span>
+    <span class="s">"""5-qubit code với error correction"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    
+    <span class="c1"># Encoding
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    
+    <span class="c1"># Introduce error (bit flip on qubit 2)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Stabilizer measurements
+</span>    <span class="c1"># S1
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    
+    <span class="c1"># S2
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    
+    <span class="c1"># S3
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+    
+    <span class="c1"># S4
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+    
+    <span class="c1"># Measure syndrome
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test 5-qubit code
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">5-Qubit Code Test:"</span><span class="p">)</span>
+<span class="n">qc_5bit</span> <span class="o">=</span> <span class="n">five_qubit_error_correction</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qc_5bit</span><span class="p">)</span>
+
+<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_5bit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Syndrome measurement results: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="bài-3-error-detection-và-correction"><strong>Bài 3: Error Detection và Correction</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">error_detection_circuit</span><span class="p">(</span><span class="n">error_type</span><span class="o">=</span><span class="s">'bit_flip'</span><span class="p">,</span> <span class="n">error_location</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="s">"""Circuit để detect và correct errors"""</span>
+    
+    <span class="k">if</span> <span class="n">error_type</span> <span class="o">==</span> <span class="s">'bit_flip'</span><span class="p">:</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Encoding
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Introduce bit flip error
+</span>        <span class="k">if</span> <span class="n">error_location</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">error_location</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">error_location</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Syndrome measurement
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        
+        <span class="c1"># Measure syndrome
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="n">qc</span>
+    
+    <span class="k">elif</span> <span class="n">error_type</span> <span class="o">==</span> <span class="s">'phase_flip'</span><span class="p">:</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Encoding for phase flip protection
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Introduce phase flip error
+</span>        <span class="k">if</span> <span class="n">error_location</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">error_location</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">error_location</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Syndrome measurement for phase flip
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+        
+        <span class="c1"># Measure syndrome
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">error_correction_lookup_table</span><span class="p">():</span>
+    <span class="s">"""Lookup table cho error correction"""</span>
+    
+    <span class="c1"># 3-qubit code syndrome table
+</span>    <span class="n">syndrome_table</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'00'</span><span class="p">:</span> <span class="s">'No error'</span><span class="p">,</span>
+        <span class="s">'01'</span><span class="p">:</span> <span class="s">'Bit flip on qubit 1'</span><span class="p">,</span>
+        <span class="s">'10'</span><span class="p">:</span> <span class="s">'Bit flip on qubit 0'</span><span class="p">,</span> 
+        <span class="s">'11'</span><span class="p">:</span> <span class="s">'Bit flip on qubit 2'</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">syndrome_table</span>
+
+<span class="c1"># Test error detection
+</span><span class="n">error_types</span> <span class="o">=</span> <span class="p">[</span><span class="s">'bit_flip'</span><span class="p">,</span> <span class="s">'phase_flip'</span><span class="p">]</span>
+<span class="n">error_locations</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">error_type</span> <span class="ow">in</span> <span class="n">error_types</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Testing </span><span class="si">{</span><span class="n">error_type</span><span class="si">}</span><span class="s"> errors:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">location</span> <span class="ow">in</span> <span class="n">error_locations</span><span class="p">:</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">error_detection_circuit</span><span class="p">(</span><span class="n">error_type</span><span class="p">,</span> <span class="n">location</span><span class="p">)</span>
+        
+        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Find most common syndrome
+</span>        <span class="n">most_common</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">counts</span><span class="p">.</span><span class="n">get</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error at qubit </span><span class="si">{</span><span class="n">location</span><span class="si">}</span><span class="s">: Syndrome </span><span class="si">{</span><span class="n">most_common</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># Error correction lookup
+</span><span class="n">syndrome_table</span> <span class="o">=</span> <span class="n">error_correction_lookup_table</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Error Correction Lookup Table:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">syndrome</span><span class="p">,</span> <span class="n">error</span> <span class="ow">in</span> <span class="n">syndrome_table</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Syndrome </span><span class="si">{</span><span class="n">syndrome</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">error</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="bài-4-surface-code-basics"><strong>Bài 4: Surface Code Basics</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">surface_code_plaquette</span><span class="p">():</span>
+    <span class="s">"""Surface code plaquette operator"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Plaquette operator: Z1 Z2 Z3 Z4
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Measure ancilla qubit
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">surface_code_star</span><span class="p">():</span>
+    <span class="s">"""Surface code star operator"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Star operator: X1 X2 X3 X4
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Hadamard để measure X
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Measure ancilla qubit
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">surface_code_logical_qubit</span><span class="p">():</span>
+    <span class="s">"""Surface code logical qubit encoding"""</span>
+    <span class="c1"># Simplified surface code
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># 9 data qubits, 4 syndrome qubits
+</span>    
+    <span class="c1"># Encode logical qubit
+</span>    <span class="c1"># This is a simplified version of surface code encoding
+</span>    
+    <span class="c1"># Apply stabilizers
+</span>    <span class="c1"># Plaquette operators
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    
+    <span class="c1"># Star operators
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+    
+    <span class="c1"># Measure syndrome qubits
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test surface code components
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Surface Code Components:"</span><span class="p">)</span>
+
+<span class="c1"># Plaquette operator
+</span><span class="n">qc_plaquette</span> <span class="o">=</span> <span class="n">surface_code_plaquette</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Plaquette Operator:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qc_plaquette</span><span class="p">)</span>
+
+<span class="c1"># Star operator
+</span><span class="n">qc_star</span> <span class="o">=</span> <span class="n">surface_code_star</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Star Operator:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qc_star</span><span class="p">)</span>
+
+<span class="c1"># Logical qubit
+</span><span class="n">qc_logical</span> <span class="o">=</span> <span class="n">surface_code_logical_qubit</span><span class="p">()</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Logical Qubit Encoding:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qc_logical</span><span class="p">)</span>
+
+<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_logical</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Surface code syndrome results: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-bài-tập-thực-hành">🔬 <strong>Bài tập thực hành:</strong></h2>
+
+<h3 id="bài-tập-1-error-rate-analysis"><strong>Bài tập 1: Error Rate Analysis</strong></h3>
+<p>Phân tích error rates cho các codes khác nhau:</p>
+<ul>
+  <li>3-qubit code vs 5-qubit code</li>
+  <li>Bit flip vs phase flip errors</li>
+  <li>Multiple error scenarios</li>
+</ul>
+
+<h3 id="bài-tập-2-custom-error-correction-codes"><strong>Bài tập 2: Custom Error Correction Codes</strong></h3>
+<p>Thiết kế custom error correction codes:</p>
+<ul>
+  <li>4-qubit code</li>
+  <li>6-qubit code</li>
+  <li>Analyze error correction capabilities</li>
+</ul>
+
+<h3 id="bài-tập-3-fault-tolerant-gates"><strong>Bài tập 3: Fault-Tolerant Gates</strong></h3>
+<p>Triển khai fault-tolerant gates:</p>
+<ul>
+  <li>Fault-tolerant CNOT</li>
+  <li>Fault-tolerant Hadamard</li>
+  <li>Error propagation analysis</li>
+</ul>
+
+<h3 id="bài-tập-4-surface-code-implementation"><strong>Bài tập 4: Surface Code Implementation</strong></h3>
+<p>Triển khai surface code hoàn chỉnh:</p>
+<ul>
+  <li>Logical qubit encoding</li>
+  <li>Error detection</li>
+  <li>Error correction</li>
+  <li>Code distance analysis</li>
+</ul>
+
+<hr />
+
+<h2 id="-tài-liệu-tham-khảo">📚 <strong>Tài liệu tham khảo:</strong></h2>
+
+<h3 id="papers"><strong>Papers:</strong></h3>
+<ul>
+  <li>“Quantum Error Correction” - Shor (1995)</li>
+  <li>“5-Qubit Code” - Laflamme et al. (1996)</li>
+  <li>“Surface Codes” - Kitaev (2003)</li>
+</ul>
+
+<h3 id="online-resources"><strong>Online Resources:</strong></h3>
+<ul>
+  <li>Qiskit Textbook: Quantum Error Correction</li>
+  <li>IBM Quantum Experience: Error Correction Tutorial</li>
+</ul>
+
+<hr />
+
+<h2 id="-kiểm-tra-kiến-thức">🎯 <strong>Kiểm tra kiến thức:</strong></h2>
+
+<ol>
+  <li><strong>Câu hỏi:</strong> Tại sao cần quantum error correction?</li>
+  <li><strong>Câu hỏi:</strong> Sự khác biệt giữa 3-qubit và 5-qubit codes?</li>
+  <li><strong>Câu hỏi:</strong> Làm thế nào để detect và correct errors?</li>
+  <li><strong>Câu hỏi:</strong> Ưu điểm của surface codes?</li>
+</ol>
+
+<hr />
+
+<h2 id="-chuẩn-bị-cho-day-25">🚀 <strong>Chuẩn bị cho Day 25:</strong></h2>
+<ul>
+  <li>Ôn lại search algorithms</li>
+  <li>Hiểu oracle design</li>
+  <li>Chuẩn bị cho Grover’s algorithm</li>
+</ul>
+
+<hr />
+
+<p><em>“Quantum error correction is essential for building reliable quantum computers that can perform complex computations despite the presence of noise and errors.”</em> - IBM Research</p>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 35: Capstone Project và Portfolio Building - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 35: Capstone Project và Portfolio Building">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day35.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 35: Capstone Project và Portfolio Building">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 35: Capstone Project và Portfolio Building</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-35-capstone-project-và-portfolio-building">Day 35: Capstone Project và Portfolio Building</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Hoàn thành dự án capstone end-to-end</li>
+  <li>Xây dựng portfolio chuyên nghiệp</li>
+  <li>Chuẩn bị cho sự nghiệp trong quantum computing</li>
+  <li>Kết nối với cộng đồng lượng tử</li>
+  <li>Tổng kết và đánh giá toàn bộ khóa học</li>
+</ul>
+
+<h2 id="-capstone-project---tổng-quan">🧠 Capstone Project - Tổng Quan</h2>
+
+<h3 id="tại-sao-cần-capstone-project">Tại sao cần Capstone Project?</h3>
+<ul>
+  <li><strong>Tổng hợp kiến thức</strong>: Áp dụng tất cả kiến thức đã học</li>
+  <li><strong>Portfolio building</strong>: Tạo sản phẩm để showcase</li>
+  <li><strong>Real-world application</strong>: Giải quyết bài toán thực tế</li>
+  <li><strong>Career preparation</strong>: Chuẩn bị cho sự nghiệp</li>
+  <li><strong>Community contribution</strong>: Đóng góp cho cộng đồng</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span><span class="p">,</span> <span class="n">IBMQ</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms</span> <span class="kn">import</span> <span class="n">VQE</span><span class="p">,</span> <span class="n">QAOA</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span><span class="p">,</span> <span class="n">COBYLA</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">Pauli</span>
+<span class="kn">from</span> <span class="nn">qiskit.opflow</span> <span class="kn">import</span> <span class="n">PauliSumOp</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span><span class="p">,</span> <span class="n">plot_state_city</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_classification</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">classification_report</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+</code></pre></div></div>
+
+<h2 id="-capstone-project-options">🚀 Capstone Project Options</h2>
+
+<h3 id="1-quantum-machine-learning-classifier">1. Quantum Machine Learning Classifier</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">QuantumMLClassifier</span><span class="p">:</span>
+    <span class="s">"""
+    Quantum Machine Learning Classifier - Capstone Project
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_qubits</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span> <span class="o">=</span> <span class="n">n_qubits</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">n_layers</span> <span class="o">=</span> <span class="n">n_layers</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">circuit</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">create_circuit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""
+        Tạo quantum circuit cho classification
+        """</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Parameters for feature encoding
+</span>        <span class="n">feature_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">Parameter</span><span class="p">(</span><span class="sa">f</span><span class="s">'x_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">)]</span>
+        
+        <span class="c1"># Parameters for variational layers
+</span>        <span class="n">var_params</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n_layers</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">):</span>
+                <span class="n">theta</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="sa">f</span><span class="s">'θ_</span><span class="si">{</span><span class="n">layer</span><span class="si">}</span><span class="s">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+                <span class="n">var_params</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+        
+        <span class="c1"># Feature encoding layer
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">feature_params</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">feature_params</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Variational layers
+</span>        <span class="n">param_idx</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n_layers</span><span class="p">):</span>
+            <span class="c1"># Single-qubit rotations
+</span>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">):</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">var_params</span><span class="p">[</span><span class="n">param_idx</span><span class="p">],</span> <span class="n">i</span><span class="p">)</span>
+                <span class="n">param_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+            <span class="c1"># Entangling layer
+</span>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># Measurement
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="p">.</span><span class="n">circuit</span> <span class="o">=</span> <span class="n">qc</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">feature_params</span> <span class="o">+</span> <span class="n">var_params</span>
+        
+        <span class="k">return</span> <span class="n">qc</span>
+    
+    <span class="k">def</span> <span class="nf">prepare_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
+        <span class="s">"""
+        Chuẩn bị dữ liệu cho training
+        """</span>
+        <span class="c1"># Generate synthetic data
+</span>        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_classification</span><span class="p">(</span>
+            <span class="n">n_samples</span><span class="o">=</span><span class="n">n_samples</span><span class="p">,</span>
+            <span class="n">n_features</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">,</span>
+            <span class="n">n_redundant</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">n_informative</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">,</span>
+            <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+            <span class="n">n_clusters_per_class</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Normalize data
+</span>        <span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">X</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="n">X</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># Split data
+</span>        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+            <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+        <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span>
+    
+    <span class="k">def</span> <span class="nf">quantum_kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">):</span>
+        <span class="s">"""
+        Tính quantum kernel giữa hai điểm dữ liệu
+        """</span>
+        <span class="c1"># Create circuit with data
+</span>        <span class="n">qc</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">({</span><span class="sa">f</span><span class="s">'x_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">:</span> <span class="n">x1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">)})</span>
+        
+        <span class="c1"># Execute circuit
+</span>        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts1</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Create circuit with second data point
+</span>        <span class="n">qc2</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">({</span><span class="sa">f</span><span class="s">'x_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">:</span> <span class="n">x2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">)})</span>
+        <span class="n">job2</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc2</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result2</span> <span class="o">=</span> <span class="n">job2</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts2</span> <span class="o">=</span> <span class="n">result2</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Calculate kernel (simplified)
+</span>        <span class="n">kernel_value</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">counts1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">counts2</span><span class="p">:</span>
+                <span class="n">kernel_value</span> <span class="o">+=</span> <span class="p">(</span><span class="n">counts1</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="o">*</span> <span class="n">counts2</span><span class="p">[</span><span class="n">state</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">kernel_value</span>
+    
+    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">):</span>
+        <span class="s">"""
+        Training quantum classifier
+        """</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Training Quantum ML Classifier..."</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize parameters randomly
+</span>        <span class="n">initial_params</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">parameters</span><span class="p">))</span>
+        
+        <span class="c1"># Define objective function
+</span>        <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="n">params</span><span class="p">):</span>
+            <span class="n">total_loss</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)):</span>
+                <span class="c1"># Bind parameters
+</span>                <span class="n">param_dict</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">parameters</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">param</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'x_'</span><span class="p">):</span>
+                        <span class="n">param_dict</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="nb">int</span><span class="p">(</span><span class="n">param</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">'_'</span><span class="p">)[</span><span class="mi">1</span><span class="p">])]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">param_dict</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">]</span>
+                
+                <span class="c1"># Execute circuit
+</span>                <span class="n">qc_bound</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">param_dict</span><span class="p">)</span>
+                <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_bound</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+                <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+                
+                <span class="c1"># Calculate prediction (simplified)
+</span>                <span class="n">prediction</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">state</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>  <span class="c1"># First qubit measurement
+</span>                        <span class="n">prediction</span> <span class="o">+=</span> <span class="n">count</span> <span class="o">/</span> <span class="mi">100</span>
+                
+                <span class="c1"># Calculate loss
+</span>                <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">prediction</span> <span class="o">-</span> <span class="n">y_train</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span>
+                <span class="n">total_loss</span> <span class="o">+=</span> <span class="n">loss</span>
+            
+            <span class="k">return</span> <span class="n">total_loss</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+        
+        <span class="c1"># Optimize
+</span>        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span><span class="p">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">objective</span><span class="p">,</span> <span class="n">initial_params</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">optimal_params</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">x</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Training completed. Final loss: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">fun</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">):</span>
+        <span class="s">"""
+        Dự đoán trên test data
+        """</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X_test</span><span class="p">:</span>
+            <span class="c1"># Bind parameters
+</span>            <span class="n">param_dict</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">param</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">parameters</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">param</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">'x_'</span><span class="p">):</span>
+                    <span class="n">param_dict</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">param</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">'_'</span><span class="p">)[</span><span class="mi">1</span><span class="p">])]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">param_dict</span><span class="p">[</span><span class="n">param</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">optimal_params</span><span class="p">[</span><span class="n">j</span> <span class="o">-</span> <span class="bp">self</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">]</span>
+            
+            <span class="c1"># Execute circuit
+</span>            <span class="n">qc_bound</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">param_dict</span><span class="p">)</span>
+            <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_bound</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+            
+            <span class="c1"># Calculate prediction
+</span>            <span class="n">prediction</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">state</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>
+                    <span class="n">prediction</span> <span class="o">+=</span> <span class="n">count</span> <span class="o">/</span> <span class="mi">100</span>
+            
+            <span class="n">predictions</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">prediction</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">evaluate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">):</span>
+        <span class="s">"""
+        Đánh giá model
+        """</span>
+        <span class="n">predictions</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+        <span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">)</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Test Accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Classification Report:"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">classification_report</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">predictions</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">accuracy</span><span class="p">,</span> <span class="n">predictions</span>
+
+<span class="c1"># Test Quantum ML Classifier
+</span><span class="n">qml_classifier</span> <span class="o">=</span> <span class="n">QuantumMLClassifier</span><span class="p">(</span><span class="n">n_qubits</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">n_layers</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">qml_classifier</span><span class="p">.</span><span class="n">create_circuit</span><span class="p">()</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">qml_classifier</span><span class="p">.</span><span class="n">prepare_data</span><span class="p">()</span>
+<span class="n">qml_classifier</span><span class="p">.</span><span class="n">train</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">accuracy</span><span class="p">,</span> <span class="n">predictions</span> <span class="o">=</span> <span class="n">qml_classifier</span><span class="p">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-quantum-chemistry-simulation">2. Quantum Chemistry Simulation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">QuantumChemistrySimulator</span><span class="p">:</span>
+    <span class="s">"""
+    Quantum Chemistry Simulator - Capstone Project
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">molecule_name</span><span class="o">=</span><span class="s">"H2"</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">molecule_name</span> <span class="o">=</span> <span class="n">molecule_name</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">hamiltonian</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">ground_state_energy</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">vqe_result</span> <span class="o">=</span> <span class="bp">None</span>
+        
+    <span class="k">def</span> <span class="nf">create_h2_hamiltonian</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""
+        Tạo Hamiltonian cho phân tử H2
+        """</span>
+        <span class="c1"># H2 molecule in minimal basis
+</span>        <span class="c1"># H = -0.2427*I - 0.1809*Z0 - 0.1809*Z1 + 0.1722*Z0Z1 + 0.0452*X0X1
+</span>        
+        <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">PauliSumOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">([</span>
+            <span class="p">(</span><span class="s">'II'</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2427</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">'ZI'</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1809</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">'IZ'</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1809</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">'ZZ'</span><span class="p">,</span> <span class="mf">0.1722</span><span class="p">),</span>
+            <span class="p">(</span><span class="s">'XX'</span><span class="p">,</span> <span class="mf">0.0452</span><span class="p">)</span>
+        <span class="p">])</span>
+        
+        <span class="bp">self</span><span class="p">.</span><span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">hamiltonian</span>
+        <span class="k">return</span> <span class="n">hamiltonian</span>
+    
+    <span class="k">def</span> <span class="nf">create_ansatz</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""
+        Tạo ansatz circuit cho VQE
+        """</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Reference state |01⟩ (Hartree-Fock)
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># UCC ansatz
+</span>        <span class="n">theta</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ'</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="p">[</span><span class="n">theta</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">run_vqe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""
+        Chạy VQE để tìm ground state energy
+        """</span>
+        <span class="c1"># Create ansatz
+</span>        <span class="n">ansatz</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_ansatz</span><span class="p">()</span>
+        
+        <span class="c1"># Setup VQE
+</span>        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">)</span>
+        
+        <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span>
+            <span class="n">ansatz</span><span class="o">=</span><span class="n">ansatz</span><span class="p">,</span>
+            <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+            <span class="n">quantum_instance</span><span class="o">=</span><span class="n">backend</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Solve
+</span>        <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">hamiltonian</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="p">.</span><span class="n">vqe_result</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">ground_state_energy</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Ground State Energy: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s"> Hartree"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal Parameters: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="k">def</span> <span class="nf">analyze_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""
+        Phân tích kết quả simulation
+        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">vqe_result</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Please run VQE first"</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="c1"># Convert to eV
+</span>        <span class="n">energy_ev</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">ground_state_energy</span> <span class="o">*</span> <span class="mf">27.2114</span>  <span class="c1"># Hartree to eV
+</span>        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">=== </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">molecule_name</span><span class="si">}</span><span class="s"> Analysis ==="</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Ground State Energy: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">ground_state_energy</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s"> Hartree"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Ground State Energy: </span><span class="si">{</span><span class="n">energy_ev</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s"> eV"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal Parameters: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">vqe_result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        
+        <span class="c1"># Compare with exact result
+</span>        <span class="n">exact_energy</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.1373</span>  <span class="c1"># Hartree (exact for H2)
+</span>        <span class="n">error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">ground_state_energy</span> <span class="o">-</span> <span class="n">exact_energy</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Exact Energy: </span><span class="si">{</span><span class="n">exact_energy</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s"> Hartree"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error: </span><span class="si">{</span><span class="n">error</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s"> Hartree"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Relative Error: </span><span class="si">{</span><span class="n">error</span><span class="o">/</span><span class="nb">abs</span><span class="p">(</span><span class="n">exact_energy</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">%"</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'energy_hartree'</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">ground_state_energy</span><span class="p">,</span>
+            <span class="s">'energy_ev'</span><span class="p">:</span> <span class="n">energy_ev</span><span class="p">,</span>
+            <span class="s">'error'</span><span class="p">:</span> <span class="n">error</span><span class="p">,</span>
+            <span class="s">'relative_error'</span><span class="p">:</span> <span class="n">error</span><span class="o">/</span><span class="nb">abs</span><span class="p">(</span><span class="n">exact_energy</span><span class="p">)</span><span class="o">*</span><span class="mi">100</span>
+        <span class="p">}</span>
+
+<span class="c1"># Test Quantum Chemistry Simulator
+</span><span class="n">chem_simulator</span> <span class="o">=</span> <span class="n">QuantumChemistrySimulator</span><span class="p">(</span><span class="s">"H2"</span><span class="p">)</span>
+<span class="n">chem_simulator</span><span class="p">.</span><span class="n">create_h2_hamiltonian</span><span class="p">()</span>
+<span class="n">vqe_result</span> <span class="o">=</span> <span class="n">chem_simulator</span><span class="p">.</span><span class="n">run_vqe</span><span class="p">()</span>
+<span class="n">analysis</span> <span class="o">=</span> <span class="n">chem_simulator</span><span class="p">.</span><span class="n">analyze_results</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="3-quantum-optimization-solver">3. Quantum Optimization Solver</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">QuantumOptimizationSolver</span><span class="p">:</span>
+    <span class="s">"""
+    Quantum Optimization Solver - Capstone Project
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem_type</span><span class="o">=</span><span class="s">"maxcut"</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">problem_type</span> <span class="o">=</span> <span class="n">problem_type</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">graph</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cost_operator</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">qaoa_result</span> <span class="o">=</span> <span class="bp">None</span>
+        
+    <span class="k">def</span> <span class="nf">create_maxcut_problem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_nodes</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="s">"""
+        Tạo bài toán MaxCut
+        """</span>
+        <span class="c1"># Create simple graph
+</span>        <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">edges</span>
+        
+        <span class="c1"># Create cost operator for MaxCut
+</span>        <span class="n">cost_operator</span> <span class="o">=</span> <span class="n">PauliSumOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">([</span>
+            <span class="p">(</span><span class="s">'ZZ'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>  <span class="c1"># Edge (0,1)
+</span>            <span class="p">(</span><span class="s">'IZ'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>  <span class="c1"># Edge (1,2) 
+</span>            <span class="p">(</span><span class="s">'ZI'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>  <span class="c1"># Edge (2,3)
+</span>            <span class="p">(</span><span class="s">'ZZ'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>  <span class="c1"># Edge (3,0)
+</span>            <span class="p">(</span><span class="s">'ZZ'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>   <span class="c1"># Edge (0,2)
+</span>        <span class="p">])</span>
+        
+        <span class="bp">self</span><span class="p">.</span><span class="n">cost_operator</span> <span class="o">=</span> <span class="n">cost_operator</span>
+        <span class="k">return</span> <span class="n">cost_operator</span>
+    
+    <span class="k">def</span> <span class="nf">run_qaoa</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="s">"""
+        Chạy QAOA để giải bài toán optimization
+        """</span>
+        <span class="c1"># Create QAOA
+</span>        <span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        
+        <span class="n">qaoa</span> <span class="o">=</span> <span class="n">QAOA</span><span class="p">(</span>
+            <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+            <span class="n">reps</span><span class="o">=</span><span class="n">p</span><span class="p">,</span>
+            <span class="n">quantum_instance</span><span class="o">=</span><span class="n">backend</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Solve
+</span>        <span class="n">result</span> <span class="o">=</span> <span class="n">qaoa</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">cost_operator</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="p">.</span><span class="n">qaoa_result</span> <span class="o">=</span> <span class="n">result</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal Cost: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal Parameters: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="k">def</span> <span class="nf">analyze_solution</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""
+        Phân tích solution
+        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">qaoa_result</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Please run QAOA first"</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="c1"># Get optimal circuit
+</span>        <span class="n">optimal_circuit</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">qaoa_result</span><span class="p">.</span><span class="n">optimal_circuit</span>
+        
+        <span class="c1"># Execute circuit to get solution
+</span>        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">optimal_circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">=== </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">problem_type</span><span class="p">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s"> Solution ==="</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal Cost: </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">qaoa_result</span><span class="p">.</span><span class="n">optimal_value</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Most frequent solutions:"</span><span class="p">)</span>
+        
+        <span class="c1"># Sort by frequency
+</span>        <span class="n">sorted_counts</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">counts</span><span class="p">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">count</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sorted_counts</span><span class="p">[:</span><span class="mi">5</span><span class="p">]):</span>
+            <span class="n">probability</span> <span class="o">=</span> <span class="n">count</span> <span class="o">/</span> <span class="mi">1000</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  </span><span class="si">{</span><span class="n">solution</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s"> times (</span><span class="si">{</span><span class="n">probability</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="o">%</span><span class="si">}</span><span class="s">)"</span><span class="p">)</span>
+            
+            <span class="c1"># Calculate cut value for this solution
+</span>            <span class="n">cut_value</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">calculate_cut_value</span><span class="p">(</span><span class="n">solution</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"    Cut value: </span><span class="si">{</span><span class="n">cut_value</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">counts</span>
+    
+    <span class="k">def</span> <span class="nf">calculate_cut_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solution</span><span class="p">):</span>
+        <span class="s">"""
+        Tính giá trị cut cho một solution
+        """</span>
+        <span class="n">cut_value</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">graph</span><span class="p">:</span>
+            <span class="n">node1</span><span class="p">,</span> <span class="n">node2</span> <span class="o">=</span> <span class="n">edge</span>
+            <span class="k">if</span> <span class="n">solution</span><span class="p">[</span><span class="n">node1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">solution</span><span class="p">[</span><span class="n">node2</span><span class="p">]:</span>
+                <span class="n">cut_value</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">cut_value</span>
+
+<span class="c1"># Test Quantum Optimization Solver
+</span><span class="n">opt_solver</span> <span class="o">=</span> <span class="n">QuantumOptimizationSolver</span><span class="p">(</span><span class="s">"maxcut"</span><span class="p">)</span>
+<span class="n">opt_solver</span><span class="p">.</span><span class="n">create_maxcut_problem</span><span class="p">()</span>
+<span class="n">qaoa_result</span> <span class="o">=</span> <span class="n">opt_solver</span><span class="p">.</span><span class="n">run_qaoa</span><span class="p">()</span>
+<span class="n">solution_counts</span> <span class="o">=</span> <span class="n">opt_solver</span><span class="p">.</span><span class="n">analyze_solution</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-portfolio-building">📊 Portfolio Building</h2>
+
+<h3 id="1-project-documentation">1. Project Documentation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">ProjectDocumentation</span><span class="p">:</span>
+    <span class="s">"""
+    Tạo documentation cho capstone project
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">project_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">project_name</span> <span class="o">=</span> <span class="n">project_name</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">documentation</span> <span class="o">=</span> <span class="p">{}</span>
+        
+    <span class="k">def</span> <span class="nf">create_readme</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""
+        Tạo README.md cho project
+        """</span>
+        <span class="n">readme_content</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"""
+# </span><span class="si">{</span><span class="bp">self</span><span class="p">.</span><span class="n">project_name</span><span class="si">}</span><span class="s">
+
+## Mô tả
+Quantum computing project sử dụng Qiskit để giải quyết bài toán thực tế.
+
+## Cài đặt
+```bash
+pip install qiskit numpy matplotlib scikit-learn
+</span></code></pre></div></div>
+
+<h2 id="sử-dụng">Sử dụng</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import project
+</span><span class="k">from</span> <span class="p">{</span><span class="bp">self</span><span class="p">.</span><span class="n">project_name</span><span class="p">.</span><span class="n">lower</span><span class="p">().</span><span class="n">replace</span><span class="p">(</span><span class="s">' '</span><span class="p">,</span> <span class="s">'_'</span><span class="p">)}</span> <span class="k">import</span> <span class="o">*</span>
+
+<span class="c1"># Run project
+</span><span class="n">python</span> <span class="n">main</span><span class="p">.</span><span class="n">py</span>
+</code></pre></div></div>
+
+<h2 id="kết-quả">Kết quả</h2>
+<ul>
+  <li>Accuracy: {accuracy:.4f}</li>
+  <li>Performance metrics được thể hiện trong notebook</li>
+</ul>
+
+<h2 id="tác-giả">Tác giả</h2>
+<p>[Your Name]</p>
+
+<h2 id="license">License</h2>
+<p>MIT
+“””</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    return readme_content
+
+def create_requirements(self):
+    """
+    Tạo requirements.txt
+    """
+    requirements = """ qiskit&gt;=0.40.0 numpy&gt;=1.21.0 matplotlib&gt;=3.5.0 scikit-learn&gt;=1.0.0 pandas&gt;=1.3.0 seaborn&gt;=0.11.0 """
+    return requirements
+
+def create_presentation(self):
+    """
+    Tạo presentation slides
+    """
+    slides_content = f""" # {self.project_name} - Presentation
+</code></pre></div></div>
+
+<h2 id="slide-1-introduction">Slide 1: Introduction</h2>
+<ul>
+  <li>Problem statement</li>
+  <li>Quantum computing approach</li>
+  <li>Expected outcomes</li>
+</ul>
+
+<h2 id="slide-2-methodology">Slide 2: Methodology</h2>
+<ul>
+  <li>Quantum algorithm used</li>
+  <li>Implementation details</li>
+  <li>Technical challenges</li>
+</ul>
+
+<h2 id="slide-3-results">Slide 3: Results</h2>
+<ul>
+  <li>Performance metrics</li>
+  <li>Comparison with classical methods</li>
+  <li>Key findings</li>
+</ul>
+
+<h2 id="slide-4-conclusion">Slide 4: Conclusion</h2>
+<ul>
+  <li>Summary of achievements</li>
+  <li>Future work</li>
+  <li>Impact and applications
+“””
+      return slides_content</li>
+</ul>
+
+<h1 id="create-documentation">Create documentation</h1>
+<p>doc = ProjectDocumentation(“Quantum ML Classifier”)
+readme = doc.create_readme()
+requirements = doc.create_requirements()
+presentation = doc.create_presentation()</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+### 2. GitHub Repository Setup
+
+```python
+def setup_github_repo():
+    """
+    Hướng dẫn setup GitHub repository
+    """
+    setup_instructions = """
+# GitHub Repository Setup
+
+## 1. Create Repository
+- Go to GitHub.com
+- Click "New repository"
+- Name: quantum-ml-classifier
+- Description: Quantum Machine Learning Classifier using Qiskit
+- Make it public
+- Add README.md
+
+## 2. Clone Repository
+```bash
+git clone https://github.com/yourusername/quantum-ml-classifier.git
+cd quantum-ml-classifier
+</code></pre></div></div>
+
+<h2 id="3-add-project-files">3. Add Project Files</h2>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Add all files</span>
+git add <span class="nb">.</span>
+
+<span class="c"># Commit changes</span>
+git commit <span class="nt">-m</span> <span class="s2">"Initial commit: Quantum ML Classifier"</span>
+
+<span class="c"># Push to GitHub</span>
+git push origin main
+</code></pre></div></div>
+
+<h2 id="4-repository-structure">4. Repository Structure</h2>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>quantum-ml-classifier/
+├── README.md
+├── requirements.txt
+├── main.py
+├── quantum_classifier.py
+├── notebooks/
+│   ├── 01_data_preparation.ipynb
+│   ├── 02_model_training.ipynb
+│   └── 03_results_analysis.ipynb
+├── data/
+├── results/
+└── docs/
+    └── presentation.md
+</code></pre></div></div>
+<p>”””
+    return setup_instructions</p>
+
+<p>github_setup = setup_github_repo()</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+## 🎯 Career Preparation
+
+### 1. Resume Building
+
+```python
+def create_quantum_resume():
+    """
+    Tạo resume cho quantum computing career
+    """
+    resume_content = """
+# [Your Name] - Quantum Computing Engineer
+
+## Contact
+- Email: your.email@example.com
+- LinkedIn: linkedin.com/in/yourprofile
+- GitHub: github.com/yourusername
+- Portfolio: yourportfolio.com
+
+## Summary
+Quantum computing engineer với 35 ngày intensive training về quantum algorithms, 
+Qiskit programming, và real hardware experience. Chuyên về quantum machine learning, 
+optimization, và quantum chemistry simulation.
+
+## Skills
+### Quantum Computing
+- Qiskit, PennyLane, Cirq
+- Quantum algorithms (Grover, Shor, QFT, VQE, QAOA)
+- Quantum error correction và mitigation
+- IBM Quantum Experience
+
+### Programming
+- Python, NumPy, SciPy
+- Machine Learning (scikit-learn, TensorFlow)
+- Data visualization (Matplotlib, Seaborn)
+- Version control (Git, GitHub)
+
+### Mathematics
+- Linear algebra, quantum mechanics
+- Optimization theory
+- Statistical analysis
+- Algorithm complexity
+
+## Projects
+
+### Quantum ML Classifier
+- Developed quantum machine learning classifier using Qiskit
+- Achieved 85% accuracy on synthetic dataset
+- Implemented quantum feature maps và variational circuits
+- Technologies: Qiskit, Python, scikit-learn
+
+### Quantum Chemistry Simulator
+- Built VQE-based molecular simulation for H2 molecule
+- Achieved 99.5% accuracy compared to exact results
+- Implemented UCC ansatz và optimization
+- Technologies: Qiskit, VQE, quantum chemistry
+
+### Quantum Optimization Solver
+- Developed QAOA solver for MaxCut problems
+- Optimized quantum circuits for NISQ devices
+- Implemented error mitigation techniques
+- Technologies: QAOA, NISQ optimization
+
+## Education
+- Quantum Mathematics Intensive Course (35 days)
+- [Your University] - [Your Degree]
+- Relevant coursework: Quantum Computing, Machine Learning, Optimization
+
+## Certifications
+- IBM Quantum Experience User
+- Qiskit Developer Certification (if applicable)
+
+## Languages
+- English (Fluent)
+- Vietnamese (Native)
+"""
+    return resume_content
+
+resume = create_quantum_resume()
+</code></pre></div></div>
+
+<h3 id="2-job-search-strategy">2. Job Search Strategy</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_job_search_strategy</span><span class="p">():</span>
+    <span class="s">"""
+    Chiến lược tìm việc trong quantum computing
+    """</span>
+    <span class="n">strategy</span> <span class="o">=</span> <span class="s">"""
+# Quantum Computing Job Search Strategy
+
+## 1. Target Companies
+### Big Tech
+- IBM Quantum
+- Google Quantum AI
+- Microsoft Quantum
+- Amazon Braket
+- Intel Quantum
+
+### Quantum Startups
+- Rigetti Computing
+- IonQ
+- PsiQuantum
+- Xanadu
+- Zapata Computing
+
+### Research Institutions
+- National Labs (Argonne, Oak Ridge)
+- Universities with quantum programs
+- Research organizations
+
+## 2. Job Titles to Target
+- Quantum Software Engineer
+- Quantum Algorithm Developer
+- Quantum Research Scientist
+- Quantum Applications Engineer
+- Quantum Computing Researcher
+
+## 3. Skills to Highlight
+- Qiskit programming experience
+- Real hardware experience (IBM Quantum)
+- Algorithm implementation
+- Error mitigation techniques
+- Portfolio projects
+
+## 4. Networking
+- LinkedIn quantum computing groups
+- Quantum computing conferences
+- Local quantum meetups
+- Online quantum communities
+
+## 5. Application Strategy
+- Customize resume for each position
+- Include portfolio links
+- Highlight relevant projects
+- Demonstrate quantum knowledge
+"""</span>
+    <span class="k">return</span> <span class="n">strategy</span>
+
+<span class="n">job_strategy</span> <span class="o">=</span> <span class="n">quantum_job_search_strategy</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-community-engagement">🌐 Community Engagement</h2>
+
+<h3 id="1-online-communities">1. Online Communities</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_communities</span><span class="p">():</span>
+    <span class="s">"""
+    Danh sách cộng đồng quantum computing
+    """</span>
+    <span class="n">communities</span> <span class="o">=</span> <span class="s">"""
+# Quantum Computing Communities
+
+## Online Forums
+- Quantum Computing Stack Exchange
+- Reddit r/QuantumComputing
+- Qiskit Community Forum
+- PennyLane Community
+
+## Social Media
+- LinkedIn Quantum Computing Groups
+- Twitter #QuantumComputing
+- Discord Quantum Computing servers
+- Telegram Quantum groups
+
+## Conferences &amp; Events
+- Qiskit Global Summer School
+- IBM Quantum Challenge
+- Quantum Computing Hackathons
+- Local quantum meetups
+
+## Learning Platforms
+- IBM Quantum Learning
+- Qiskit Textbook
+- Quantum Computing Report
+- Quantum Journal
+"""</span>
+    <span class="k">return</span> <span class="n">communities</span>
+
+<span class="n">communities_list</span> <span class="o">=</span> <span class="n">quantum_communities</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-contributing-to-open-source">2. Contributing to Open Source</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">open_source_contribution</span><span class="p">():</span>
+    <span class="s">"""
+    Hướng dẫn đóng góp open source
+    """</span>
+    <span class="n">contribution_guide</span> <span class="o">=</span> <span class="s">"""
+# Open Source Contribution Guide
+
+## 1. Qiskit Ecosystem
+- Qiskit Terra: Core quantum circuits
+- Qiskit Aer: Simulators
+- Qiskit Ignis: Error mitigation
+- Qiskit Aqua: Algorithms
+
+## 2. Contribution Types
+- Bug fixes
+- Documentation improvements
+- New features
+- Tutorial creation
+- Code examples
+
+## 3. Getting Started
+- Fork repository
+- Create feature branch
+- Make changes
+- Write tests
+- Submit pull request
+
+## 4. Your Projects
+- Open source your capstone projects
+- Create quantum tutorials
+- Share quantum notebooks
+- Build quantum tools
+"""</span>
+    <span class="k">return</span> <span class="n">contribution_guide</span>
+
+<span class="n">contribution_guide</span> <span class="o">=</span> <span class="n">open_source_contribution</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-final-assessment">📈 Final Assessment</h2>
+
+<h3 id="1-skills-assessment">1. Skills Assessment</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">final_skills_assessment</span><span class="p">():</span>
+    <span class="s">"""
+    Đánh giá kỹ năng cuối khóa
+    """</span>
+    <span class="n">assessment</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">"Quantum Fundamentals"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"Superposition"</span><span class="p">:</span> <span class="s">"✅ Mastered"</span><span class="p">,</span>
+            <span class="s">"Entanglement"</span><span class="p">:</span> <span class="s">"✅ Mastered"</span><span class="p">,</span> 
+            <span class="s">"Measurement"</span><span class="p">:</span> <span class="s">"✅ Mastered"</span><span class="p">,</span>
+            <span class="s">"Quantum Gates"</span><span class="p">:</span> <span class="s">"✅ Mastered"</span>
+        <span class="p">},</span>
+        <span class="s">"Programming"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"Qiskit"</span><span class="p">:</span> <span class="s">"✅ Proficient"</span><span class="p">,</span>
+            <span class="s">"Python"</span><span class="p">:</span> <span class="s">"✅ Proficient"</span><span class="p">,</span>
+            <span class="s">"Quantum Circuits"</span><span class="p">:</span> <span class="s">"✅ Proficient"</span><span class="p">,</span>
+            <span class="s">"Algorithm Implementation"</span><span class="p">:</span> <span class="s">"✅ Proficient"</span>
+        <span class="p">},</span>
+        <span class="s">"Algorithms"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"Grover"</span><span class="p">:</span> <span class="s">"✅ Implemented"</span><span class="p">,</span>
+            <span class="s">"VQE"</span><span class="p">:</span> <span class="s">"✅ Implemented"</span><span class="p">,</span>
+            <span class="s">"QAOA"</span><span class="p">:</span> <span class="s">"✅ Implemented"</span><span class="p">,</span>
+            <span class="s">"QFT"</span><span class="p">:</span> <span class="s">"✅ Implemented"</span>
+        <span class="p">},</span>
+        <span class="s">"Real Hardware"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"IBM Quantum"</span><span class="p">:</span> <span class="s">"✅ Experience"</span><span class="p">,</span>
+            <span class="s">"Error Mitigation"</span><span class="p">:</span> <span class="s">"✅ Implemented"</span><span class="p">,</span>
+            <span class="s">"Noise Characterization"</span><span class="p">:</span> <span class="s">"✅ Understanding"</span><span class="p">,</span>
+            <span class="s">"NISQ Optimization"</span><span class="p">:</span> <span class="s">"✅ Applied"</span>
+        <span class="p">},</span>
+        <span class="s">"Applications"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"Quantum ML"</span><span class="p">:</span> <span class="s">"✅ Project Completed"</span><span class="p">,</span>
+            <span class="s">"Quantum Chemistry"</span><span class="p">:</span> <span class="s">"✅ Project Completed"</span><span class="p">,</span>
+            <span class="s">"Quantum Optimization"</span><span class="p">:</span> <span class="s">"✅ Project Completed"</span><span class="p">,</span>
+            <span class="s">"Portfolio"</span><span class="p">:</span> <span class="s">"✅ Created"</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">assessment</span>
+
+<span class="n">skills_assessment</span> <span class="o">=</span> <span class="n">final_skills_assessment</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-learning-path-forward">2. Learning Path Forward</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">future_learning_path</span><span class="p">():</span>
+    <span class="s">"""
+    Lộ trình học tập tiếp theo
+    """</span>
+    <span class="n">learning_path</span> <span class="o">=</span> <span class="s">"""
+# Future Learning Path
+
+## Short Term (3-6 months)
+- Deep dive into specific quantum algorithms
+- Contribute to open source quantum projects
+- Attend quantum computing conferences
+- Build more complex quantum applications
+
+## Medium Term (6-12 months)
+- Specialize in quantum machine learning
+- Learn additional quantum frameworks (PennyLane, Cirq)
+- Work on quantum research projects
+- Network with quantum computing professionals
+
+## Long Term (1+ years)
+- Pursue advanced quantum computing degree
+- Work in quantum computing industry
+- Contribute to quantum computing research
+- Mentor others in quantum computing
+
+## Specializations
+- Quantum Machine Learning
+- Quantum Chemistry
+- Quantum Cryptography
+- Quantum Error Correction
+- Quantum Hardware
+"""</span>
+    <span class="k">return</span> <span class="n">learning_path</span>
+
+<span class="n">future_path</span> <span class="o">=</span> <span class="n">future_learning_path</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-cuối-khóa">🎯 Bài tập cuối khóa</h2>
+
+<h3 id="bài-tập-1-complete-capstone-project">Bài tập 1: Complete Capstone Project</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">capstone_project_requirements</span><span class="p">():</span>
+    <span class="s">"""
+    Yêu cầu cho capstone project hoàn chỉnh
+    """</span>
+    <span class="n">requirements</span> <span class="o">=</span> <span class="s">"""
+# Capstone Project Requirements
+
+## 1. Project Selection
+- Choose one: Quantum ML, Quantum Chemistry, or Quantum Optimization
+- Define clear problem statement
+- Set measurable objectives
+
+## 2. Implementation
+- Implement complete solution
+- Use real quantum hardware when possible
+- Apply error mitigation techniques
+- Optimize for NISQ devices
+
+## 3. Documentation
+- Create comprehensive README
+- Write technical documentation
+- Create presentation slides
+- Record demo video
+
+## 4. Analysis
+- Compare with classical methods
+- Analyze performance metrics
+- Discuss limitations and improvements
+- Document lessons learned
+
+## 5. Portfolio
+- Host project on GitHub
+- Create portfolio website
+- Write blog post about project
+- Share with quantum community
+"""</span>
+    <span class="k">return</span> <span class="n">requirements</span>
+
+<span class="n">project_requirements</span> <span class="o">=</span> <span class="n">capstone_project_requirements</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-2-portfolio-website">Bài tập 2: Portfolio Website</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">portfolio_website_structure</span><span class="p">():</span>
+    <span class="s">"""
+    Cấu trúc website portfolio
+    """</span>
+    <span class="n">structure</span> <span class="o">=</span> <span class="s">"""
+# Portfolio Website Structure
+
+## Pages
+1. Home
+   - Introduction
+   - Key skills
+   - Contact information
+
+2. Projects
+   - Quantum ML Classifier
+   - Quantum Chemistry Simulator
+   - Quantum Optimization Solver
+   - Other projects
+
+3. Skills
+   - Quantum Computing
+   - Programming
+   - Mathematics
+   - Tools &amp; Technologies
+
+4. Experience
+   - Education
+   - Certifications
+   - Work experience
+   - Research
+
+5. Blog
+   - Quantum computing articles
+   - Tutorial posts
+   - Project updates
+   - Industry insights
+
+6. Contact
+   - Contact form
+   - Social media links
+   - Resume download
+"""</span>
+    <span class="k">return</span> <span class="n">structure</span>
+
+<span class="n">website_structure</span> <span class="o">=</span> <span class="n">portfolio_website_structure</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-tài-nguyên-bổ-sung">📚 Tài nguyên bổ sung</h2>
+
+<h3 id="career-resources">Career Resources:</h3>
+<ul>
+  <li><a href="https://quantumcomputingreport.com/">Quantum Computing Report</a></li>
+  <li><a href="https://www.ibm.com/quantum-computing/careers/">IBM Quantum Careers</a></li>
+  <li><a href="https://quantumcomputing.stackexchange.com/jobs">Quantum Computing Stack Exchange Jobs</a></li>
+</ul>
+
+<h3 id="portfolio-examples">Portfolio Examples:</h3>
+<ul>
+  <li><a href="https://github.com/topics/quantum-computing">Quantum Portfolio Templates</a></li>
+  <li><a href="https://github.com/Qiskit/qiskit-community-tutorials">Qiskit Community Projects</a></li>
+</ul>
+
+<h3 id="networking">Networking:</h3>
+<ul>
+  <li><a href="https://www.linkedin.com/groups/quantum-computing">LinkedIn Quantum Computing Groups</a></li>
+  <li><a href="https://discord.gg/quantum">Quantum Computing Discord</a></li>
+</ul>
+
+<hr />
+
+<h2 id="-tổng-kết-khóa-học">🎯 Tổng kết khóa học</h2>
+
+<h3 id="thành-tựu-đạt-được">Thành tựu đạt được:</h3>
+<ul>
+  <li>✅ Hoàn thành 35 ngày intensive quantum computing training</li>
+  <li>✅ Thành thạo Qiskit và quantum programming</li>
+  <li>✅ Triển khai các thuật toán lượng tử quan trọng</li>
+  <li>✅ Làm việc với real quantum hardware</li>
+  <li>✅ Hoàn thành capstone project</li>
+  <li>✅ Xây dựng portfolio chuyên nghiệp</li>
+</ul>
+
+<h3 id="kỹ-năng-chuyên-môn">Kỹ năng chuyên môn:</h3>
+<ul>
+  <li>Quantum algorithms (Grover, Shor, VQE, QAOA)</li>
+  <li>Quantum machine learning và optimization</li>
+  <li>Error mitigation và NISQ optimization</li>
+  <li>Real hardware experience với IBM Quantum</li>
+  <li>Project management và documentation</li>
+</ul>
+
+<h3 id="chuẩn-bị-cho-sự-nghiệp">Chuẩn bị cho sự nghiệp:</h3>
+<ul>
+  <li>Portfolio hoàn chỉnh với projects thực tế</li>
+  <li>Kết nối với cộng đồng quantum computing</li>
+  <li>Chiến lược tìm việc và networking</li>
+  <li>Lộ trình học tập tiếp theo</li>
+</ul>
+
+<hr />
+
+<p><em>“The future of computing is quantum, and you are now part of that future.”</em> 🚀</p>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

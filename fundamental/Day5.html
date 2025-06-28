@@ -3,19 +3,19 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>🧩 Ngày 1: Vector và Không gian Vector - Quantum Mathematics</title>
-    <meta name="description" content="Lộ trình 15 ngày nhập môn Toán học Lượng tử">
+    <title>🌟 Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1 - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
     <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
     <!-- Additional head elements -->
 <meta name="robots" content="index, follow">
 <meta name="author" content="Nguyen Ngoc Binh">
-<meta property="og:title" content="🧩 Ngày 1: Vector và Không gian Vector">
-<meta property="og:description" content="Lộ trình 15 ngày nhập môn Toán học Lượng tử">
+<meta property="og:title" content="🌟 Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/Day1.html">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/fundamental/Day5.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="🧩 Ngày 1: Vector và Không gian Vector">
-<meta name="twitter:description" content="Lộ trình 15 ngày nhập môn Toán học Lượng tử">
+<meta name="twitter:title" content="🌟 Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
@@ -63,102 +63,128 @@
             <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">🧩 Ngày 1: Vector và Không gian Vector</h1>
+    <h1 class="post-title">🌟 Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1</h1>
   </header>
 
   <div class="post-content">
-    
-<h1 id="-ngày-1-vector-và-không-gian-vector">🧩 <strong>Ngày 1: Vector và Không gian Vector</strong></h1>
+    <h1 id="-ngày-5-xác-suất-cơ-bản-và-nguyên-lý-tổng-xác-suất--1">🌟 <strong>Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1</strong></h1>
 
 <hr />
 
-<h2 id="1-khái-niệm-đơn-giản-nhất-vector-là-gì"><strong>1. Khái niệm đơn giản nhất: Vector là gì?</strong></h2>
+<h2 id="1-xác-suất-là-gì"><strong>1. Xác suất là gì?</strong></h2>
 
-<p><strong>Vector</strong> là một mũi tên có:
-✅ <strong>Hướng</strong>
-✅ <strong>Độ dài (hay còn gọi là độ lớn)</strong></p>
-
-<p>Dùng để mô tả:</p>
+<p>✅ Xác suất đo lường khả năng xảy ra của một sự kiện, giá trị nằm trong khoảng từ 0 đến 1:</p>
 
 <ul>
-  <li>Vị trí</li>
-  <li>Vận tốc</li>
-  <li>Lực</li>
-  <li>Và trong lượng tử: Trạng thái của hệ thống</li>
+  <li>Xác suất = 1 ⇒ chắc chắn xảy ra</li>
+  <li>Xác suất = 0 ⇒ không thể xảy ra</li>
+  <li>Xác suất giữa 0 và 1 ⇒ có khả năng xảy ra với tỷ lệ tương ứng</li>
 </ul>
+
+<p><strong>Tổng tất cả các khả năng phải bằng 1</strong>, đó là nguyên lý chuẩn hóa trong xác suất.</p>
 
 <hr />
 
-<h2 id="2-ví-dụ-vector-trong-không-gian-2d-phẳng"><strong>2. Ví dụ Vector trong không gian 2D (phẳng):</strong></h2>
-
-<p>Giả sử:</p>
+<h2 id="2-ví-dụ-đơn-giản-tung-đồng-xu"><strong>2. Ví dụ Đơn giản: Tung đồng xu</strong></h2>
 
 <ul>
-  <li>Vector <strong>A</strong> = (3, 4)</li>
-  <li>Vector <strong>B</strong> = (1, 2)</li>
+  <li>Có 2 khả năng: Sấp ($S$) hoặc Ngửa ($N$)</li>
+  <li>Nếu đồng xu cân bằng:</li>
 </ul>
 
-<p>Đây là cách biểu diễn vector bằng tọa độ, với trục <strong>Ox</strong> là chiều ngang, <strong>Oy</strong> là chiều dọc.</p>
+\[P(S) = 0.5, \quad P(N) = 0.5\]
+
+<p>Tổng xác suất:</p>
+
+\[P(S) + P(N) = 0.5 + 0.5 = 1\]
 
 <hr />
 
-<h2 id="3-phép-toán-đơn-giản-với-vector"><strong>3. Phép toán đơn giản với Vector:</strong></h2>
+<h2 id="3-ví-dụ-gieo-xúc-xắc"><strong>3. Ví dụ: Gieo xúc xắc</strong></h2>
 
-<h3 id="-tổng-2-vector">✨ <strong>Tổng 2 vector:</strong></h3>
+<ul>
+  <li>6 mặt: 1, 2, 3, 4, 5, 6</li>
+  <li>Xác suất ra mỗi mặt:</li>
+</ul>
 
-\[\mathbf{A} + \mathbf{B} = (3, 4) + (1, 2) = (4, 6)\]
+\[P(1) = P(2) = \ldots = P(6) = \frac{1}{6}\]
 
-<h3 id="-nhân-vector-với-số-thực">✨ <strong>Nhân vector với số thực:</strong></h3>
+<p>Tổng xác suất:</p>
 
-<p>Giả sử bạn nhân vector A với 2:</p>
-
-\[2 \times \mathbf{A} = 2 \times (3, 4) = (6, 8)\]
-
-<hr />
-
-<h2 id="4-độ-lớn-magnitude-của-vector"><strong>4. Độ lớn (Magnitude) của vector:</strong></h2>
-
-<p>Công thức:</p>
-
-\[|\mathbf{A}| = \sqrt{x^2 + y^2}\]
-
-<p>Tính độ lớn của vector A = (3, 4):</p>
-
-\[|\mathbf{A}| = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = 5\]
+\[P(1) + P(2) + \ldots + P(6) = 6 \times \frac{1}{6} = 1\]
 
 <hr />
 
-<h2 id="5-ứng-dụng-cho-toán-lượng-tử-sau-này"><strong>5. Ứng dụng cho Toán lượng tử sau này:</strong></h2>
+<h2 id="4-liên-hệ-với-cơ-học-lượng-tử"><strong>4. Liên hệ với Cơ học Lượng tử</strong></h2>
 
 <p>Trong toán lượng tử:</p>
 
 <ul>
-  <li><strong>Vector</strong> không chỉ ở không gian 2D, mà ở không gian trừu tượng nhiều chiều hơn (Hilbert Space).</li>
-  <li>Nhưng bản chất vẫn là vector: Có thể cộng, nhân, tính độ lớn, hướng…</li>
+  <li>Biên độ $a, b$ là số phức mô tả trạng thái lượng tử</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Xác suất đo được trạng thái $</td>
+          <td>0⟩$ là $</td>
+          <td>a</td>
+          <td>^2$, trạng thái $</td>
+          <td>1⟩$ là $</td>
+          <td>b</td>
+          <td>^2$</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>Phải có:</li>
 </ul>
+
+\[|a|^2 + |b|^2 = 1\]
+
+<p>Đây chính là nguyên lý tổng xác suất = 1, rất giống với xác suất cổ điển.</p>
 
 <hr />
 
-<h1 id="-bài-tập-ngày-1-cho-bạn-tự-làm">🎯 <strong>Bài tập Ngày 1 cho bạn tự làm:</strong></h1>
-
-<p>Hãy tính các phép sau:</p>
+<h1 id="-bài-tập-ngày-5-cho-bạn">🎯 <strong>Bài tập Ngày 5 cho bạn</strong></h1>
 
 <ol>
   <li>
-    <p>Cho vector <strong>C</strong> = (5, -2) và vector <strong>D</strong> = (-3, 7), tính:</p>
+    <p>Một đồng xu không cân bằng, xác suất sấp là 0.3</p>
 
     <ul>
-      <li><strong>C + D</strong></li>
-      <li><strong>2 × D</strong></li>
-      <li>Độ lớn của vector <strong>C</strong></li>
+      <li>Tính xác suất ra ngửa?</li>
     </ul>
   </li>
   <li>
-    <p>Tự vẽ sơ đồ 2D đơn giản biểu diễn vector C và D (trục x, y).</p>
+    <p>Một hệ lượng tử có:</p>
   </li>
 </ol>
 
-<hr />
+\[|\psi⟩ = \sqrt{0.6} \, |0⟩ + \sqrt{0.4} \, |1⟩\]
+
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Xác suất đo được $</td>
+          <td>0⟩$ là bao nhiêu?</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>Xác suất đo được $</td>
+          <td>1⟩$ là bao nhiêu?</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>Tổng xác suất có đúng bằng 1 không?</li>
+</ul>
 
 
   </div>

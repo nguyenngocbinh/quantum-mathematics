@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>📚 Day 21: Quantum Fourier Transform (QFT) - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="📚 Day 21: Quantum Fourier Transform (QFT)">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day21.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="📚 Day 21: Quantum Fourier Transform (QFT)">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">📚 Day 21: Quantum Fourier Transform (QFT)</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="-day-21-quantum-fourier-transform-qft">📚 <strong>Day 21: Quantum Fourier Transform (QFT)</strong></h1>
+
+<hr />
+
+<h2 id="-mục-tiêu-học-tập">🎯 <strong>Mục tiêu học tập:</strong></h2>
+<ul>
+  <li>Hiểu nguyên lý hoạt động của Quantum Fourier Transform</li>
+  <li>Triển khai QFT bằng Qiskit</li>
+  <li>Áp dụng QFT trong phase estimation và period finding</li>
+  <li>Hiểu ứng dụng của QFT trong các thuật toán lượng tử</li>
+</ul>
+
+<hr />
+
+<h2 id="-lý-thuyết-cơ-bản">📖 <strong>Lý thuyết cơ bản:</strong></h2>
+
+<h3 id="1-fourier-transform-cổ-điển"><strong>1. Fourier Transform cổ điển:</strong></h3>
+<p>Fourier Transform chuyển đổi tín hiệu từ miền thời gian sang miền tần số:</p>
+
+\[F(\omega) = \int_{-\infty}^{\infty} f(t) e^{-i\omega t} dt\]
+
+<h3 id="2-quantum-fourier-transform"><strong>2. Quantum Fourier Transform:</strong></h3>
+<p>QFT chuyển đổi trạng thái lượng tử từ computational basis sang Fourier basis:</p>
+
+\[QFT|j\rangle = \frac{1}{\sqrt{N}} \sum_{k=0}^{N-1} e^{2\pi i jk/N} |k\rangle\]
+
+<p>Trong đó $N = 2^n$ với $n$ là số qubit.</p>
+
+<h3 id="3-cấu-trúc-mạch-qft"><strong>3. Cấu trúc mạch QFT:</strong></h3>
+<p>QFT có thể được triển khai bằng các cổng Hadamard và controlled-phase:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>H ---•---•---•---•---
+      |   |   |   |
+     R₂  R₃  R₄  R₅
+      |   |   |   |
+     H ---•---•---•---
+          |   |   |
+         R₂  R₃  R₄
+          |   |   |
+         H ---•---•---
+              |   |
+             R₂  R₃
+              |   |
+             H ---•---
+                  |
+                 R₂
+                  |
+                 H
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-thực-hành-với-qiskit">💻 <strong>Thực hành với Qiskit:</strong></h2>
+
+<h3 id="bài-1-triển-khai-qft-cơ-bản"><strong>Bài 1: Triển khai QFT cơ bản</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="k">def</span> <span class="nf">qft_rotations</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="s">"""Thực hiện QFT rotations trên n qubit"""</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">circuit</span>
+    
+    <span class="n">n</span> <span class="o">-=</span> <span class="mi">1</span>
+    <span class="n">circuit</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">circuit</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="n">qubit</span><span class="p">)),</span> <span class="n">qubit</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    
+    <span class="n">qft_rotations</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">swap_registers</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="s">"""Hoán đổi các qubit để có thứ tự đúng"""</span>
+    <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">//</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">circuit</span><span class="p">.</span><span class="n">swap</span><span class="p">(</span><span class="n">qubit</span><span class="p">,</span> <span class="n">n</span><span class="o">-</span><span class="n">qubit</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">circuit</span>
+
+<span class="k">def</span> <span class="nf">qft</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+    <span class="s">"""Triển khai QFT hoàn chỉnh"""</span>
+    <span class="n">qft_rotations</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">swap_registers</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">circuit</span>
+
+<span class="c1"># Tạo mạch QFT 3-qubit
+</span><span class="n">n_qubits</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+<span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Đặt input |001⟩
+</span><span class="n">qft</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">)</span>
+<span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+
+<span class="c1"># Chạy mạch
+</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"QFT Circuit:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Results:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="bài-2-phase-estimation-với-qft"><strong>Bài 2: Phase Estimation với QFT</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">phase_estimation</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">precision_qubits</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+    <span class="s">"""Phase estimation để ước tính phase của một góc"""</span>
+    
+    <span class="c1"># Số qubit cho precision
+</span>    <span class="n">n_precision</span> <span class="o">=</span> <span class="n">precision_qubits</span>
+    <span class="c1"># Qubit cho eigenstate
+</span>    <span class="n">n_eigenstate</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_precision</span> <span class="o">+</span> <span class="n">n_eigenstate</span><span class="p">,</span> <span class="n">n_precision</span><span class="p">)</span>
+    
+    <span class="c1"># Áp dụng Hadamard trên precision qubits
+</span>    <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">qubit</span><span class="p">)</span>
+    
+    <span class="c1"># Controlled phase rotations
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">angle</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">),</span> <span class="n">n_precision</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Inverse QFT
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_precision</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="p">)),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_precision</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="c1"># ... tiếp tục cho các qubit khác
+</span>    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_precision</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test với phase = 0.125 (1/8)
+</span><span class="n">angle</span> <span class="o">=</span> <span class="mf">0.125</span>
+<span class="n">qc_pe</span> <span class="o">=</span> <span class="n">phase_estimation</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_pe</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Phase Estimation Circuit:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qc_pe</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Expected phase: </span><span class="si">{</span><span class="n">angle</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Results: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="bài-3-period-finding-với-qft"><strong>Bài 3: Period Finding với QFT</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">period_finding</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">n_qubits</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+    <span class="s">"""Tìm chu kỳ của hàm f(x) = a^x mod N"""</span>
+    
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Superposition trên register đầu tiên
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Oracle để tính f(x) = a^x mod N
+</span>    <span class="c1"># (Đây là phiên bản đơn giản, trong thực tế cần modular exponentiation)
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n_qubits</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># QFT trên register đầu tiên
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="p">)),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="mi">1</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    <span class="c1"># ... tiếp tục
+</span>    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test period finding
+</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">15</span>
+<span class="n">qc_pf</span> <span class="o">=</span> <span class="n">period_finding</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_pf</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Period Finding Circuit:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qc_pf</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Looking for period of </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">^x mod </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Results: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-bài-tập-thực-hành">🔬 <strong>Bài tập thực hành:</strong></h2>
+
+<h3 id="bài-tập-1-qft-với-input-khác-nhau"><strong>Bài tập 1: QFT với input khác nhau</strong></h3>
+<p>Tạo mạch QFT và test với các input khác nhau:</p>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>000⟩ →</td>
+          <td>000⟩ +</td>
+          <td>001⟩ + … +</td>
+          <td>111⟩</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>100⟩ → Superposition với phase khác nhau</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>111⟩ → Superposition với phase khác nhau</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<h3 id="bài-tập-2-inverse-qft"><strong>Bài tập 2: Inverse QFT</strong></h3>
+<p>Triển khai inverse QFT và verify rằng QFT⁻¹(QFT|ψ⟩) = |ψ⟩</p>
+
+<h3 id="bài-tập-3-phase-estimation-chính-xác"><strong>Bài tập 3: Phase Estimation chính xác</strong></h3>
+<p>Cải thiện độ chính xác của phase estimation bằng cách:</p>
+<ul>
+  <li>Tăng số qubit precision</li>
+  <li>Sử dụng error mitigation</li>
+  <li>So sánh với giá trị lý thuyết</li>
+</ul>
+
+<h3 id="bài-tập-4-period-finding-thực-tế"><strong>Bài tập 4: Period Finding thực tế</strong></h3>
+<p>Triển khai period finding cho các trường hợp:</p>
+<ul>
+  <li>a = 2, N = 15 (period = 4)</li>
+  <li>a = 3, N = 15 (period = 4)</li>
+  <li>a = 7, N = 15 (period = 4)</li>
+</ul>
+
+<hr />
+
+<h2 id="-tài-liệu-tham-khảo">📚 <strong>Tài liệu tham khảo:</strong></h2>
+
+<h3 id="sách"><strong>Sách:</strong></h3>
+<ul>
+  <li>“Quantum Computation and Quantum Information” - Nielsen &amp; Chuang (Chapter 5)</li>
+  <li>“Programming Quantum Computers” - Johnston et al. (Chapter 8)</li>
+</ul>
+
+<h3 id="papers"><strong>Papers:</strong></h3>
+<ul>
+  <li>“Quantum Fourier Transform” - Coppersmith (1994)</li>
+  <li>“Quantum Phase Estimation” - Kitaev (1995)</li>
+</ul>
+
+<h3 id="online-resources"><strong>Online Resources:</strong></h3>
+<ul>
+  <li>Qiskit Textbook: Quantum Fourier Transform</li>
+  <li>IBM Quantum Experience: QFT Tutorial</li>
+</ul>
+
+<hr />
+
+<h2 id="-kiểm-tra-kiến-thức">🎯 <strong>Kiểm tra kiến thức:</strong></h2>
+
+<ol>
+  <li><strong>Câu hỏi:</strong> Tại sao QFT quan trọng trong computing lượng tử?</li>
+  <li><strong>Câu hỏi:</strong> Làm thế nào để triển khai QFT với n qubit?</li>
+  <li><strong>Câu hỏi:</strong> Mối quan hệ giữa QFT và phase estimation?</li>
+  <li><strong>Câu hỏi:</strong> Ứng dụng của QFT trong period finding?</li>
+</ol>
+
+<hr />
+
+<h2 id="-chuẩn-bị-cho-day-22">🚀 <strong>Chuẩn bị cho Day 22:</strong></h2>
+<ul>
+  <li>Ôn lại phase estimation</li>
+  <li>Hiểu eigenvalue estimation</li>
+  <li>Chuẩn bị cho quantum counting</li>
+</ul>
+
+<hr />
+
+<p><em>“The Quantum Fourier Transform is the quantum analogue of the discrete Fourier transform, and it’s a key component in many quantum algorithms.”</em> - Qiskit Textbook</p>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

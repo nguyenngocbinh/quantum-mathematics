@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 20: Quantum Measurement và State Tomography - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 20: Quantum Measurement và State Tomography">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day20.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 20: Quantum Measurement và State Tomography">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 20: Quantum Measurement và State Tomography</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-20-quantum-measurement-và-state-tomography">Day 20: Quantum Measurement và State Tomography</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Hiểu sâu về quantum measurement và POVM</li>
+  <li>Thực hiện projective measurement</li>
+  <li>State tomography và state reconstruction</li>
+  <li>Phân tích lỗi và uncertainty</li>
+</ul>
+
+<h2 id="-quantum-measurement-theory">🔍 Quantum Measurement Theory</h2>
+
+<h3 id="1-projective-measurement">1. Projective Measurement</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">Operator</span><span class="p">,</span> <span class="n">state_fidelity</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span><span class="p">,</span> <span class="n">plot_bloch_multivector</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="k">def</span> <span class="nf">projective_measurement</span><span class="p">():</span>
+    <span class="s">"""Demonstrate projective measurement"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Prepare state |ψ⟩ = (|00⟩ + |11⟩)/√2
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Projective measurement in computational basis
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">measurement_in_different_basis</span><span class="p">():</span>
+    <span class="s">"""Measure in different bases"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Prepare state |ψ⟩ = |+⟩
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Measure in X basis (Hadamard basis)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">measurement_in_y_basis</span><span class="p">():</span>
+    <span class="s">"""Measure in Y basis"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Prepare state |ψ⟩ = |+⟩
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Measure in Y basis
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">sdg</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># S† gate
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h3 id="2-povm-positive-operator-valued-measure">2. POVM (Positive Operator-Valued Measure)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">povm_measurement</span><span class="p">():</span>
+    <span class="s">"""Implement POVM measurement"""</span>
+    <span class="c1"># Define POVM elements
+</span>    <span class="c1"># E1 = |0⟩⟨0|, E2 = |1⟩⟨1|, E3 = |+⟩⟨+|
+</span>    
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># 2 classical bits for 3 outcomes
+</span>    
+    <span class="c1"># Prepare state |ψ⟩ = |+⟩
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Measure in computational basis (E1, E2)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Additional measurement in |+⟩ basis (E3)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">create_povm_operators</span><span class="p">():</span>
+    <span class="s">"""Create POVM operators"""</span>
+    <span class="c1"># Example: 3-element POVM
+</span>    <span class="n">E1</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>  <span class="c1"># |0⟩⟨0|
+</span>    <span class="n">E2</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span>  <span class="c1"># |1⟩⟨1|
+</span>    <span class="n">E3</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]])</span>  <span class="c1"># |+⟩⟨+|
+</span>    
+    <span class="c1"># Verify completeness: E1 + E2 + E3 = I
+</span>    <span class="n">completeness</span> <span class="o">=</span> <span class="n">E1</span> <span class="o">+</span> <span class="n">E2</span> <span class="o">+</span> <span class="n">E3</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"POVM completeness check:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">completeness</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">E1</span><span class="p">,</span> <span class="n">E2</span><span class="p">,</span> <span class="n">E3</span>
+</code></pre></div></div>
+
+<h2 id="-state-tomography">📊 State Tomography</h2>
+
+<h3 id="1-single-qubit-state-tomography">1. Single Qubit State Tomography</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">single_qubit_tomography</span><span class="p">():</span>
+    <span class="s">"""Perform single qubit state tomography"""</span>
+    <span class="kn">from</span> <span class="nn">qiskit.ignis.verification.tomography</span> <span class="kn">import</span> <span class="n">state_tomography_circuits</span>
+    <span class="kn">from</span> <span class="nn">qiskit.ignis.verification.tomography</span> <span class="kn">import</span> <span class="n">StateTomographyFitter</span>
+    
+    <span class="c1"># Prepare state to be tomographed
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># |ψ⟩ = (|0⟩ + e^(iπ/4)|1⟩)/√2
+</span>    
+    <span class="c1"># Generate tomography circuits
+</span>    <span class="n">qst_circs</span> <span class="o">=</span> <span class="n">state_tomography_circuits</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="n">qst_circs</span>
+
+<span class="k">def</span> <span class="nf">analyze_tomography_results</span><span class="p">():</span>
+    <span class="s">"""Analyze tomography results"""</span>
+    <span class="n">qc</span><span class="p">,</span> <span class="n">qst_circs</span> <span class="o">=</span> <span class="n">single_qubit_tomography</span><span class="p">()</span>
+    
+    <span class="c1"># Simulate measurements
+</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qst_circs</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    
+    <span class="c1"># Fit tomography data
+</span>    <span class="kn">from</span> <span class="nn">qiskit.ignis.verification.tomography</span> <span class="kn">import</span> <span class="n">StateTomographyFitter</span>
+    <span class="n">qst_fitter</span> <span class="o">=</span> <span class="n">StateTomographyFitter</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">qst_circs</span><span class="p">)</span>
+    <span class="n">rho_fit</span> <span class="o">=</span> <span class="n">qst_fitter</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">rho_fit</span>
+</code></pre></div></div>
+
+<h3 id="2-two-qubit-state-tomography">2. Two Qubit State Tomography</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">two_qubit_tomography</span><span class="p">():</span>
+    <span class="s">"""Perform two qubit state tomography"""</span>
+    <span class="kn">from</span> <span class="nn">qiskit.ignis.verification.tomography</span> <span class="kn">import</span> <span class="n">state_tomography_circuits</span>
+    
+    <span class="c1"># Prepare Bell state
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Generate tomography circuits
+</span>    <span class="n">qst_circs</span> <span class="o">=</span> <span class="n">state_tomography_circuits</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="n">qst_circs</span>
+
+<span class="k">def</span> <span class="nf">bell_state_tomography</span><span class="p">():</span>
+    <span class="s">"""Tomograph all four Bell states"""</span>
+    <span class="n">bell_states</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="c1"># |Φ⁺⟩ = (|00⟩ + |11⟩)/√2
+</span>    <span class="n">qc_phi_plus</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc_phi_plus</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc_phi_plus</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># |Φ⁻⟩ = (|00⟩ - |11⟩)/√2
+</span>    <span class="n">qc_phi_minus</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc_phi_minus</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc_phi_minus</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc_phi_minus</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># |Ψ⁺⟩ = (|01⟩ + |10⟩)/√2
+</span>    <span class="n">qc_psi_plus</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc_psi_plus</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc_psi_plus</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc_psi_plus</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># |Ψ⁻⟩ = (|01⟩ - |10⟩)/√2
+</span>    <span class="n">qc_psi_minus</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc_psi_minus</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc_psi_minus</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc_psi_minus</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc_psi_minus</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">states</span> <span class="o">=</span> <span class="p">[</span><span class="n">qc_phi_plus</span><span class="p">,</span> <span class="n">qc_phi_minus</span><span class="p">,</span> <span class="n">qc_psi_plus</span><span class="p">,</span> <span class="n">qc_psi_minus</span><span class="p">]</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s">'|Φ⁺⟩'</span><span class="p">,</span> <span class="s">'|Φ⁻⟩'</span><span class="p">,</span> <span class="s">'|Ψ⁺⟩'</span><span class="p">,</span> <span class="s">'|Ψ⁻⟩'</span><span class="p">]</span>
+    
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">qc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+        <span class="n">qst_circs</span> <span class="o">=</span> <span class="n">state_tomography_circuits</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+        <span class="n">bell_states</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">qst_circs</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">bell_states</span>
+</code></pre></div></div>
+
+<h2 id="-advanced-measurement-techniques">🔬 Advanced Measurement Techniques</h2>
+
+<h3 id="1-weak-measurement">1. Weak Measurement</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">weak_measurement_simulation</span><span class="p">():</span>
+    <span class="s">"""Simulate weak measurement"""</span>
+    <span class="c1"># Weak measurement: partial collapse of wavefunction
+</span>    
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Prepare state |ψ⟩ = |+⟩
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Weak measurement: apply small rotation
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Small rotation angle
+</span>    
+    <span class="c1"># Ancilla qubit for measurement
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Measure ancilla
+</span>    
+    <span class="c1"># Final measurement
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">adaptive_measurement</span><span class="p">():</span>
+    <span class="s">"""Adaptive measurement based on previous results"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Prepare state
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># First measurement
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Adaptive second measurement based on first result
+</span>    <span class="c1"># (This would require classical feedback in real implementation)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h3 id="2-continuous-measurement">2. Continuous Measurement</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">continuous_measurement_model</span><span class="p">():</span>
+    <span class="s">"""Model continuous measurement"""</span>
+    <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+    
+    <span class="c1"># Simulate continuous measurement of a qubit
+</span>    <span class="n">time_steps</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">measurement_strength</span> <span class="o">=</span> <span class="mf">0.1</span>
+    
+    <span class="c1"># Initial state: |ψ⟩ = |+⟩
+</span>    <span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># amplitude of |0⟩
+</span>    <span class="n">beta</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>   <span class="c1"># amplitude of |1⟩
+</span>    
+    <span class="c1"># Track state evolution
+</span>    <span class="n">alpha_history</span> <span class="o">=</span> <span class="p">[</span><span class="n">alpha</span><span class="p">]</span>
+    <span class="n">beta_history</span> <span class="o">=</span> <span class="p">[</span><span class="n">beta</span><span class="p">]</span>
+    
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">time_steps</span><span class="p">):</span>
+        <span class="c1"># Random measurement outcome
+</span>        <span class="n">p_0</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">outcome</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">p</span><span class="o">=</span><span class="p">[</span><span class="n">p_0</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">p_0</span><span class="p">])</span>
+        
+        <span class="c1"># Update state based on measurement
+</span>        <span class="k">if</span> <span class="n">outcome</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">/</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p_0</span><span class="p">)</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">measurement_strength</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">measurement_strength</span><span class="p">)</span>
+            <span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">/</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p_0</span><span class="p">)</span>
+        
+        <span class="c1"># Normalize
+</span>        <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="nb">abs</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">alpha</span> <span class="o">/=</span> <span class="n">norm</span>
+        <span class="n">beta</span> <span class="o">/=</span> <span class="n">norm</span>
+        
+        <span class="n">alpha_history</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">beta_history</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">alpha_history</span><span class="p">,</span> <span class="n">beta_history</span>
+</code></pre></div></div>
+
+<h2 id="-error-analysis-và-uncertainty">📈 Error Analysis và Uncertainty</h2>
+
+<h3 id="1-measurement-error-analysis">1. Measurement Error Analysis</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">measurement_error_analysis</span><span class="p">():</span>
+    <span class="s">"""Analyze measurement errors"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Prepare |+⟩ state
+</span>    
+    <span class="c1"># Ideal measurement should give 50-50 distribution
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Simulate with different shot counts
+</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    
+    <span class="n">shot_counts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">shots</span> <span class="ow">in</span> <span class="n">shot_counts</span><span class="p">:</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">shots</span><span class="p">]</span> <span class="o">=</span> <span class="n">counts</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="k">def</span> <span class="nf">calculate_measurement_uncertainty</span><span class="p">():</span>
+    <span class="s">"""Calculate measurement uncertainty"""</span>
+    <span class="c1"># For a single qubit measurement
+</span>    <span class="n">p</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># probability of measuring |0⟩
+</span>    <span class="n">n</span> <span class="o">=</span> <span class="mi">1000</span>  <span class="c1"># number of measurements
+</span>    
+    <span class="c1"># Standard error of the mean
+</span>    <span class="n">std_error</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">)</span>
+    
+    <span class="c1"># 95% confidence interval
+</span>    <span class="n">confidence_interval</span> <span class="o">=</span> <span class="mf">1.96</span> <span class="o">*</span> <span class="n">std_error</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Standard error: </span><span class="si">{</span><span class="n">std_error</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"95% confidence interval: ±</span><span class="si">{</span><span class="n">confidence_interval</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">std_error</span><span class="p">,</span> <span class="n">confidence_interval</span>
+</code></pre></div></div>
+
+<h3 id="2-state-fidelity-calculation">2. State Fidelity Calculation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">calculate_state_fidelity</span><span class="p">():</span>
+    <span class="s">"""Calculate fidelity between ideal and measured states"""</span>
+    <span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">state_fidelity</span>
+    
+    <span class="c1"># Ideal Bell state
+</span>    <span class="n">ideal_bell</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Simulate noisy Bell state preparation
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Add some noise (small rotation)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Get state vector
+</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">noisy_state</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_statevector</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate fidelity
+</span>    <span class="n">fidelity</span> <span class="o">=</span> <span class="n">state_fidelity</span><span class="p">(</span><span class="n">ideal_bell</span><span class="p">,</span> <span class="n">noisy_state</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"State fidelity: </span><span class="si">{</span><span class="n">fidelity</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fidelity</span>
+</code></pre></div></div>
+
+<h2 id="-thực-hành-và-thí-nghiệm">🔬 Thực hành và Thí nghiệm</h2>
+
+<h3 id="bài-tập-1-complete-state-tomography">Bài tập 1: Complete State Tomography</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">complete_tomography_experiment</span><span class="p">():</span>
+    <span class="s">"""Complete tomography experiment"""</span>
+    <span class="c1"># Prepare a complex state
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Generate tomography circuits
+</span>    <span class="kn">from</span> <span class="nn">qiskit.ignis.verification.tomography</span> <span class="kn">import</span> <span class="n">state_tomography_circuits</span>
+    <span class="n">qst_circs</span> <span class="o">=</span> <span class="n">state_tomography_circuits</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="c1"># Simulate measurements
+</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qst_circs</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    
+    <span class="c1"># Fit tomography data
+</span>    <span class="kn">from</span> <span class="nn">qiskit.ignis.verification.tomography</span> <span class="kn">import</span> <span class="n">StateTomographyFitter</span>
+    <span class="n">qst_fitter</span> <span class="o">=</span> <span class="n">StateTomographyFitter</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">qst_circs</span><span class="p">)</span>
+    <span class="n">rho_fit</span> <span class="o">=</span> <span class="n">qst_fitter</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="n">rho_fit</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-2-measurement-in-custom-bases">Bài tập 2: Measurement in Custom Bases</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">custom_basis_measurement</span><span class="p">():</span>
+    <span class="s">"""Measure in custom bases"""</span>
+    <span class="c1"># Define custom basis: |u⟩ = cos(θ)|0⟩ + sin(θ)|1⟩
+</span>    <span class="c1">#                      |v⟩ = -sin(θ)|0⟩ + cos(θ)|1⟩
+</span>    
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">6</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Prepare state |ψ⟩ = |+⟩
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Rotate to custom basis
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="o">-</span><span class="n">theta</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Measure in computational basis
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">multiple_basis_measurement</span><span class="p">():</span>
+    <span class="s">"""Measure in multiple bases"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># 3 classical bits for different bases
+</span>    
+    <span class="c1"># Prepare state
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Measure in Z basis
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Measure in X basis
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Measure in Y basis
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">sdg</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-3-error-mitigation">Bài tập 3: Error Mitigation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">measurement_error_mitigation</span><span class="p">():</span>
+    <span class="s">"""Implement measurement error mitigation"""</span>
+    <span class="kn">from</span> <span class="nn">qiskit.ignis.mitigation.measurement</span> <span class="kn">import</span> <span class="n">complete_meas_cal</span>
+    
+    <span class="c1"># Generate calibration circuits
+</span>    <span class="n">qr</span> <span class="o">=</span> <span class="n">QuantumRegister</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">meas_calibs</span><span class="p">,</span> <span class="n">state_labels</span> <span class="o">=</span> <span class="n">complete_meas_cal</span><span class="p">(</span><span class="n">qr</span><span class="o">=</span><span class="n">qr</span><span class="p">,</span> <span class="n">circlabel</span><span class="o">=</span><span class="s">'mcal'</span><span class="p">)</span>
+    
+    <span class="c1"># Prepare test state
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">meas_calibs</span><span class="p">,</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">apply_error_mitigation</span><span class="p">():</span>
+    <span class="s">"""Apply error mitigation to measurement results"""</span>
+    <span class="n">meas_calibs</span><span class="p">,</span> <span class="n">qc</span> <span class="o">=</span> <span class="n">measurement_error_mitigation</span><span class="p">()</span>
+    
+    <span class="c1"># Simulate with noise
+</span>    <span class="kn">from</span> <span class="nn">qiskit.providers.aer.noise</span> <span class="kn">import</span> <span class="n">NoiseModel</span>
+    <span class="kn">from</span> <span class="nn">qiskit.providers.aer.noise.errors</span> <span class="kn">import</span> <span class="n">depolarizing_error</span>
+    
+    <span class="c1"># Create noise model
+</span>    <span class="n">noise_model</span> <span class="o">=</span> <span class="n">NoiseModel</span><span class="p">()</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">depolarizing_error</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">noise_model</span><span class="p">.</span><span class="n">add_all_qubit_quantum_error</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="p">[</span><span class="s">'measure'</span><span class="p">])</span>
+    
+    <span class="c1"># Execute with noise
+</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">meas_calibs</span> <span class="o">+</span> <span class="p">[</span><span class="n">qc</span><span class="p">],</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">noise_model</span><span class="o">=</span><span class="n">noise_model</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    
+    <span class="c1"># Apply mitigation
+</span>    <span class="kn">from</span> <span class="nn">qiskit.ignis.mitigation.measurement</span> <span class="kn">import</span> <span class="n">CompleteMeasFitter</span>
+    <span class="n">meas_fitter</span> <span class="o">=</span> <span class="n">CompleteMeasFitter</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">state_labels</span><span class="p">,</span> <span class="n">circlabel</span><span class="o">=</span><span class="s">'mcal'</span><span class="p">)</span>
+    <span class="n">meas_filter</span> <span class="o">=</span> <span class="n">meas_fitter</span><span class="p">.</span><span class="nb">filter</span>
+    
+    <span class="c1"># Apply filter to results
+</span>    <span class="n">mitigated_result</span> <span class="o">=</span> <span class="n">meas_filter</span><span class="p">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">mitigated_result</span>
+</code></pre></div></div>
+
+<h2 id="-ứng-dụng-thực-tế">🎯 Ứng dụng thực tế</h2>
+
+<h3 id="1-quantum-state-estimation">1. Quantum State Estimation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_state_estimation</span><span class="p">():</span>
+    <span class="s">"""Estimate unknown quantum state"""</span>
+    <span class="c1"># Simulate unknown state preparation
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Random state parameters
+</span>    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">)</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Perform tomography to estimate state
+</span>    <span class="kn">from</span> <span class="nn">qiskit.ignis.verification.tomography</span> <span class="kn">import</span> <span class="n">state_tomography_circuits</span>
+    <span class="n">qst_circs</span> <span class="o">=</span> <span class="n">state_tomography_circuits</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="n">qst_circs</span><span class="p">,</span> <span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-entanglement-witness">2. Entanglement Witness</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">entanglement_witness</span><span class="p">():</span>
+    <span class="s">"""Measure entanglement witness"""</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Prepare potentially entangled state
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Add some noise
+</span>    
+    <span class="c1"># Measure entanglement witness
+</span>    <span class="c1"># W = |00⟩⟨00| + |11⟩⟨11| - |01⟩⟨01| - |10⟩⟨10|
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-về-nhà">📚 Bài tập về nhà</h2>
+
+<ol>
+  <li><strong>Complete Tomography</strong>: Thực hiện tomography cho 3-qubit GHZ state</li>
+  <li><strong>Error Analysis</strong>: Phân tích measurement errors trong Bell state</li>
+  <li><strong>Custom POVM</strong>: Thiết kế và implement POVM cho 3-outcome measurement</li>
+  <li><strong>Fidelity Tracking</strong>: Theo dõi fidelity theo thời gian với noise</li>
+</ol>
+
+<h2 id="-kết-quả-mong-đợi">🎯 Kết quả mong đợi</h2>
+<ul>
+  <li>Hiểu sâu về quantum measurement theory</li>
+  <li>Thành thạo state tomography techniques</li>
+  <li>Có thể phân tích và mitigate measurement errors</li>
+  <li>Áp dụng advanced measurement protocols</li>
+</ul>
+
+<h2 id="-tài-liệu-tham-khảo">📖 Tài liệu tham khảo</h2>
+<ul>
+  <li><a href="https://qiskit.org/documentation/ignis/verification/tomography.html">Qiskit Ignis Tomography</a></li>
+  <li><a href="https://qiskit.org/textbook/ch-quantum-hardware/measurement-error-mitigation.html">Quantum Measurement Theory</a></li>
+  <li><a href="https://qiskit.org/textbook/ch-quantum-hardware/measurement-error-mitigation.html">State Tomography Tutorial</a></li>
+</ul>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 16: Cài đặt Qiskit và Môi trường Python - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 16: Cài đặt Qiskit và Môi trường Python">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day16.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 16: Cài đặt Qiskit và Môi trường Python">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 16: Cài đặt Qiskit và Môi trường Python</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-16-cài-đặt-qiskit-và-môi-trường-python">Day 16: Cài đặt Qiskit và Môi trường Python</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Cài đặt Python và Qiskit</li>
+  <li>Hiểu cấu trúc cơ bản của Qiskit</li>
+  <li>Chạy chương trình lượng tử đầu tiên</li>
+</ul>
+
+<h2 id="-cài-đặt-môi-trường">📦 Cài đặt môi trường</h2>
+
+<h3 id="1-cài-đặt-python">1. Cài đặt Python</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Tải Python từ python.org (khuyến nghị Python 3.8+)</span>
+<span class="c"># Hoặc sử dụng Anaconda</span>
+conda create <span class="nt">-n</span> quantum <span class="nv">python</span><span class="o">=</span>3.9
+conda activate quantum
+</code></pre></div></div>
+
+<h3 id="2-cài-đặt-qiskit">2. Cài đặt Qiskit</h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pip <span class="nb">install </span>qiskit
+pip <span class="nb">install </span>qiskit[visualization]
+</code></pre></div></div>
+
+<h3 id="3-kiểm-tra-cài-đặt">3. Kiểm tra cài đặt</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">qiskit</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Qiskit version: </span><span class="si">{</span><span class="n">qiskit</span><span class="p">.</span><span class="n">__version__</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-cấu-trúc-qiskit-cơ-bản">🔧 Cấu trúc Qiskit cơ bản</h2>
+
+<h3 id="các-thành-phần-chính">Các thành phần chính:</h3>
+<ul>
+  <li><strong>Qiskit Terra</strong>: Cấu trúc cơ bản và thuật toán</li>
+  <li><strong>Qiskit Aer</strong>: Mô phỏng lượng tử</li>
+  <li><strong>Qiskit Ignis</strong>: Đo lường và hiệu chuẩn</li>
+  <li><strong>Qiskit Aqua</strong>: Thuật toán ứng dụng</li>
+</ul>
+
+<h2 id="-chương-trình-đầu-tiên">💻 Chương trình đầu tiên</h2>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="c1"># Tạo mạch lượng tử với 1 qubit
+</span><span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Áp dụng cổng Hadamard (tạo siêu vị)
+</span><span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Đo qubit
+</span><span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Vẽ mạch
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Mạch lượng tử:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+
+<span class="c1"># Chạy mô phỏng
+</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+
+<span class="c1"># Hiển thị kết quả
+</span><span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Kết quả: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># Vẽ biểu đồ
+</span><span class="n">plot_histogram</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+<span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-thực-hành">📚 Bài tập thực hành</h2>
+
+<h3 id="bài-tập-1-tạo-qubit-0-và-1">Bài tập 1: Tạo qubit |0⟩ và |1⟩</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Tạo qubit |0⟩
+</span><span class="n">qc_0</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">qc_0</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Tạo qubit |1⟩
+</span><span class="n">qc_1</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">qc_1</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Cổng NOT
+</span><span class="n">qc_1</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># Chạy và so sánh kết quả
+</span></code></pre></div></div>
+
+<h3 id="bài-tập-2-tạo-siêu-vị-với-góc-khác-nhau">Bài tập 2: Tạo siêu vị với góc khác nhau</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="k">def</span> <span class="nf">create_superposition</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Cổng quay Y
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Thử với các góc khác nhau
+</span><span class="n">angles</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="-kết-quả-mong-đợi">🎯 Kết quả mong đợi</h2>
+<ul>
+  <li>Hiểu cách cài đặt và sử dụng Qiskit</li>
+  <li>Biết cách tạo mạch lượng tử đơn giản</li>
+  <li>Có thể chạy mô phỏng và hiển thị kết quả</li>
+</ul>
+
+<h2 id="-tài-liệu-tham-khảo">📖 Tài liệu tham khảo</h2>
+<ul>
+  <li><a href="https://qiskit.org/documentation/">Qiskit Documentation</a></li>
+  <li><a href="https://qiskit.org/documentation/tutorials.html">Qiskit Tutorials</a></li>
+  <li><a href="https://qiskit.org/textbook/preface.html">Python for Quantum Computing</a></li>
+</ul>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

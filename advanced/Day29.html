@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 29: Variational Quantum Eigensolver (VQE) - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 29: Variational Quantum Eigensolver (VQE)">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day29.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 29: Variational Quantum Eigensolver (VQE)">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 29: Variational Quantum Eigensolver (VQE)</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-29-variational-quantum-eigensolver-vqe">Day 29: Variational Quantum Eigensolver (VQE)</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Hiểu nguyên lý hoạt động của VQE</li>
+  <li>Triển khai VQE cho ground state estimation</li>
+  <li>Áp dụng VQE trong quantum chemistry</li>
+  <li>Thiết kế ansatz circuits cho phân tử</li>
+</ul>
+
+<h2 id="-vqe---tổng-quan">🧠 VQE - Tổng Quan</h2>
+
+<h3 id="tại-sao-vqe">Tại sao VQE?</h3>
+<ul>
+  <li><strong>Ground state estimation</strong>: Tìm trạng thái cơ bản của hệ lượng tử</li>
+  <li><strong>Quantum chemistry</strong>: Mô phỏng phân tử và phản ứng hóa học</li>
+  <li><strong>Hybrid quantum-classical</strong>: Kết hợp quantum và classical optimization</li>
+  <li><strong>NISQ compatibility</strong>: Phù hợp với quantum computers hiện tại</li>
+  <li><strong>Energy minimization</strong>: Tối ưu hóa năng lượng của hệ</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms</span> <span class="kn">import</span> <span class="n">VQE</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span><span class="p">,</span> <span class="n">COBYLA</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">Pauli</span>
+<span class="kn">from</span> <span class="nn">qiskit.opflow</span> <span class="kn">import</span> <span class="n">PauliSumOp</span><span class="p">,</span> <span class="n">I</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span>
+<span class="kn">from</span> <span class="nn">qiskit_nature.drivers</span> <span class="kn">import</span> <span class="n">PySCFDriver</span>
+<span class="kn">from</span> <span class="nn">qiskit_nature.transformers</span> <span class="kn">import</span> <span class="n">ActiveSpaceTransformer</span>
+<span class="kn">from</span> <span class="nn">qiskit_nature.algorithms</span> <span class="kn">import</span> <span class="n">GroundStateEigensolver</span>
+<span class="kn">from</span> <span class="nn">qiskit_nature.algorithms</span> <span class="kn">import</span> <span class="n">VQEUCCFactory</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
+</code></pre></div></div>
+
+<h2 id="-vqe-fundamentals">🔧 VQE Fundamentals</h2>
+
+<h3 id="1-vqe-algorithm-structure">1. VQE Algorithm Structure</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">vqe_algorithm_overview</span><span class="p">():</span>
+    <span class="s">"""
+    Tổng quan về thuật toán VQE
+    """</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"VQE Algorithm Steps:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"1. Prepare parameterized quantum state |ψ(θ)⟩"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"2. Measure expectation value ⟨ψ(θ)|H|ψ(θ)⟩"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"3. Use classical optimizer to minimize energy"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"4. Update parameters θ"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"5. Repeat until convergence"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="bp">True</span>
+
+<span class="c1"># Overview
+</span><span class="n">vqe_algorithm_overview</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-ansatz-circuit-design">2. Ansatz Circuit Design</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">hardware_efficient_ansatz</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="s">"""
+    Tạo hardware-efficient ansatz circuit
+    """</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Parameters
+</span>    <span class="n">params</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">param_idx</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="c1"># Initial layer
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Ansatz layers
+</span>    <span class="k">for</span> <span class="n">layer</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
+        <span class="c1"># Single-qubit rotations
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">theta</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="sa">f</span><span class="s">'θ_</span><span class="si">{</span><span class="n">param_idx</span><span class="si">}</span><span class="s">'</span><span class="p">)</span>
+            <span class="n">params</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">param_idx</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+        <span class="c1"># Entangling layer
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Final layer connects last to first
+</span>        <span class="k">if</span> <span class="n">n_qubits</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="n">params</span>
+
+<span class="k">def</span> <span class="nf">ucc_ansatz_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo UCC (Unitary Coupled Cluster) ansatz
+    """</span>
+    <span class="c1"># Simple UCC ansatz for 2-qubit system
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Reference state |01⟩ (Hartree-Fock)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># UCC excitation operator
+</span>    <span class="n">theta</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ'</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="p">[</span><span class="n">theta</span><span class="p">]</span>
+
+<span class="c1"># Test ansatz circuits
+</span><span class="n">n_qubits</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">hw_ansatz</span><span class="p">,</span> <span class="n">hw_params</span> <span class="o">=</span> <span class="n">hardware_efficient_ansatz</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+<span class="n">ucc_ansatz</span><span class="p">,</span> <span class="n">ucc_params</span> <span class="o">=</span> <span class="n">ucc_ansatz_demo</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Hardware-Efficient Ansatz:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">hw_ansatz</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Number of parameters: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">hw_params</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">UCC Ansatz:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">ucc_ansatz</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Number of parameters: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">ucc_params</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-vqe-implementation">🧪 VQE Implementation</h2>
+
+<h3 id="1-simple-vqe-cho-2-qubit-system">1. Simple VQE cho 2-qubit System</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">simple_vqe_demo</span><span class="p">():</span>
+    <span class="s">"""
+    VQE demo cho hệ 2-qubit đơn giản
+    """</span>
+    <span class="c1"># Hamiltonian: H = Z⊗Z + 0.5*X⊗I
+</span>    <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">PauliSumOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">([</span>
+        <span class="p">(</span><span class="s">'ZZ'</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">'XI'</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="p">])</span>
+    
+    <span class="c1"># Ansatz circuit
+</span>    <span class="n">qc</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">ucc_ansatz_demo</span><span class="p">()</span>
+    
+    <span class="c1"># VQE setup
+</span>    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">)</span>
+    
+    <span class="c1"># Create VQE
+</span>    <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span>
+        <span class="n">ansatz</span><span class="o">=</span><span class="n">qc</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+        <span class="n">quantum_instance</span><span class="o">=</span><span class="n">backend</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Solve
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Ground state energy: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal parameters: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Run VQE demo
+</span><span class="n">vqe_result</span> <span class="o">=</span> <span class="n">simple_vqe_demo</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-vqe-với-custom-ansatz">2. VQE với Custom Ansatz</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">custom_ansatz_vqe</span><span class="p">():</span>
+    <span class="s">"""
+    VQE với custom ansatz cho hệ phức tạp hơn
+    """</span>
+    <span class="c1"># Hamiltonian: H = -Z⊗Z - X⊗X + 0.5*I⊗Z
+</span>    <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">PauliSumOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">([</span>
+        <span class="p">(</span><span class="s">'ZZ'</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">'XX'</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">'IZ'</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="p">])</span>
+    
+    <span class="c1"># Custom ansatz
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Parameters
+</span>    <span class="n">theta1</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₁'</span><span class="p">)</span>
+    <span class="n">theta2</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₂'</span><span class="p">)</span>
+    <span class="n">theta3</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₃'</span><span class="p">)</span>
+    
+    <span class="c1"># Ansatz structure
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">theta3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># VQE
+</span>    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">COBYLA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">)</span>
+    
+    <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span>
+        <span class="n">ansatz</span><span class="o">=</span><span class="n">qc</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+        <span class="n">quantum_instance</span><span class="o">=</span><span class="n">backend</span>
+    <span class="p">)</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Ground state energy: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal parameters: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">qc</span>
+
+<span class="c1"># Run custom VQE
+</span><span class="n">custom_result</span><span class="p">,</span> <span class="n">custom_ansatz</span> <span class="o">=</span> <span class="n">custom_ansatz_vqe</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-quantum-chemistry-với-vqe">🧬 Quantum Chemistry với VQE</h2>
+
+<h3 id="1-molecular-hamiltonian">1. Molecular Hamiltonian</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">molecular_hamiltonian_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo tạo molecular Hamiltonian
+    """</span>
+    <span class="c1"># H₂ molecule Hamiltonian (simplified)
+</span>    <span class="c1"># H = -0.011280 * Z⊗Z + 0.171201 * Z⊗I + 0.171201 * I⊗Z + 0.045232 * X⊗X
+</span>    
+    <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">PauliSumOp</span><span class="p">.</span><span class="n">from_list</span><span class="p">([</span>
+        <span class="p">(</span><span class="s">'ZZ'</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.011280</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">'ZI'</span><span class="p">,</span> <span class="mf">0.171201</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">'IZ'</span><span class="p">,</span> <span class="mf">0.171201</span><span class="p">),</span>
+        <span class="p">(</span><span class="s">'XX'</span><span class="p">,</span> <span class="mf">0.045232</span><span class="p">)</span>
+    <span class="p">])</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"H₂ Molecular Hamiltonian:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">hamiltonian</span>
+
+<span class="k">def</span> <span class="nf">h2_vqe_simulation</span><span class="p">():</span>
+    <span class="s">"""
+    VQE simulation cho phân tử H₂
+    """</span>
+    <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">molecular_hamiltonian_demo</span><span class="p">()</span>
+    
+    <span class="c1"># UCC ansatz for H₂
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Reference state |01⟩ (Hartree-Fock)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># UCC excitation
+</span>    <span class="n">theta</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ'</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># VQE
+</span>    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">)</span>
+    
+    <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span>
+        <span class="n">ansatz</span><span class="o">=</span><span class="n">qc</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+        <span class="n">quantum_instance</span><span class="o">=</span><span class="n">backend</span>
+    <span class="p">)</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"H₂ Ground State Energy: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s"> Hartree"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal parameter: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># H₂ simulation
+</span><span class="n">h2_result</span> <span class="o">=</span> <span class="n">h2_vqe_simulation</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-energy-landscape-analysis">2. Energy Landscape Analysis</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">energy_landscape_analysis</span><span class="p">():</span>
+    <span class="s">"""
+    Phân tích energy landscape của VQE
+    """</span>
+    <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">molecular_hamiltonian_demo</span><span class="p">()</span>
+    
+    <span class="c1"># Parameter range
+</span>    <span class="n">theta_range</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">energies</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># UCC ansatz
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ'</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate energy for each parameter
+</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">theta_val</span> <span class="ow">in</span> <span class="n">theta_range</span><span class="p">:</span>
+        <span class="c1"># Bind parameter
+</span>        <span class="n">bound_circuit</span> <span class="o">=</span> <span class="n">qc</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">({</span><span class="n">theta</span><span class="p">:</span> <span class="n">theta_val</span><span class="p">})</span>
+        
+        <span class="c1"># Execute
+</span>        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">bound_circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+        <span class="n">statevector</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">().</span><span class="n">get_statevector</span><span class="p">()</span>
+        
+        <span class="c1"># Calculate expectation value
+</span>        <span class="n">energy</span> <span class="o">=</span> <span class="n">hamiltonian</span><span class="p">.</span><span class="nb">eval</span><span class="p">(</span><span class="s">'statevector'</span><span class="p">,</span> <span class="n">statevector</span><span class="p">)</span>
+        <span class="n">energies</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
+    
+    <span class="c1"># Plot energy landscape
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theta_range</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span> <span class="s">'b-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Parameter θ'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Energy (Hartree)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'VQE Energy Landscape for H₂'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    
+    <span class="c1"># Mark minimum
+</span>    <span class="n">min_idx</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theta_range</span><span class="p">[</span><span class="n">min_idx</span><span class="p">],</span> <span class="n">energies</span><span class="p">[</span><span class="n">min_idx</span><span class="p">],</span> <span class="s">'ro'</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Minimum'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Minimum energy: </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">energies</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s"> Hartree"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimal parameter: </span><span class="si">{</span><span class="n">theta_range</span><span class="p">[</span><span class="n">min_idx</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">theta_range</span><span class="p">,</span> <span class="n">energies</span>
+
+<span class="c1"># Energy landscape
+</span><span class="n">theta_vals</span><span class="p">,</span> <span class="n">energy_vals</span> <span class="o">=</span> <span class="n">energy_landscape_analysis</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-advanced-vqe-techniques">🔬 Advanced VQE Techniques</h2>
+
+<h3 id="1-adaptive-vqe">1. Adaptive VQE</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">adaptive_vqe_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo adaptive VQE với parameter adaptation
+    """</span>
+    <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">molecular_hamiltonian_demo</span><span class="p">()</span>
+    
+    <span class="c1"># Adaptive ansatz
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Reference state
+</span>    
+    <span class="c1"># First excitation
+</span>    <span class="n">theta1</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₁'</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Second excitation (adaptive)
+</span>    <span class="n">theta2</span> <span class="o">=</span> <span class="n">Parameter</span><span class="p">(</span><span class="s">'θ₂'</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">theta2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># VQE with adaptive optimization
+</span>    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">150</span><span class="p">)</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">)</span>
+    
+    <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span>
+        <span class="n">ansatz</span><span class="o">=</span><span class="n">qc</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+        <span class="n">quantum_instance</span><span class="o">=</span><span class="n">backend</span>
+    <span class="p">)</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Adaptive VQE Energy: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s"> Hartree"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Parameters: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_parameters</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Adaptive VQE
+</span><span class="n">adaptive_result</span> <span class="o">=</span> <span class="n">adaptive_vqe_demo</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-vqe-với-error-mitigation">2. VQE với Error Mitigation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">vqe_error_mitigation</span><span class="p">():</span>
+    <span class="s">"""
+    VQE với error mitigation techniques
+    """</span>
+    <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">molecular_hamiltonian_demo</span><span class="p">()</span>
+    
+    <span class="c1"># Ansatz
+</span>    <span class="n">qc</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">ucc_ansatz_demo</span><span class="p">()</span>
+    
+    <span class="c1"># Multiple backends for comparison
+</span>    <span class="n">backends</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'statevector'</span><span class="p">:</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">),</span>
+        <span class="s">'qasm'</span><span class="p">:</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="p">}</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">backend</span> <span class="ow">in</span> <span class="n">backends</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span>
+            <span class="n">ansatz</span><span class="o">=</span><span class="n">qc</span><span class="p">,</span>
+            <span class="n">optimizer</span><span class="o">=</span><span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
+            <span class="n">quantum_instance</span><span class="o">=</span><span class="n">backend</span>
+        <span class="p">)</span>
+        
+        <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s"> backend energy: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s"> Hartree"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Error mitigation demo
+</span><span class="n">error_results</span> <span class="o">=</span> <span class="n">vqe_error_mitigation</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-vqe-performance-analysis">📊 VQE Performance Analysis</h2>
+
+<h3 id="1-convergence-analysis">1. Convergence Analysis</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">vqe_convergence_analysis</span><span class="p">():</span>
+    <span class="s">"""
+    Phân tích sự hội tụ của VQE
+    """</span>
+    <span class="n">hamiltonian</span> <span class="o">=</span> <span class="n">molecular_hamiltonian_demo</span><span class="p">()</span>
+    <span class="n">qc</span><span class="p">,</span> <span class="n">params</span> <span class="o">=</span> <span class="n">ucc_ansatz_demo</span><span class="p">()</span>
+    
+    <span class="c1"># Track convergence
+</span>    <span class="n">energies</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">iterations</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span><span class="p">):</span>
+        <span class="n">energies</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">mean</span><span class="p">)</span>
+        <span class="n">iterations</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">iteration</span><span class="p">)</span>
+    
+    <span class="c1"># VQE with callback
+</span>    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">)</span>
+    
+    <span class="n">vqe</span> <span class="o">=</span> <span class="n">VQE</span><span class="p">(</span>
+        <span class="n">ansatz</span><span class="o">=</span><span class="n">qc</span><span class="p">,</span>
+        <span class="n">optimizer</span><span class="o">=</span><span class="n">optimizer</span><span class="p">,</span>
+        <span class="n">quantum_instance</span><span class="o">=</span><span class="n">backend</span>
+    <span class="p">)</span>
+    
+    <span class="n">result</span> <span class="o">=</span> <span class="n">vqe</span><span class="p">.</span><span class="n">solve</span><span class="p">(</span><span class="n">hamiltonian</span><span class="p">)</span>
+    
+    <span class="c1"># Plot convergence
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">iterations</span><span class="p">,</span> <span class="n">energies</span><span class="p">,</span> <span class="s">'b-o'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Iteration'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Energy (Hartree)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'VQE Convergence'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">yscale</span><span class="p">(</span><span class="s">'log'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Final energy: </span><span class="si">{</span><span class="n">result</span><span class="p">.</span><span class="n">optimal_value</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s"> Hartree"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Convergence iterations: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">iterations</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">iterations</span><span class="p">,</span> <span class="n">energies</span>
+
+<span class="c1"># Convergence analysis
+</span><span class="n">conv_iterations</span><span class="p">,</span> <span class="n">conv_energies</span> <span class="o">=</span> <span class="n">vqe_convergence_analysis</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-thực-hành">🎯 Bài tập thực hành</h2>
+
+<h3 id="bài-tập-1-vqe-cho-heisenberg-model">Bài tập 1: VQE cho Heisenberg Model</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">heisenberg_vqe_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Bài tập: Implement VQE cho Heisenberg model
+    H = J * (X⊗X + Y⊗Y + Z⊗Z)
+    """</span>
+    <span class="c1"># TODO: Implement Heisenberg Hamiltonian
+</span>    <span class="c1"># TODO: Design appropriate ansatz
+</span>    <span class="c1"># TODO: Run VQE and find ground state
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-2-vqe-cho-lih-molecule">Bài tập 2: VQE cho LiH Molecule</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">lih_vqe_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Bài tập: VQE cho phân tử LiH
+    """</span>
+    <span class="c1"># TODO: Use Qiskit Nature for LiH
+</span>    <span class="c1"># TODO: Implement UCC ansatz
+</span>    <span class="c1"># TODO: Compare with classical methods
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h2 id="-tài-liệu-tham-khảo">📚 Tài liệu tham khảo</h2>
+
+<h3 id="sách-và-papers">Sách và Papers:</h3>
+<ul>
+  <li>“Variational Quantum Eigensolver: A Review of Methods and Best Practices” - Cerezo et al.</li>
+  <li>“Quantum Chemistry in the Age of Quantum Computing” - Cao et al.</li>
+  <li>Qiskit Nature Documentation</li>
+</ul>
+
+<h3 id="công-cụ">Công cụ:</h3>
+<ul>
+  <li>Qiskit Nature</li>
+  <li>PennyLane Chemistry</li>
+  <li>OpenFermion</li>
+</ul>
+
+<h3 id="ứng-dụng-thực-tế">Ứng dụng thực tế:</h3>
+<ul>
+  <li>Drug discovery</li>
+  <li>Material science</li>
+  <li>Catalysis research</li>
+</ul>
+
+<hr />
+
+<h2 id="-tổng-kết-day-29">🎯 Tổng kết Day 29</h2>
+
+<h3 id="kỹ-năng-đạt-được">Kỹ năng đạt được:</h3>
+<ul>
+  <li>✅ Hiểu nguyên lý VQE và variational principle</li>
+  <li>✅ Thiết kế ansatz circuits cho quantum chemistry</li>
+  <li>✅ Triển khai VQE cho ground state estimation</li>
+  <li>✅ Phân tích energy landscape và convergence</li>
+  <li>✅ Áp dụng VQE cho molecular systems</li>
+</ul>
+
+<h3 id="kiến-thức-quan-trọng">Kiến thức quan trọng:</h3>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td><strong>Variational principle</strong>: E ≥ ⟨ψ</td>
+          <td>H</td>
+          <td>ψ⟩</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li><strong>Ansatz design</strong>: Hardware-efficient vs chemistry-inspired</li>
+  <li><strong>Optimization</strong>: Classical optimizers for quantum problems</li>
+  <li><strong>Quantum chemistry</strong>: Molecular Hamiltonians và electronic structure</li>
+</ul>
+
+<h3 id="chuẩn-bị-cho-day-30">Chuẩn bị cho Day 30:</h3>
+<ul>
+  <li>Neural networks và machine learning concepts</li>
+  <li>Parameter optimization techniques</li>
+  <li>Quantum-classical hybrid algorithms</li>
+</ul>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

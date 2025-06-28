@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 32: Quantum Random Number Generation - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 32: Quantum Random Number Generation">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day32.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 32: Quantum Random Number Generation">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 32: Quantum Random Number Generation</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-32-quantum-random-number-generation">Day 32: Quantum Random Number Generation</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Hiểu nguyên lý tạo số ngẫu nhiên lượng tử</li>
+  <li>Triển khai các phương pháp QRNG khác nhau</li>
+  <li>Đánh giá chất lượng và entropy của số ngẫu nhiên</li>
+  <li>Ứng dụng QRNG trong cryptography và simulation</li>
+</ul>
+
+<h2 id="-quantum-random-number-generation---tổng-quan">🎲 Quantum Random Number Generation - Tổng Quan</h2>
+
+<h3 id="tại-sao-quantum-random-number-generation">Tại sao Quantum Random Number Generation?</h3>
+<ul>
+  <li><strong>True randomness</strong>: Dựa trên nguyên lý bất định của cơ học lượng tử</li>
+  <li><strong>Unpredictability</strong>: Không thể dự đoán kết quả trước khi đo</li>
+  <li><strong>Cryptographic security</strong>: Entropy cao cho ứng dụng bảo mật</li>
+  <li><strong>Simulation accuracy</strong>: Cần thiết cho Monte Carlo và các phương pháp simulation</li>
+  <li><strong>Gaming and gambling</strong>: Fairness và unpredictability</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">random_statevector</span><span class="p">,</span> <span class="n">Statevector</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_bloch_multivector</span><span class="p">,</span> <span class="n">plot_histogram</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">stats</span>
+<span class="kn">import</span> <span class="nn">time</span>
+</code></pre></div></div>
+
+<h2 id="-quantum-random-number-generation-methods">🔧 Quantum Random Number Generation Methods</h2>
+
+<h3 id="1-measurement-based-qrng">1. Measurement-based QRNG</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">MeasurementBasedQRNG</span><span class="p">:</span>
+    <span class="s">"""
+    QRNG dựa trên đo lường trạng thái lượng tử
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s">'qasm_simulator'</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">generate_random_bits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bits</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">method</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">'hadamard'</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="s">"""
+        Tạo n_bits ngẫu nhiên bằng phương pháp đo lường
+        """</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s">'hadamard'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">_hadamard_method</span><span class="p">(</span><span class="n">n_bits</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s">'rotation'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">_rotation_method</span><span class="p">(</span><span class="n">n_bits</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s">'bell'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">_bell_method</span><span class="p">(</span><span class="n">n_bits</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s">"Unknown method: </span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_hadamard_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bits</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="s">"""
+        Sử dụng Hadamard gate để tạo superposition
+        """</span>
+        <span class="c1"># Tạo circuit với n_bits qubits
+</span>        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_bits</span><span class="p">,</span> <span class="n">n_bits</span><span class="p">)</span>
+        
+        <span class="c1"># Áp dụng Hadamard gate cho mỗi qubit
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Đo tất cả qubits
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="c1"># Thực hiện đo
+</span>        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Lấy kết quả
+</span>        <span class="n">bit_string</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">counts</span><span class="p">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">bit_string</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">_rotation_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bits</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="s">"""
+        Sử dụng random rotation để tạo randomness
+        """</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_bits</span><span class="p">,</span> <span class="n">n_bits</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bits</span><span class="p">):</span>
+            <span class="c1"># Random rotation angles
+</span>            <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">)</span>
+            <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">)</span>
+            
+            <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="n">bit_string</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">counts</span><span class="p">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">bit_string</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">_bell_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bits</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="s">"""
+        Sử dụng Bell states để tạo randomness
+        """</span>
+        <span class="c1"># Tạo n_bits/2 Bell pairs
+</span>        <span class="n">n_pairs</span> <span class="o">=</span> <span class="n">n_bits</span> <span class="o">//</span> <span class="mi">2</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n_pairs</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_pairs</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_pairs</span><span class="p">):</span>
+            <span class="c1"># Tạo Bell state
+</span>            <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="n">bit_string</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">counts</span><span class="p">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">bit_string</span><span class="p">]</span>
+
+<span class="c1"># Test Measurement-based QRNG
+</span><span class="n">qrng</span> <span class="o">=</span> <span class="n">MeasurementBasedQRNG</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"Measurement-based QRNG Demo:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Hadamard method:"</span><span class="p">)</span>
+<span class="n">hadamard_bits</span> <span class="o">=</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">'hadamard'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Generated bits: </span><span class="si">{</span><span class="n">hadamard_bits</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Rotation method:"</span><span class="p">)</span>
+<span class="n">rotation_bits</span> <span class="o">=</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">'rotation'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Generated bits: </span><span class="si">{</span><span class="n">rotation_bits</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Bell method:"</span><span class="p">)</span>
+<span class="n">bell_bits</span> <span class="o">=</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="s">'bell'</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Generated bits: </span><span class="si">{</span><span class="n">bell_bits</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-entanglement-based-qrng">2. Entanglement-based QRNG</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">EntanglementBasedQRNG</span><span class="p">:</span>
+    <span class="s">"""
+    QRNG dựa trên quantum entanglement
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s">'qasm_simulator'</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">generate_from_bell_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_pairs</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+        <span class="s">"""
+        Tạo randomness từ Bell states
+        """</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">n_pairs</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_pairs</span><span class="p">)</span>
+        
+        <span class="c1"># Tạo Bell pairs
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_pairs</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Đo với basis ngẫu nhiên
+</span>        <span class="n">alice_bits</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">bob_bits</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_pairs</span><span class="p">):</span>
+            <span class="c1"># Alice measures first qubit
+</span>            <span class="n">alice_qc</span> <span class="o">=</span> <span class="n">qc</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">alice_qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
+            
+            <span class="c1"># Bob measures second qubit
+</span>            <span class="n">bob_qc</span> <span class="o">=</span> <span class="n">qc</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="n">bob_qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+            
+            <span class="c1"># Execute measurements
+</span>            <span class="n">alice_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">alice_qc</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">alice_result</span> <span class="o">=</span> <span class="n">alice_job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">alice_bit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">alice_result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">().</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            
+            <span class="n">bob_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">bob_qc</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">bob_result</span> <span class="o">=</span> <span class="n">bob_job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">bob_bit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">bob_result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">().</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            
+            <span class="n">alice_bits</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">alice_bit</span><span class="p">)</span>
+            <span class="n">bob_bits</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">bob_bit</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">alice_bits</span><span class="p">,</span> <span class="n">bob_bits</span>
+    
+    <span class="k">def</span> <span class="nf">generate_from_ghz_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="s">"""
+        Tạo randomness từ GHZ state
+        """</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Tạo GHZ state
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="n">bit_string</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">counts</span><span class="p">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">bit_string</span><span class="p">]</span>
+
+<span class="c1"># Test Entanglement-based QRNG
+</span><span class="n">ent_qrng</span> <span class="o">=</span> <span class="n">EntanglementBasedQRNG</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Entanglement-based QRNG Demo:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Bell state method:"</span><span class="p">)</span>
+<span class="n">alice_bits</span><span class="p">,</span> <span class="n">bob_bits</span> <span class="o">=</span> <span class="n">ent_qrng</span><span class="p">.</span><span class="n">generate_from_bell_state</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Alice's bits: </span><span class="si">{</span><span class="n">alice_bits</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Bob's bits: </span><span class="si">{</span><span class="n">bob_bits</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">GHZ state method:"</span><span class="p">)</span>
+<span class="n">ghz_bits</span> <span class="o">=</span> <span class="n">ent_qrng</span><span class="p">.</span><span class="n">generate_from_ghz_state</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"GHZ bits: </span><span class="si">{</span><span class="n">ghz_bits</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-randomness-quality-assessment">📊 Randomness Quality Assessment</h2>
+
+<h3 id="1-statistical-tests">1. Statistical Tests</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">RandomnessTester</span><span class="p">:</span>
+    <span class="s">"""
+    Đánh giá chất lượng số ngẫu nhiên
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">tests</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'frequency'</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">_frequency_test</span><span class="p">,</span>
+            <span class="s">'runs'</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">_runs_test</span><span class="p">,</span>
+            <span class="s">'autocorrelation'</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">_autocorrelation_test</span><span class="p">,</span>
+            <span class="s">'entropy'</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">_entropy_test</span><span class="p">,</span>
+            <span class="s">'chi_square'</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">_chi_square_test</span>
+        <span class="p">}</span>
+    
+    <span class="k">def</span> <span class="nf">run_all_tests</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bit_sequence</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="s">"""
+        Chạy tất cả các test thống kê
+        """</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="k">for</span> <span class="n">test_name</span><span class="p">,</span> <span class="n">test_func</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">.</span><span class="n">tests</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">test_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">test_func</span><span class="p">(</span><span class="n">bit_sequence</span><span class="p">)</span>
+            <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">results</span><span class="p">[</span><span class="n">test_name</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"Error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s">"</span>
+        
+        <span class="k">return</span> <span class="n">results</span>
+    
+    <span class="k">def</span> <span class="nf">_frequency_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="s">"""
+        Test tần suất 0 và 1
+        """</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">ones</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">ones</span>
+        
+        <span class="n">proportion</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="mf">0.5</span>
+        
+        <span class="c1"># Chi-square test
+</span>        <span class="n">chi_square</span> <span class="o">=</span> <span class="p">((</span><span class="n">ones</span> <span class="o">-</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">zeros</span> <span class="o">-</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">p_value</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">stats</span><span class="p">.</span><span class="n">chi2</span><span class="p">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">chi_square</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'proportion_ones'</span><span class="p">:</span> <span class="n">proportion</span><span class="p">,</span>
+            <span class="s">'chi_square'</span><span class="p">:</span> <span class="n">chi_square</span><span class="p">,</span>
+            <span class="s">'p_value'</span><span class="p">:</span> <span class="n">p_value</span><span class="p">,</span>
+            <span class="s">'pass'</span><span class="p">:</span> <span class="n">p_value</span> <span class="o">&gt;</span> <span class="mf">0.01</span>
+        <span class="p">}</span>
+    
+    <span class="k">def</span> <span class="nf">_runs_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="s">"""
+        Test runs (chuỗi liên tiếp)
+        """</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">ones</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">ones</span>
+        
+        <span class="c1"># Count runs
+</span>        <span class="n">runs</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">bits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="n">bits</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">runs</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+        <span class="c1"># Expected number of runs
+</span>        <span class="n">expected_runs</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">zeros</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="n">variance</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">zeros</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">ones</span> <span class="o">*</span> <span class="n">zeros</span> <span class="o">-</span> <span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        
+        <span class="c1"># Z-score
+</span>        <span class="n">z_score</span> <span class="o">=</span> <span class="p">(</span><span class="n">runs</span> <span class="o">-</span> <span class="n">expected_runs</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span>
+        <span class="n">p_value</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">stats</span><span class="p">.</span><span class="n">norm</span><span class="p">.</span><span class="n">cdf</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">z_score</span><span class="p">)))</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'runs'</span><span class="p">:</span> <span class="n">runs</span><span class="p">,</span>
+            <span class="s">'expected_runs'</span><span class="p">:</span> <span class="n">expected_runs</span><span class="p">,</span>
+            <span class="s">'z_score'</span><span class="p">:</span> <span class="n">z_score</span><span class="p">,</span>
+            <span class="s">'p_value'</span><span class="p">:</span> <span class="n">p_value</span><span class="p">,</span>
+            <span class="s">'pass'</span><span class="p">:</span> <span class="n">p_value</span> <span class="o">&gt;</span> <span class="mf">0.01</span>
+        <span class="p">}</span>
+    
+    <span class="k">def</span> <span class="nf">_autocorrelation_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">lag</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="s">"""
+        Test autocorrelation
+        """</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">lag</span> <span class="o">&gt;=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{</span><span class="s">'error'</span><span class="p">:</span> <span class="s">'Lag too large'</span><span class="p">}</span>
+        
+        <span class="c1"># Calculate autocorrelation
+</span>        <span class="n">autocorr</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">lag</span><span class="p">):</span>
+            <span class="n">autocorr</span> <span class="o">+=</span> <span class="n">bits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">bits</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">lag</span><span class="p">]</span>
+        
+        <span class="n">autocorr</span> <span class="o">=</span> <span class="n">autocorr</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">lag</span><span class="p">)</span>
+        
+        <span class="c1"># Expected value for random sequence
+</span>        <span class="n">expected</span> <span class="o">=</span> <span class="mf">0.25</span>  <span class="c1"># E[X*X] = E[X]^2 = 0.25
+</span>        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'autocorrelation'</span><span class="p">:</span> <span class="n">autocorr</span><span class="p">,</span>
+            <span class="s">'expected'</span><span class="p">:</span> <span class="n">expected</span><span class="p">,</span>
+            <span class="s">'deviation'</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">autocorr</span> <span class="o">-</span> <span class="n">expected</span><span class="p">),</span>
+            <span class="s">'pass'</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">autocorr</span> <span class="o">-</span> <span class="n">expected</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
+        <span class="p">}</span>
+    
+    <span class="k">def</span> <span class="nf">_entropy_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="s">"""
+        Test entropy
+        """</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">ones</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">ones</span>
+        
+        <span class="c1"># Calculate Shannon entropy
+</span>        <span class="n">p1</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">/</span> <span class="n">n</span>
+        <span class="n">p0</span> <span class="o">=</span> <span class="n">zeros</span> <span class="o">/</span> <span class="n">n</span>
+        
+        <span class="k">if</span> <span class="n">p1</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">p0</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">entropy</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">entropy</span> <span class="o">=</span> <span class="o">-</span><span class="n">p1</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span> <span class="o">-</span> <span class="n">p0</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p0</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'entropy'</span><span class="p">:</span> <span class="n">entropy</span><span class="p">,</span>
+            <span class="s">'max_entropy'</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s">'entropy_ratio'</span><span class="p">:</span> <span class="n">entropy</span><span class="p">,</span>
+            <span class="s">'pass'</span><span class="p">:</span> <span class="n">entropy</span> <span class="o">&gt;</span> <span class="mf">0.9</span>
+        <span class="p">}</span>
+    
+    <span class="k">def</span> <span class="nf">_chi_square_test</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+        <span class="s">"""
+        Chi-square test cho distribution
+        """</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">ones</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="n">n</span> <span class="o">-</span> <span class="n">ones</span>
+        
+        <span class="c1"># Chi-square statistic
+</span>        <span class="n">chi_square</span> <span class="o">=</span> <span class="p">((</span><span class="n">ones</span> <span class="o">-</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">zeros</span> <span class="o">-</span> <span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">p_value</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">stats</span><span class="p">.</span><span class="n">chi2</span><span class="p">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">chi_square</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'chi_square'</span><span class="p">:</span> <span class="n">chi_square</span><span class="p">,</span>
+            <span class="s">'p_value'</span><span class="p">:</span> <span class="n">p_value</span><span class="p">,</span>
+            <span class="s">'pass'</span><span class="p">:</span> <span class="n">p_value</span> <span class="o">&gt;</span> <span class="mf">0.01</span>
+        <span class="p">}</span>
+
+<span class="c1"># Test randomness quality
+</span><span class="n">tester</span> <span class="o">=</span> <span class="n">RandomnessTester</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Randomness Quality Assessment:"</span><span class="p">)</span>
+<span class="c1"># Generate test sequence
+</span><span class="n">test_bits</span> <span class="o">=</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="s">'hadamard'</span><span class="p">)</span>
+<span class="n">test_results</span> <span class="o">=</span> <span class="n">tester</span><span class="p">.</span><span class="n">run_all_tests</span><span class="p">(</span><span class="n">test_bits</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">test_name</span><span class="p">,</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">test_results</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="si">{</span><span class="n">test_name</span><span class="p">.</span><span class="n">upper</span><span class="p">()</span><span class="si">}</span><span class="s"> Test:"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">result</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Result: </span><span class="si">{</span><span class="n">result</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-entropy-analysis">2. Entropy Analysis</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">analyze_entropy_sources</span><span class="p">():</span>
+    <span class="s">"""
+    Phân tích entropy từ các nguồn khác nhau
+    """</span>
+    <span class="n">sources</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'Quantum Hadamard'</span><span class="p">:</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="s">'hadamard'</span><span class="p">),</span>
+        <span class="s">'Quantum Rotation'</span><span class="p">:</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="s">'rotation'</span><span class="p">),</span>
+        <span class="s">'Quantum Bell'</span><span class="p">:</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="s">'bell'</span><span class="p">),</span>
+        <span class="s">'Classical Python'</span><span class="p">:</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)],</span>
+        <span class="s">'Pseudo-random'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1000</span><span class="p">).</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="p">}</span>
+    
+    <span class="n">entropy_analysis</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">source_name</span><span class="p">,</span> <span class="n">bits</span> <span class="ow">in</span> <span class="n">sources</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Calculate entropy
+</span>        <span class="n">ones</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">zeros</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span> <span class="o">-</span> <span class="n">ones</span>
+        <span class="n">p1</span> <span class="o">=</span> <span class="n">ones</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">p0</span> <span class="o">=</span> <span class="n">zeros</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">p1</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">p0</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">entropy</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">entropy</span> <span class="o">=</span> <span class="o">-</span><span class="n">p1</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span> <span class="o">-</span> <span class="n">p0</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">log2</span><span class="p">(</span><span class="n">p0</span><span class="p">)</span>
+        
+        <span class="c1"># Run statistical tests
+</span>        <span class="n">test_results</span> <span class="o">=</span> <span class="n">tester</span><span class="p">.</span><span class="n">run_all_tests</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">passed_tests</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">test_results</span><span class="p">.</span><span class="n">values</span><span class="p">()</span> 
+                          <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="n">result</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'pass'</span><span class="p">,</span> <span class="bp">False</span><span class="p">))</span>
+        
+        <span class="n">entropy_analysis</span><span class="p">[</span><span class="n">source_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'entropy'</span><span class="p">:</span> <span class="n">entropy</span><span class="p">,</span>
+            <span class="s">'passed_tests'</span><span class="p">:</span> <span class="n">passed_tests</span><span class="p">,</span>
+            <span class="s">'total_tests'</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_results</span><span class="p">)</span>
+        <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">entropy_analysis</span>
+
+<span class="c1"># Analyze entropy sources
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Entropy Source Analysis:"</span><span class="p">)</span>
+<span class="n">entropy_results</span> <span class="o">=</span> <span class="n">analyze_entropy_sources</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">source</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">entropy_results</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s">:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Entropy: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s">'entropy'</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Tests passed: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s">'passed_tests'</span><span class="p">]</span><span class="si">}</span><span class="s">/</span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s">'total_tests'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-cryptographic-applications">🔐 Cryptographic Applications</h2>
+
+<h3 id="1-quantum-key-generation">1. Quantum Key Generation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_key_generation</span><span class="p">(</span><span class="n">n_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">256</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="s">"""
+    Tạo cryptographic key sử dụng QRNG
+    """</span>
+    <span class="c1"># Generate random bits
+</span>    <span class="n">alice_bits</span> <span class="o">=</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="n">n_bits</span><span class="p">,</span> <span class="s">'hadamard'</span><span class="p">)</span>
+    <span class="n">bob_bits</span> <span class="o">=</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="n">n_bits</span><span class="p">,</span> <span class="s">'hadamard'</span><span class="p">)</span>
+    
+    <span class="c1"># Test quality
+</span>    <span class="n">alice_quality</span> <span class="o">=</span> <span class="n">tester</span><span class="p">.</span><span class="n">run_all_tests</span><span class="p">(</span><span class="n">alice_bits</span><span class="p">)</span>
+    <span class="n">bob_quality</span> <span class="o">=</span> <span class="n">tester</span><span class="p">.</span><span class="n">run_all_tests</span><span class="p">(</span><span class="n">bob_bits</span><span class="p">)</span>
+    
+    <span class="c1"># Check if keys are suitable for cryptography
+</span>    <span class="n">alice_entropy</span> <span class="o">=</span> <span class="n">alice_quality</span><span class="p">[</span><span class="s">'entropy'</span><span class="p">][</span><span class="s">'entropy'</span><span class="p">]</span>
+    <span class="n">bob_entropy</span> <span class="o">=</span> <span class="n">bob_quality</span><span class="p">[</span><span class="s">'entropy'</span><span class="p">][</span><span class="s">'entropy'</span><span class="p">]</span>
+    
+    <span class="k">if</span> <span class="n">alice_entropy</span> <span class="o">&lt;</span> <span class="mf">0.95</span> <span class="ow">or</span> <span class="n">bob_entropy</span> <span class="o">&lt;</span> <span class="mf">0.95</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Warning: Low entropy detected in key generation"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">alice_bits</span><span class="p">,</span> <span class="n">bob_bits</span>
+
+<span class="k">def</span> <span class="nf">quantum_otp_encryption</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="s">"""
+    One-time pad encryption sử dụng quantum key
+    """</span>
+    <span class="c1"># Convert message to binary
+</span>    <span class="n">message_bits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">message</span><span class="p">:</span>
+        <span class="n">char_bits</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">format</span><span class="p">(</span><span class="nb">ord</span><span class="p">(</span><span class="n">char</span><span class="p">),</span> <span class="s">'08b'</span><span class="p">)]</span>
+        <span class="n">message_bits</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="n">char_bits</span><span class="p">)</span>
+    
+    <span class="c1"># Pad message if necessary
+</span>    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">message_bits</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+        <span class="n">message_bits</span><span class="p">.</span><span class="n">extend</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">8</span><span class="p">)</span>  <span class="c1"># Pad with null bytes
+</span>    
+    <span class="c1"># Truncate key if necessary
+</span>    <span class="n">key</span> <span class="o">=</span> <span class="n">key</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">message_bits</span><span class="p">)]</span>
+    
+    <span class="c1"># XOR encryption
+</span>    <span class="n">cipher_bits</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="o">^</span> <span class="n">k</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">message_bits</span><span class="p">,</span> <span class="n">key</span><span class="p">)]</span>
+    
+    <span class="k">return</span> <span class="n">cipher_bits</span>
+
+<span class="k">def</span> <span class="nf">quantum_otp_decryption</span><span class="p">(</span><span class="n">cipher_bits</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">key</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="s">"""
+    One-time pad decryption
+    """</span>
+    <span class="c1"># XOR decryption
+</span>    <span class="n">message_bits</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="o">^</span> <span class="n">k</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cipher_bits</span><span class="p">,</span> <span class="n">key</span><span class="p">)]</span>
+    
+    <span class="c1"># Convert back to string
+</span>    <span class="n">message</span> <span class="o">=</span> <span class="s">""</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">message_bits</span><span class="p">),</span> <span class="mi">8</span><span class="p">):</span>
+        <span class="n">byte_bits</span> <span class="o">=</span> <span class="n">message_bits</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">8</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">byte_bits</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span><span class="p">:</span>
+            <span class="n">char_code</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">byte_bits</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">char_code</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># Skip null bytes
+</span>                <span class="n">message</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">char_code</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">message</span>
+
+<span class="c1"># Test quantum cryptography
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Quantum Cryptography Demo:"</span><span class="p">)</span>
+<span class="c1"># Generate quantum key
+</span><span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span> <span class="o">=</span> <span class="n">quantum_key_generation</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>
+
+<span class="c1"># Test OTP encryption
+</span><span class="n">message</span> <span class="o">=</span> <span class="s">"Hello Quantum World!"</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Original message: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># Encrypt with Alice's key
+</span><span class="n">cipher</span> <span class="o">=</span> <span class="n">quantum_otp_encryption</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">alice_key</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Cipher length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">cipher</span><span class="p">)</span><span class="si">}</span><span class="s"> bits"</span><span class="p">)</span>
+
+<span class="c1"># Decrypt with Bob's key (should be different)
+</span><span class="n">decrypted</span> <span class="o">=</span> <span class="n">quantum_otp_decryption</span><span class="p">(</span><span class="n">cipher</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Decrypted with Bob's key: </span><span class="si">{</span><span class="n">decrypted</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># Decrypt with Alice's key (should be correct)
+</span><span class="n">correct_decrypted</span> <span class="o">=</span> <span class="n">quantum_otp_decryption</span><span class="p">(</span><span class="n">cipher</span><span class="p">,</span> <span class="n">alice_key</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Decrypted with Alice's key: </span><span class="si">{</span><span class="n">correct_decrypted</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-quantum-random-number-service">2. Quantum Random Number Service</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">QuantumRandomService</span><span class="p">:</span>
+    <span class="s">"""
+    Service cung cấp số ngẫu nhiên lượng tử
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">qrng</span> <span class="o">=</span> <span class="n">MeasurementBasedQRNG</span><span class="p">()</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cache</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cache_size</span> <span class="o">=</span> <span class="mi">1000</span>
+    
+    <span class="k">def</span> <span class="nf">get_random_bits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_bits</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+        <span class="s">"""
+        Lấy n_bits ngẫu nhiên
+        """</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">n_bits</span><span class="p">:</span>
+            <span class="c1"># Generate more bits
+</span>            <span class="n">new_bits</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">cache_size</span><span class="p">,</span> <span class="s">'hadamard'</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_bits</span><span class="p">)</span>
+        
+        <span class="c1"># Return requested bits
+</span>        <span class="n">requested_bits</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">[:</span><span class="n">n_bits</span><span class="p">]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cache</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">cache</span><span class="p">[</span><span class="n">n_bits</span><span class="p">:]</span>
+        
+        <span class="k">return</span> <span class="n">requested_bits</span>
+    
+    <span class="k">def</span> <span class="nf">get_random_int</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">min_val</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">max_val</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="s">"""
+        Lấy số nguyên ngẫu nhiên trong khoảng [min_val, max_val]
+        """</span>
+        <span class="n">range_size</span> <span class="o">=</span> <span class="n">max_val</span> <span class="o">-</span> <span class="n">min_val</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="n">n_bits</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">log2</span><span class="p">(</span><span class="n">range_size</span><span class="p">)))</span>
+        
+        <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">bits</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_random_bits</span><span class="p">(</span><span class="n">n_bits</span><span class="p">)</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">bits</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">value</span> <span class="o">&lt;</span> <span class="n">range_size</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">min_val</span> <span class="o">+</span> <span class="n">value</span>
+    
+    <span class="k">def</span> <span class="nf">get_random_float</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="s">"""
+        Lấy số thực ngẫu nhiên trong [0, 1)
+        """</span>
+        <span class="n">bits</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_random_bits</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">bits</span><span class="p">)),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">32</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">get_random_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">charset</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">"0123456789ABCDEF"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="s">"""
+        Lấy chuỗi ngẫu nhiên
+        """</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s">""</span>
+        <span class="n">charset_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">charset</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">length</span><span class="p">):</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">get_random_int</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">charset_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="n">charset</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">result</span>
+
+<span class="c1"># Test quantum random service
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Quantum Random Service Demo:"</span><span class="p">)</span>
+<span class="n">qrng_service</span> <span class="o">=</span> <span class="n">QuantumRandomService</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Random bits: </span><span class="si">{</span><span class="n">qrng_service</span><span class="p">.</span><span class="n">get_random_bits</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Random int (1-100): </span><span class="si">{</span><span class="n">qrng_service</span><span class="p">.</span><span class="n">get_random_int</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Random float: </span><span class="si">{</span><span class="n">qrng_service</span><span class="p">.</span><span class="n">get_random_float</span><span class="p">()</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Random string: </span><span class="si">{</span><span class="n">qrng_service</span><span class="p">.</span><span class="n">get_random_string</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-gaming-and-simulation-applications">🎲 Gaming and Simulation Applications</h2>
+
+<h3 id="1-quantum-dice">1. Quantum Dice</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_dice_roll</span><span class="p">(</span><span class="n">sides</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="s">"""
+    Gieo xúc xắc lượng tử
+    """</span>
+    <span class="n">qrng_service</span> <span class="o">=</span> <span class="n">QuantumRandomService</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">qrng_service</span><span class="p">.</span><span class="n">get_random_int</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">sides</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">quantum_card_shuffle</span><span class="p">(</span><span class="n">deck_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">52</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="s">"""
+    Xáo bài lượng tử
+    """</span>
+    <span class="n">qrng_service</span> <span class="o">=</span> <span class="n">QuantumRandomService</span><span class="p">()</span>
+    <span class="n">deck</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">deck_size</span><span class="p">))</span>
+    <span class="n">shuffled</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">while</span> <span class="n">deck</span><span class="p">:</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">qrng_service</span><span class="p">.</span><span class="n">get_random_int</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">deck</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">shuffled</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">deck</span><span class="p">.</span><span class="n">pop</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">shuffled</span>
+
+<span class="c1"># Test quantum gaming
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Quantum Gaming Demo:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Quantum dice rolls:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">roll</span> <span class="o">=</span> <span class="n">quantum_dice_roll</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Roll: </span><span class="si">{</span><span class="n">roll</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Quantum card shuffle (first 10 cards):"</span><span class="p">)</span>
+<span class="n">shuffled_deck</span> <span class="o">=</span> <span class="n">quantum_card_shuffle</span><span class="p">(</span><span class="mi">52</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"First 10 cards: </span><span class="si">{</span><span class="n">shuffled_deck</span><span class="p">[</span><span class="si">:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-monte-carlo-simulation">2. Monte Carlo Simulation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_monte_carlo_pi</span><span class="p">(</span><span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="s">"""
+    Tính π sử dụng Monte Carlo với QRNG
+    """</span>
+    <span class="n">qrng_service</span> <span class="o">=</span> <span class="n">QuantumRandomService</span><span class="p">()</span>
+    <span class="n">inside_circle</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_points</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">qrng_service</span><span class="p">.</span><span class="n">get_random_float</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># [-1, 1]
+</span>        <span class="n">y</span> <span class="o">=</span> <span class="n">qrng_service</span><span class="p">.</span><span class="n">get_random_float</span><span class="p">()</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>  <span class="c1"># [-1, 1]
+</span>        
+        <span class="k">if</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">inside_circle</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="n">pi_estimate</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">inside_circle</span> <span class="o">/</span> <span class="n">n_points</span>
+    <span class="k">return</span> <span class="n">pi_estimate</span>
+
+<span class="k">def</span> <span class="nf">quantum_integration</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n_points</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="s">"""
+    Tích phân Monte Carlo với QRNG
+    """</span>
+    <span class="n">qrng_service</span> <span class="o">=</span> <span class="n">QuantumRandomService</span><span class="p">()</span>
+    <span class="n">sum_values</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_points</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">qrng_service</span><span class="p">.</span><span class="n">get_random_float</span><span class="p">()</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span>
+        <span class="n">sum_values</span> <span class="o">+=</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    
+    <span class="n">integral</span> <span class="o">=</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">sum_values</span> <span class="o">/</span> <span class="n">n_points</span>
+    <span class="k">return</span> <span class="n">integral</span>
+
+<span class="c1"># Test quantum Monte Carlo
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Quantum Monte Carlo Demo:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Estimating π:"</span><span class="p">)</span>
+<span class="n">pi_estimate</span> <span class="o">=</span> <span class="n">quantum_monte_carlo_pi</span><span class="p">(</span><span class="mi">10000</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Estimated π: </span><span class="si">{</span><span class="n">pi_estimate</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Actual π: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error: </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">pi_estimate</span> <span class="o">-</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Integrating x² from 0 to 1:"</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">square_func</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="n">integral</span> <span class="o">=</span> <span class="n">quantum_integration</span><span class="p">(</span><span class="n">square_func</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10000</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Estimated integral: </span><span class="si">{</span><span class="n">integral</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Actual integral: 1/3 = </span><span class="si">{</span><span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error: </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">integral</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">6</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-performance-analysis">📈 Performance Analysis</h2>
+
+<h3 id="1-speed-comparison">1. Speed Comparison</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">performance_comparison</span><span class="p">(</span><span class="n">n_bits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">):</span>
+    <span class="s">"""
+    So sánh hiệu suất các phương pháp QRNG
+    """</span>
+    <span class="n">methods</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'Quantum Hadamard'</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="n">n_bits</span><span class="p">,</span> <span class="s">'hadamard'</span><span class="p">),</span>
+        <span class="s">'Quantum Rotation'</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="n">n_bits</span><span class="p">,</span> <span class="s">'rotation'</span><span class="p">),</span>
+        <span class="s">'Quantum Bell'</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">qrng</span><span class="p">.</span><span class="n">generate_random_bits</span><span class="p">(</span><span class="n">n_bits</span><span class="p">,</span> <span class="s">'bell'</span><span class="p">),</span>
+        <span class="s">'Classical Python'</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_bits</span><span class="p">)],</span>
+        <span class="s">'NumPy'</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n_bits</span><span class="p">).</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="p">}</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">method_name</span><span class="p">,</span> <span class="n">method_func</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">bits</span> <span class="o">=</span> <span class="n">method_func</span><span class="p">()</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+        
+        <span class="c1"># Test quality
+</span>        <span class="n">quality</span> <span class="o">=</span> <span class="n">tester</span><span class="p">.</span><span class="n">run_all_tests</span><span class="p">(</span><span class="n">bits</span><span class="p">)</span>
+        <span class="n">entropy</span> <span class="o">=</span> <span class="n">quality</span><span class="p">[</span><span class="s">'entropy'</span><span class="p">][</span><span class="s">'entropy'</span><span class="p">]</span>
+        
+        <span class="n">results</span><span class="p">[</span><span class="n">method_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'time'</span><span class="p">:</span> <span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">,</span>
+            <span class="s">'entropy'</span><span class="p">:</span> <span class="n">entropy</span><span class="p">,</span>
+            <span class="s">'bits_per_second'</span><span class="p">:</span> <span class="n">n_bits</span> <span class="o">/</span> <span class="p">(</span><span class="n">end_time</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+        <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Performance analysis
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Performance Analysis:"</span><span class="p">)</span>
+<span class="n">perf_results</span> <span class="o">=</span> <span class="n">performance_comparison</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">perf_results</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s">:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Time: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s">'time'</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s"> seconds"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Entropy: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s">'entropy'</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Bits/second: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s">'bits_per_second'</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">0</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-thực-hành">🎯 Bài tập thực hành</h2>
+
+<h3 id="bài-tập-1-implement-quantum-random-walk">Bài tập 1: Implement Quantum Random Walk</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_random_walk</span><span class="p">():</span>
+    <span class="s">"""
+    Triển khai quantum random walk
+    """</span>
+    <span class="c1"># TODO: Implement quantum random walk
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-2-quantum-lottery-system">Bài tập 2: Quantum Lottery System</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_lottery</span><span class="p">():</span>
+    <span class="s">"""
+    Hệ thống xổ số lượng tử
+    """</span>
+    <span class="c1"># TODO: Implement quantum lottery
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-3-quantum-art-generation">Bài tập 3: Quantum Art Generation</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_art_generation</span><span class="p">():</span>
+    <span class="s">"""
+    Tạo nghệ thuật sử dụng QRNG
+    """</span>
+    <span class="c1"># TODO: Implement quantum art generation
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h2 id="-tài-liệu-tham-khảo">📚 Tài liệu tham khảo</h2>
+
+<ol>
+  <li><strong>Quantum Random Number Generation</strong>: Herrero-Collantes, M. &amp; Garcia-Escartin, J.C. (2017). Quantum random number generators.</li>
+  <li><strong>Statistical Testing</strong>: NIST Special Publication 800-22: A Statistical Test Suite for Random and Pseudorandom Number Generators.</li>
+  <li><strong>Cryptographic Applications</strong>: Menezes, A.J., van Oorschot, P.C. &amp; Vanstone, S.A. (1996). Handbook of Applied Cryptography.</li>
+  <li><strong>Monte Carlo Methods</strong>: Metropolis, N. &amp; Ulam, S. (1949). The Monte Carlo method.</li>
+</ol>
+
+<h2 id="-hướng-dẫn-tiếp-theo">🔮 Hướng dẫn tiếp theo</h2>
+
+<ul>
+  <li><strong>Day 33</strong>: Quantum Simulation Projects</li>
+  <li><strong>Day 34</strong>: Quantum Computing on Real Hardware</li>
+  <li><strong>Day 35</strong>: Capstone Project và Portfolio Building</li>
+</ul>
+
+<hr />
+
+<p><em>“True randomness is a fundamental resource in quantum information processing.”</em> - Artur Ekert</p>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

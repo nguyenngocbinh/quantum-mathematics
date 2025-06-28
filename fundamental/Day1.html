@@ -3,19 +3,19 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>🧩 Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors) - Quantum Mathematics</title>
-    <meta name="description" content="Lộ trình 15 ngày nhập môn Toán học Lượng tử">
+    <title>🧩 Ngày 1: Vector và Không gian Vector - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
     <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
     <!-- Additional head elements -->
 <meta name="robots" content="index, follow">
 <meta name="author" content="Nguyen Ngoc Binh">
-<meta property="og:title" content="🧩 Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors)">
-<meta property="og:description" content="Lộ trình 15 ngày nhập môn Toán học Lượng tử">
+<meta property="og:title" content="🧩 Ngày 1: Vector và Không gian Vector">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/Day4.html">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/fundamental/Day1.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="🧩 Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors)">
-<meta name="twitter:description" content="Lộ trình 15 ngày nhập môn Toán học Lượng tử">
+<meta name="twitter:title" content="🧩 Ngày 1: Vector và Không gian Vector">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
@@ -63,87 +63,100 @@
             <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">🧩 Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors)</h1>
+    <h1 class="post-title">🧩 Ngày 1: Vector và Không gian Vector</h1>
   </header>
 
   <div class="post-content">
     
-<h1 id="-ngày-4-trị-riêng-eigenvalues-và-vector-riêng-eigenvectors">🧩 <strong>Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors)</strong></h1>
+<h1 id="-ngày-1-vector-và-không-gian-vector">🧩 <strong>Ngày 1: Vector và Không gian Vector</strong></h1>
 
 <hr />
 
-<h2 id="1-khái-niệm-đơn-giản-nhất"><strong>1. Khái niệm đơn giản nhất</strong></h2>
+<h2 id="1-khái-niệm-đơn-giản-nhất-vector-là-gì"><strong>1. Khái niệm đơn giản nhất: Vector là gì?</strong></h2>
 
-<p><strong>Vector riêng</strong> là một vector khi bị tác động bởi một ma trận sẽ <strong>không đổi hướng</strong>, chỉ thay đổi độ lớn.</p>
+<p><strong>Vector</strong> là một mũi tên có:
+✅ <strong>Hướng</strong>
+✅ <strong>Độ dài (hay còn gọi là độ lớn)</strong></p>
 
-<p><strong>Trị riêng</strong> là con số cho biết độ lớn bị thay đổi bao nhiêu.</p>
-
-<hr />
-
-<h3 id="công-thức-cơ-bản"><strong>Công thức cơ bản:</strong></h3>
-
-<p>Cho ma trận <strong>A</strong> và vector <strong>v</strong>, nếu:</p>
-
-\[A \times \mathbf{v} = \lambda \times \mathbf{v}\]
+<p>Dùng để mô tả:</p>
 
 <ul>
-  <li><strong>v</strong> là <strong>vector riêng</strong></li>
-  <li><strong>λ</strong> (lambda) là <strong>trị riêng</strong></li>
-  <li>Nghĩa là: Sau khi nhân ma trận A vào v, vector v vẫn cùng hướng, chỉ bị kéo dài hoặc rút ngắn bởi λ.</li>
+  <li>Vị trí</li>
+  <li>Vận tốc</li>
+  <li>Lực</li>
+  <li>Và trong lượng tử: Trạng thái của hệ thống</li>
 </ul>
 
 <hr />
 
-<h2 id="2-ví-dụ-trực-quan"><strong>2. Ví dụ trực quan:</strong></h2>
+<h2 id="2-ví-dụ-vector-trong-không-gian-2d-phẳng"><strong>2. Ví dụ Vector trong không gian 2D (phẳng):</strong></h2>
 
 <p>Giả sử:</p>
 
-\[A = \begin{bmatrix} 2 &amp; 0 \\ 0 &amp; 3 \end{bmatrix}\]
+<ul>
+  <li>Vector <strong>A</strong> = (3, 4)</li>
+  <li>Vector <strong>B</strong> = (1, 2)</li>
+</ul>
 
-<p>Vector:</p>
+<p>Đây là cách biểu diễn vector bằng tọa độ, với trục <strong>Ox</strong> là chiều ngang, <strong>Oy</strong> là chiều dọc.</p>
 
-\[\mathbf{v}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}\]
+<hr />
 
-<p>Tính:</p>
+<h2 id="3-phép-toán-đơn-giản-với-vector"><strong>3. Phép toán đơn giản với Vector:</strong></h2>
 
-\[A \times \mathbf{v}_1 = \begin{bmatrix} 2 &amp; 0 \\ 0 &amp; 3 \end{bmatrix} \times \begin{bmatrix} 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 2 \\ 0 \end{bmatrix} = 2 \times \mathbf{v}_1\]
+<h3 id="-tổng-2-vector">✨ <strong>Tổng 2 vector:</strong></h3>
 
-<p>Vậy:</p>
+\[\mathbf{A} + \mathbf{B} = (3, 4) + (1, 2) = (4, 6)\]
+
+<h3 id="-nhân-vector-với-số-thực">✨ <strong>Nhân vector với số thực:</strong></h3>
+
+<p>Giả sử bạn nhân vector A với 2:</p>
+
+\[2 \times \mathbf{A} = 2 \times (3, 4) = (6, 8)\]
+
+<hr />
+
+<h2 id="4-độ-lớn-magnitude-của-vector"><strong>4. Độ lớn (Magnitude) của vector:</strong></h2>
+
+<p>Công thức:</p>
+
+\[|\mathbf{A}| = \sqrt{x^2 + y^2}\]
+
+<p>Tính độ lớn của vector A = (3, 4):</p>
+
+\[|\mathbf{A}| = \sqrt{3^2 + 4^2} = \sqrt{9 + 16} = 5\]
+
+<hr />
+
+<h2 id="5-ứng-dụng-cho-toán-lượng-tử-sau-này"><strong>5. Ứng dụng cho Toán lượng tử sau này:</strong></h2>
+
+<p>Trong toán lượng tử:</p>
 
 <ul>
-  <li><strong>v₁</strong> là vector riêng</li>
-  <li><strong>λ = 2</strong> là trị riêng tương ứng</li>
+  <li><strong>Vector</strong> không chỉ ở không gian 2D, mà ở không gian trừu tượng nhiều chiều hơn (Hilbert Space).</li>
+  <li>Nhưng bản chất vẫn là vector: Có thể cộng, nhân, tính độ lớn, hướng…</li>
 </ul>
 
 <hr />
 
-<h2 id="3-vì-sao-quan-trọng-trong-lượng-tử"><strong>3. Vì sao quan trọng trong lượng tử?</strong></h2>
+<h1 id="-bài-tập-ngày-1-cho-bạn-tự-làm">🎯 <strong>Bài tập Ngày 1 cho bạn tự làm:</strong></h1>
 
-<p>Trong lượng tử:</p>
-
-<ul>
-  <li><strong>Vector riêng</strong> = Trạng thái ổn định khi đo đạc</li>
-  <li><strong>Trị riêng</strong> = Giá trị đo được (kết quả vật lý, ví dụ năng lượng, vị trí…)</li>
-</ul>
-
-<p>Bạn chỉ đo được giá trị <strong>trị riêng</strong>, không thể biết toàn bộ trạng thái nếu chưa đo.</p>
-
-<hr />
-
-<h2 id="4-bài-tập-tự-làm-cho-bạn"><strong>4. Bài tập tự làm cho bạn:</strong></h2>
-
-<p>Cho ma trận:</p>
-
-\[B = \begin{bmatrix} 4 &amp; 0 \\ 0 &amp; 5 \end{bmatrix}\]
+<p>Hãy tính các phép sau:</p>
 
 <ol>
-  <li>Tìm vector riêng và trị riêng của ma trận B</li>
-  <li>Kiểm tra lại phép tính như ví dụ trên</li>
+  <li>
+    <p>Cho vector <strong>C</strong> = (5, -2) và vector <strong>D</strong> = (-3, 7), tính:</p>
+
+    <ul>
+      <li><strong>C + D</strong></li>
+      <li><strong>2 × D</strong></li>
+      <li>Độ lớn của vector <strong>C</strong></li>
+    </ul>
+  </li>
+  <li>
+    <p>Tự vẽ sơ đồ 2D đơn giản biểu diễn vector C và D (trục x, y).</p>
+  </li>
 </ol>
-
-<p><strong>Gợi ý:</strong> Thử với:</p>
-
-\[\mathbf{v}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}, \quad \mathbf{v}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}\]
 
 <hr />
 

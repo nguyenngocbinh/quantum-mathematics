@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 34: Quantum Computing on Real Hardware - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 34: Quantum Computing on Real Hardware">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day34.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 34: Quantum Computing on Real Hardware">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 34: Quantum Computing on Real Hardware</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-34-quantum-computing-on-real-hardware">Day 34: Quantum Computing on Real Hardware</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Kết nối và sử dụng IBM Quantum Experience</li>
+  <li>Hiểu về noise và decoherence trong quantum hardware</li>
+  <li>Triển khai error mitigation techniques</li>
+  <li>So sánh simulator vs real quantum hardware</li>
+  <li>Tối ưu hóa circuits cho NISQ devices</li>
+</ul>
+
+<h2 id="-real-quantum-hardware---tổng-quan">🧠 Real Quantum Hardware - Tổng Quan</h2>
+
+<h3 id="tại-sao-cần-real-hardware">Tại sao cần Real Hardware?</h3>
+<ul>
+  <li><strong>Noise characterization</strong>: Hiểu thực tế về quantum noise</li>
+  <li><strong>Decoherence effects</strong>: Tác động của môi trường lên qubits</li>
+  <li><strong>Error rates</strong>: Tỷ lệ lỗi thực tế của các cổng lượng tử</li>
+  <li><strong>NISQ limitations</strong>: Giới hạn của Noisy Intermediate-Scale Quantum</li>
+  <li><strong>Cloud access</strong>: Truy cập quantum computers qua cloud</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span><span class="p">,</span> <span class="n">IBMQ</span>
+<span class="kn">from</span> <span class="nn">qiskit.providers.ibmq</span> <span class="kn">import</span> <span class="n">least_busy</span>
+<span class="kn">from</span> <span class="nn">qiskit.tools.monitor</span> <span class="kn">import</span> <span class="n">job_monitor</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span><span class="p">,</span> <span class="n">plot_error_map</span>
+<span class="kn">from</span> <span class="nn">qiskit.ignis.mitigation</span> <span class="kn">import</span> <span class="n">complete_meas_cal</span><span class="p">,</span> <span class="n">CompleteMeasFitter</span>
+<span class="kn">from</span> <span class="nn">qiskit.ignis.mitigation</span> <span class="kn">import</span> <span class="n">measurement_calibration</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="p">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s">'ignore'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-ibm-quantum-experience-setup">🔧 IBM Quantum Experience Setup</h2>
+
+<h3 id="1-kết-nối-ibm-quantum">1. Kết nối IBM Quantum</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">setup_ibm_quantum</span><span class="p">():</span>
+    <span class="s">"""
+    Thiết lập kết nối với IBM Quantum Experience
+    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Load IBM Quantum account
+</span>        <span class="n">IBMQ</span><span class="p">.</span><span class="n">load_account</span><span class="p">()</span>
+        <span class="n">provider</span> <span class="o">=</span> <span class="n">IBMQ</span><span class="p">.</span><span class="n">get_provider</span><span class="p">(</span><span class="n">hub</span><span class="o">=</span><span class="s">'ibm-q'</span><span class="p">)</span>
+        
+        <span class="c1"># Get available backends
+</span>        <span class="n">backends</span> <span class="o">=</span> <span class="n">provider</span><span class="p">.</span><span class="n">backends</span><span class="p">()</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="s">"Available IBM Quantum Backends:"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">backend</span> <span class="ow">in</span> <span class="n">backends</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">backend</span><span class="p">.</span><span class="n">configuration</span><span class="p">().</span><span class="n">simulator</span> <span class="o">==</span> <span class="bp">False</span><span class="p">:</span>
+                <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"- </span><span class="si">{</span><span class="n">backend</span><span class="p">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">backend</span><span class="p">.</span><span class="n">configuration</span><span class="p">().</span><span class="n">n_qubits</span><span class="si">}</span><span class="s"> qubits"</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">provider</span><span class="p">,</span> <span class="n">backends</span>
+    
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error connecting to IBM Quantum: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Using local simulator instead"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">get_least_busy_backend</span><span class="p">(</span><span class="n">provider</span><span class="p">,</span> <span class="n">min_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="s">"""
+    Lấy backend ít bận nhất với số qubit tối thiểu
+    """</span>
+    <span class="k">if</span> <span class="n">provider</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">least_busy</span><span class="p">(</span><span class="n">provider</span><span class="p">.</span><span class="n">backends</span><span class="p">(</span>
+        <span class="n">filters</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">.</span><span class="n">configuration</span><span class="p">().</span><span class="n">n_qubits</span> <span class="o">&gt;=</span> <span class="n">min_qubits</span> 
+        <span class="ow">and</span> <span class="ow">not</span> <span class="n">x</span><span class="p">.</span><span class="n">configuration</span><span class="p">().</span><span class="n">simulator</span>
+    <span class="p">))</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Selected backend: </span><span class="si">{</span><span class="n">backend</span><span class="p">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">backend</span>
+
+<span class="c1"># Setup IBM Quantum
+</span><span class="n">provider</span><span class="p">,</span> <span class="n">backends</span> <span class="o">=</span> <span class="n">setup_ibm_quantum</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-backend-information-và-properties">2. Backend Information và Properties</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">analyze_backend_properties</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
+    <span class="s">"""
+    Phân tích thuộc tính của quantum backend
+    """</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">=== Backend Analysis: </span><span class="si">{</span><span class="n">backend</span><span class="p">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s"> ==="</span><span class="p">)</span>
+    
+    <span class="c1"># Configuration
+</span>    <span class="n">config</span> <span class="o">=</span> <span class="n">backend</span><span class="p">.</span><span class="n">configuration</span><span class="p">()</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Number of qubits: </span><span class="si">{</span><span class="n">config</span><span class="p">.</span><span class="n">n_qubits</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Max experiments: </span><span class="si">{</span><span class="n">config</span><span class="p">.</span><span class="n">max_experiments</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Max shots: </span><span class="si">{</span><span class="n">config</span><span class="p">.</span><span class="n">max_shots</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Simulator: </span><span class="si">{</span><span class="n">config</span><span class="p">.</span><span class="n">simulator</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Properties (if available)
+</span>    <span class="k">try</span><span class="p">:</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="n">backend</span><span class="p">.</span><span class="n">properties</span><span class="p">()</span>
+        
+        <span class="c1"># Gate errors
+</span>        <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Gate Errors:"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">gate</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">.</span><span class="n">gates</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">gate</span><span class="p">.</span><span class="n">gate</span> <span class="o">==</span> <span class="s">'cx'</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">qubit</span> <span class="ow">in</span> <span class="n">gate</span><span class="p">.</span><span class="n">qubits</span><span class="p">:</span>
+                    <span class="n">error</span> <span class="o">=</span> <span class="n">gate</span><span class="p">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">value</span>
+                    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  CX(</span><span class="si">{</span><span class="n">qubit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">qubit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s">): </span><span class="si">{</span><span class="n">error</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        
+        <span class="c1"># Qubit properties
+</span>        <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Qubit Properties:"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">config</span><span class="p">.</span><span class="n">n_qubits</span><span class="p">)):</span>  <span class="c1"># Show first 5 qubits
+</span>            <span class="n">t1</span> <span class="o">=</span> <span class="n">properties</span><span class="p">.</span><span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="n">value</span>
+            <span class="n">t2</span> <span class="o">=</span> <span class="n">properties</span><span class="p">.</span><span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">].</span><span class="n">value</span>
+            <span class="n">readout_error</span> <span class="o">=</span> <span class="n">properties</span><span class="p">.</span><span class="n">qubits</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">2</span><span class="p">].</span><span class="n">value</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Qubit </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">: T1=</span><span class="si">{</span><span class="n">t1</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">μs, T2=</span><span class="si">{</span><span class="n">t2</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">μs, Readout Error=</span><span class="si">{</span><span class="n">readout_error</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Could not retrieve properties: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">config</span>
+
+<span class="c1"># Analyze backend
+</span><span class="k">if</span> <span class="n">provider</span><span class="p">:</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">get_least_busy_backend</span><span class="p">(</span><span class="n">provider</span><span class="p">)</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">analyze_backend_properties</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Using local simulator"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-noise-và-error-characterization">🧪 Noise và Error Characterization</h2>
+
+<h3 id="1-noise-model-simulation">1. Noise Model Simulation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">create_noise_model</span><span class="p">():</span>
+    <span class="s">"""
+    Tạo noise model để mô phỏng real hardware
+    """</span>
+    <span class="kn">from</span> <span class="nn">qiskit.providers.aer.noise</span> <span class="kn">import</span> <span class="n">NoiseModel</span>
+    <span class="kn">from</span> <span class="nn">qiskit.providers.aer.noise.errors</span> <span class="kn">import</span> <span class="n">depolarizing_error</span><span class="p">,</span> <span class="n">thermal_relaxation_error</span>
+    
+    <span class="c1"># Create noise model
+</span>    <span class="n">noise_model</span> <span class="o">=</span> <span class="n">NoiseModel</span><span class="p">()</span>
+    
+    <span class="c1"># Add depolarizing error to single-qubit gates
+</span>    <span class="n">error_1q</span> <span class="o">=</span> <span class="n">depolarizing_error</span><span class="p">(</span><span class="mf">0.001</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">noise_model</span><span class="p">.</span><span class="n">add_all_qubit_quantum_error</span><span class="p">(</span><span class="n">error_1q</span><span class="p">,</span> <span class="p">[</span><span class="s">'u1'</span><span class="p">,</span> <span class="s">'u2'</span><span class="p">,</span> <span class="s">'u3'</span><span class="p">])</span>
+    
+    <span class="c1"># Add depolarizing error to two-qubit gates
+</span>    <span class="n">error_2q</span> <span class="o">=</span> <span class="n">depolarizing_error</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">noise_model</span><span class="p">.</span><span class="n">add_all_qubit_quantum_error</span><span class="p">(</span><span class="n">error_2q</span><span class="p">,</span> <span class="p">[</span><span class="s">'cx'</span><span class="p">])</span>
+    
+    <span class="c1"># Add thermal relaxation error
+</span>    <span class="n">t1</span> <span class="o">=</span> <span class="mf">50.0</span>  <span class="c1"># microseconds
+</span>    <span class="n">t2</span> <span class="o">=</span> <span class="mf">70.0</span>  <span class="c1"># microseconds
+</span>    <span class="n">error_relax</span> <span class="o">=</span> <span class="n">thermal_relaxation_error</span><span class="p">(</span><span class="n">t1</span><span class="p">,</span> <span class="n">t2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># 0.1μs gate time
+</span>    <span class="n">noise_model</span><span class="p">.</span><span class="n">add_all_qubit_quantum_error</span><span class="p">(</span><span class="n">error_relax</span><span class="p">,</span> <span class="p">[</span><span class="s">'u1'</span><span class="p">,</span> <span class="s">'u2'</span><span class="p">,</span> <span class="s">'u3'</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">noise_model</span>
+
+<span class="k">def</span> <span class="nf">compare_simulator_vs_noise</span><span class="p">():</span>
+    <span class="s">"""
+    So sánh kết quả giữa ideal simulator và noisy simulator
+    """</span>
+    <span class="c1"># Create Bell state circuit
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+    
+    <span class="c1"># Ideal simulation
+</span>    <span class="n">backend_ideal</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job_ideal</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend_ideal</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">result_ideal</span> <span class="o">=</span> <span class="n">job_ideal</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">counts_ideal</span> <span class="o">=</span> <span class="n">result_ideal</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+    
+    <span class="c1"># Noisy simulation
+</span>    <span class="n">noise_model</span> <span class="o">=</span> <span class="n">create_noise_model</span><span class="p">()</span>
+    <span class="n">backend_noisy</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job_noisy</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend_noisy</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">noise_model</span><span class="o">=</span><span class="n">noise_model</span><span class="p">)</span>
+    <span class="n">result_noisy</span> <span class="o">=</span> <span class="n">job_noisy</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">counts_noisy</span> <span class="o">=</span> <span class="n">result_noisy</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Bell State Results:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Ideal simulator: </span><span class="si">{</span><span class="n">counts_ideal</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Noisy simulator: </span><span class="si">{</span><span class="n">counts_noisy</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">counts_ideal</span><span class="p">,</span> <span class="n">counts_noisy</span>
+
+<span class="c1"># Compare simulations
+</span><span class="n">ideal_counts</span><span class="p">,</span> <span class="n">noisy_counts</span> <span class="o">=</span> <span class="n">compare_simulator_vs_noise</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-error-mitigation-techniques">2. Error Mitigation Techniques</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">measurement_error_mitigation</span><span class="p">():</span>
+    <span class="s">"""
+    Triển khai measurement error mitigation
+    """</span>
+    <span class="c1"># Create calibration circuits
+</span>    <span class="n">meas_calibs</span><span class="p">,</span> <span class="n">state_labels</span> <span class="o">=</span> <span class="n">complete_meas_cal</span><span class="p">(</span>
+        <span class="n">qubit_list</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> 
+        <span class="n">circlabel</span><span class="o">=</span><span class="s">'mcal'</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Create test circuit
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+    
+    <span class="c1"># Execute calibration and test circuits
+</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    
+    <span class="c1"># Add noise to calibration
+</span>    <span class="n">noise_model</span> <span class="o">=</span> <span class="n">create_noise_model</span><span class="p">()</span>
+    
+    <span class="c1"># Execute calibration
+</span>    <span class="n">cal_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">meas_calibs</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">noise_model</span><span class="o">=</span><span class="n">noise_model</span><span class="p">)</span>
+    <span class="n">cal_results</span> <span class="o">=</span> <span class="n">cal_job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    
+    <span class="c1"># Execute test circuit
+</span>    <span class="n">test_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">noise_model</span><span class="o">=</span><span class="n">noise_model</span><span class="p">)</span>
+    <span class="n">test_results</span> <span class="o">=</span> <span class="n">test_job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    
+    <span class="c1"># Create measurement filter
+</span>    <span class="n">meas_fitter</span> <span class="o">=</span> <span class="n">CompleteMeasFitter</span><span class="p">(</span><span class="n">cal_results</span><span class="p">,</span> <span class="n">state_labels</span><span class="p">)</span>
+    
+    <span class="c1"># Apply correction
+</span>    <span class="n">mitigated_results</span> <span class="o">=</span> <span class="n">meas_fitter</span><span class="p">.</span><span class="nb">filter</span><span class="p">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">test_results</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Measurement Error Mitigation Results:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Original counts: </span><span class="si">{</span><span class="n">test_results</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Mitigated counts: </span><span class="si">{</span><span class="n">mitigated_results</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">meas_fitter</span><span class="p">,</span> <span class="n">test_results</span><span class="p">,</span> <span class="n">mitigated_results</span>
+
+<span class="c1"># Error mitigation demo
+</span><span class="n">meas_fitter</span><span class="p">,</span> <span class="n">original_results</span><span class="p">,</span> <span class="n">mitigated_results</span> <span class="o">=</span> <span class="n">measurement_error_mitigation</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-real-hardware-execution">🚀 Real Hardware Execution</h2>
+
+<h3 id="1-circuit-optimization-cho-nisq">1. Circuit Optimization cho NISQ</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">optimize_circuit_for_nisq</span><span class="p">(</span><span class="n">qc</span><span class="p">):</span>
+    <span class="s">"""
+    Tối ưu hóa circuit cho NISQ devices
+    """</span>
+    <span class="kn">from</span> <span class="nn">qiskit.transpiler</span> <span class="kn">import</span> <span class="n">PassManager</span>
+    <span class="kn">from</span> <span class="nn">qiskit.transpiler.passes</span> <span class="kn">import</span> <span class="n">Optimize1qGates</span><span class="p">,</span> <span class="n">CXCancellation</span>
+    
+    <span class="c1"># Create pass manager for optimization
+</span>    <span class="n">pm</span> <span class="o">=</span> <span class="n">PassManager</span><span class="p">()</span>
+    <span class="n">pm</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">Optimize1qGates</span><span class="p">())</span>
+    <span class="n">pm</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">CXCancellation</span><span class="p">())</span>
+    
+    <span class="c1"># Optimize circuit
+</span>    <span class="n">optimized_qc</span> <span class="o">=</span> <span class="n">pm</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Original circuit depth: </span><span class="si">{</span><span class="n">qc</span><span class="p">.</span><span class="n">depth</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimized circuit depth: </span><span class="si">{</span><span class="n">optimized_qc</span><span class="p">.</span><span class="n">depth</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Original circuit gates: </span><span class="si">{</span><span class="n">qc</span><span class="p">.</span><span class="n">count_ops</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Optimized circuit gates: </span><span class="si">{</span><span class="n">optimized_qc</span><span class="p">.</span><span class="n">count_ops</span><span class="p">()</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">optimized_qc</span>
+
+<span class="k">def</span> <span class="nf">create_nisq_friendly_circuit</span><span class="p">():</span>
+    <span class="s">"""
+    Tạo circuit thân thiện với NISQ devices
+    """</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    
+    <span class="c1"># Use simple gates that are well-calibrated
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Create and optimize circuit
+</span><span class="n">nisq_circuit</span> <span class="o">=</span> <span class="n">create_nisq_friendly_circuit</span><span class="p">()</span>
+<span class="n">optimized_circuit</span> <span class="o">=</span> <span class="n">optimize_circuit_for_nisq</span><span class="p">(</span><span class="n">nisq_circuit</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-real-hardware-execution">2. Real Hardware Execution</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">execute_on_real_hardware</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="s">"""
+    Thực thi circuit trên real quantum hardware
+    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Submitting job to </span><span class="si">{</span><span class="n">backend</span><span class="p">.</span><span class="n">name</span><span class="p">()</span><span class="si">}</span><span class="s">..."</span><span class="p">)</span>
+        
+        <span class="c1"># Submit job
+</span>        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="n">shots</span><span class="p">)</span>
+        
+        <span class="c1"># Monitor job
+</span>        <span class="n">job_monitor</span><span class="p">(</span><span class="n">job</span><span class="p">)</span>
+        
+        <span class="c1"># Get results
+</span>        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Job completed! Results: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="n">counts</span>
+    
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error executing on real hardware: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">compare_all_backends</span><span class="p">():</span>
+    <span class="s">"""
+    So sánh kết quả trên các backend khác nhau
+    """</span>
+    <span class="c1"># Create test circuit
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="c1"># Ideal simulator
+</span>    <span class="n">backend_ideal</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job_ideal</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend_ideal</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">result_ideal</span> <span class="o">=</span> <span class="n">job_ideal</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">results</span><span class="p">[</span><span class="s">'ideal'</span><span class="p">]</span> <span class="o">=</span> <span class="n">result_ideal</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+    
+    <span class="c1"># Noisy simulator
+</span>    <span class="n">noise_model</span> <span class="o">=</span> <span class="n">create_noise_model</span><span class="p">()</span>
+    <span class="n">backend_noisy</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job_noisy</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend_noisy</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">noise_model</span><span class="o">=</span><span class="n">noise_model</span><span class="p">)</span>
+    <span class="n">result_noisy</span> <span class="o">=</span> <span class="n">job_noisy</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">results</span><span class="p">[</span><span class="s">'noisy'</span><span class="p">]</span> <span class="o">=</span> <span class="n">result_noisy</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+    
+    <span class="c1"># Real hardware (if available)
+</span>    <span class="k">if</span> <span class="n">provider</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">real_result</span><span class="p">,</span> <span class="n">real_counts</span> <span class="o">=</span> <span class="n">execute_on_real_hardware</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">real_counts</span><span class="p">:</span>
+                <span class="n">results</span><span class="p">[</span><span class="s">'real_hardware'</span><span class="p">]</span> <span class="o">=</span> <span class="n">real_counts</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Could not execute on real hardware"</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== Comparison Results ==="</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">backend_name</span><span class="p">,</span> <span class="n">counts</span> <span class="ow">in</span> <span class="n">results</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">backend_name</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Compare all backends
+</span><span class="n">comparison_results</span> <span class="o">=</span> <span class="n">compare_all_backends</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-error-analysis-và-visualization">📊 Error Analysis và Visualization</h2>
+
+<h3 id="1-error-map-visualization">1. Error Map Visualization</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">visualize_error_map</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
+    <span class="s">"""
+    Trực quan hóa error map của backend
+    """</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="n">backend</span><span class="p">.</span><span class="n">properties</span><span class="p">()</span>
+        
+        <span class="c1"># Create error map
+</span>        <span class="n">error_map</span> <span class="o">=</span> <span class="n">plot_error_map</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+        
+        <span class="k">return</span> <span class="n">error_map</span>
+    
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Could not create error map: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span>
+
+<span class="k">def</span> <span class="nf">analyze_error_statistics</span><span class="p">(</span><span class="n">results_dict</span><span class="p">):</span>
+    <span class="s">"""
+    Phân tích thống kê lỗi
+    """</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== Error Analysis ==="</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="s">'ideal'</span> <span class="ow">in</span> <span class="n">results_dict</span> <span class="ow">and</span> <span class="s">'noisy'</span> <span class="ow">in</span> <span class="n">results_dict</span><span class="p">:</span>
+        <span class="n">ideal</span> <span class="o">=</span> <span class="n">results_dict</span><span class="p">[</span><span class="s">'ideal'</span><span class="p">]</span>
+        <span class="n">noisy</span> <span class="o">=</span> <span class="n">results_dict</span><span class="p">[</span><span class="s">'noisy'</span><span class="p">]</span>
+        
+        <span class="c1"># Calculate fidelity
+</span>        <span class="n">total_ideal</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">ideal</span><span class="p">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">total_noisy</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">noisy</span><span class="p">.</span><span class="n">values</span><span class="p">())</span>
+        
+        <span class="n">fidelity</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">ideal</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">noisy</span><span class="p">:</span>
+                <span class="n">fidelity</span> <span class="o">+=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ideal</span><span class="p">[</span><span class="n">state</span><span class="p">],</span> <span class="n">noisy</span><span class="p">[</span><span class="n">state</span><span class="p">])</span>
+        
+        <span class="n">fidelity</span> <span class="o">/=</span> <span class="n">total_ideal</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Fidelity (ideal vs noisy): </span><span class="si">{</span><span class="n">fidelity</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">fidelity</span>
+
+<span class="c1"># Visualize and analyze
+</span><span class="k">if</span> <span class="n">provider</span><span class="p">:</span>
+    <span class="n">error_map</span> <span class="o">=</span> <span class="n">visualize_error_map</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+<span class="n">fidelity</span> <span class="o">=</span> <span class="n">analyze_error_statistics</span><span class="p">(</span><span class="n">comparison_results</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-thực-hành">🎯 Bài tập thực hành</h2>
+
+<h3 id="bài-tập-1-noise-characterization">Bài tập 1: Noise Characterization</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">noise_characterization_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Bài tập: Phân tích noise trên real hardware
+    """</span>
+    <span class="c1"># 1. Tạo circuit đơn giản (Bell state)
+</span>    <span class="c1"># 2. Chạy trên simulator và real hardware
+</span>    <span class="c1"># 3. So sánh kết quả và tính fidelity
+</span>    <span class="c1"># 4. Phân tích nguyên nhân lỗi
+</span>    
+    <span class="k">pass</span>
+
+<span class="c1">### Bài tập 2: Error Mitigation
+</span><span class="sb">``</span><span class="err">`</span><span class="n">python</span>
+<span class="k">def</span> <span class="nf">error_mitigation_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Bài tập: Triển khai error mitigation
+    """</span>
+    <span class="c1"># 1. Implement measurement error mitigation
+</span>    <span class="c1"># 2. So sánh kết quả trước và sau mitigation
+</span>    <span class="c1"># 3. Đánh giá hiệu quả của mitigation
+</span>    
+    <span class="k">pass</span>
+
+<span class="c1">### Bài tập 3: Circuit Optimization
+</span><span class="sb">``</span><span class="err">`</span><span class="n">python</span>
+<span class="k">def</span> <span class="nf">circuit_optimization_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Bài tập: Tối ưu hóa circuit cho NISQ
+    """</span>
+    <span class="c1"># 1. Tạo circuit phức tạp
+</span>    <span class="c1"># 2. Áp dụng các kỹ thuật optimization
+</span>    <span class="c1"># 3. Đo lường cải thiện performance
+</span>    
+    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h2 id="-tài-nguyên-bổ-sung">📚 Tài nguyên bổ sung</h2>
+
+<h3 id="ibm-quantum-resources">IBM Quantum Resources:</h3>
+<ul>
+  <li><a href="https://quantum-computing.ibm.com/">IBM Quantum Experience</a></li>
+  <li><a href="https://qiskit.org/documentation/">Qiskit Documentation</a></li>
+  <li><a href="https://learning.quantum-computing.ibm.com/">IBM Quantum Learning</a></li>
+</ul>
+
+<h3 id="error-mitigation-papers">Error Mitigation Papers:</h3>
+<ul>
+  <li>“Error Mitigation for Short-Depth Quantum Circuits” - Temme et al.</li>
+  <li>“Scalable Error Mitigation for Noisy Quantum Circuits” - Kandala et al.</li>
+</ul>
+
+<h3 id="nisq-computing">NISQ Computing:</h3>
+<ul>
+  <li>“Quantum Computing in the NISQ era and beyond” - Preskill</li>
+  <li>“Noisy intermediate-scale quantum algorithms” - Bharti et al.</li>
+</ul>
+
+<hr />
+
+<h2 id="-tổng-kết-ngày-34">🎯 Tổng kết ngày 34</h2>
+
+<h3 id="kỹ-năng-đạt-được">Kỹ năng đạt được:</h3>
+<ul>
+  <li>✅ Kết nối và sử dụng IBM Quantum Experience</li>
+  <li>✅ Hiểu về noise và error trong quantum hardware</li>
+  <li>✅ Triển khai error mitigation techniques</li>
+  <li>✅ Tối ưu hóa circuits cho NISQ devices</li>
+  <li>✅ So sánh simulator vs real hardware</li>
+</ul>
+
+<h3 id="chuẩn-bị-cho-ngày-tiếp-theo">Chuẩn bị cho ngày tiếp theo:</h3>
+<ul>
+  <li>Portfolio building và documentation</li>
+  <li>Capstone project planning</li>
+  <li>Career preparation trong quantum computing</li>
+</ul>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>📚 Day 23: Quantum Teleportation Protocol - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="📚 Day 23: Quantum Teleportation Protocol">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day23.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="📚 Day 23: Quantum Teleportation Protocol">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">📚 Day 23: Quantum Teleportation Protocol</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="-day-23-quantum-teleportation-protocol">📚 <strong>Day 23: Quantum Teleportation Protocol</strong></h1>
+
+<hr />
+
+<h2 id="-mục-tiêu-học-tập">🎯 <strong>Mục tiêu học tập:</strong></h2>
+<ul>
+  <li>Hiểu nguyên lý quantum teleportation</li>
+  <li>Triển khai Bell state preparation</li>
+  <li>Thực hiện teleportation circuit</li>
+  <li>Áp dụng classical communication protocols</li>
+  <li>Hiểu error correction trong teleportation</li>
+</ul>
+
+<hr />
+
+<h2 id="-lý-thuyết-cơ-bản">📖 <strong>Lý thuyết cơ bản:</strong></h2>
+
+<h3 id="1-bell-states"><strong>1. Bell States:</strong></h3>
+<p>Các trạng thái Bell là các trạng thái entangled cơ bản:</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>$$</td>
+      <td>\Phi^+\rangle = \frac{1}{\sqrt{2}}(</td>
+      <td>00\rangle +</td>
+      <td>11\rangle)$$</td>
+    </tr>
+    <tr>
+      <td>$$</td>
+      <td>\Phi^-\rangle = \frac{1}{\sqrt{2}}(</td>
+      <td>00\rangle -</td>
+      <td>11\rangle)$$</td>
+    </tr>
+    <tr>
+      <td>$$</td>
+      <td>\Psi^+\rangle = \frac{1}{\sqrt{2}}(</td>
+      <td>01\rangle +</td>
+      <td>10\rangle)$$</td>
+    </tr>
+    <tr>
+      <td>$$</td>
+      <td>\Psi^-\rangle = \frac{1}{\sqrt{2}}(</td>
+      <td>01\rangle -</td>
+      <td>10\rangle)$$</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="2-quantum-teleportation-protocol"><strong>2. Quantum Teleportation Protocol:</strong></h3>
+<p>Quá trình truyền thông tin lượng tử từ Alice đến Bob:</p>
+
+<ol>
+  <li><strong>Preparation:</strong> Alice và Bob chia sẻ Bell state</li>
+  <li><strong>Entanglement:</strong> Alice entangles qubit cần teleport với qubit của mình</li>
+  <li><strong>Measurement:</strong> Alice đo Bell state và gửi kết quả cổ điển</li>
+  <li><strong>Correction:</strong> Bob áp dụng correction dựa trên kết quả đo</li>
+</ol>
+
+<h3 id="3-mathematical-description"><strong>3. Mathematical Description:</strong></h3>
+<p>Ban đầu: $|\psi\rangle_A \otimes |\Phi^+\rangle_{BC}$</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Sau Bell measurement: $\frac{1}{2}\sum_{i,j}</td>
+      <td>\beta_{ij}\rangle_{AB} \otimes X^i Z^j</td>
+      <td>\psi\rangle_C$</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-thực-hành-với-qiskit">💻 <strong>Thực hành với Qiskit:</strong></h2>
+
+<h3 id="bài-1-bell-state-preparation"><strong>Bài 1: Bell State Preparation</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span><span class="p">,</span> <span class="n">plot_bloch_multivector</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="k">def</span> <span class="nf">create_bell_state</span><span class="p">(</span><span class="n">bell_type</span><span class="o">=</span><span class="s">'phi_plus'</span><span class="p">):</span>
+    <span class="s">"""Tạo các Bell states khác nhau"""</span>
+    
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 1: Hadamard trên qubit đầu tiên
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 2: CNOT để tạo entanglement
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 3: Áp dụng corrections cho các Bell states khác
+</span>    <span class="k">if</span> <span class="n">bell_type</span> <span class="o">==</span> <span class="s">'phi_minus'</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">bell_type</span> <span class="o">==</span> <span class="s">'psi_plus'</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">bell_type</span> <span class="o">==</span> <span class="s">'psi_minus'</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test tất cả Bell states
+</span><span class="n">bell_states</span> <span class="o">=</span> <span class="p">[</span><span class="s">'phi_plus'</span><span class="p">,</span> <span class="s">'phi_minus'</span><span class="p">,</span> <span class="s">'psi_plus'</span><span class="p">,</span> <span class="s">'psi_minus'</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">bell_type</span> <span class="ow">in</span> <span class="n">bell_states</span><span class="p">:</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">create_bell_state</span><span class="p">(</span><span class="n">bell_type</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Bell State: </span><span class="si">{</span><span class="n">bell_type</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+    
+    <span class="c1"># Chạy mạch
+</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Results: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+<span class="c1"># Visualize Bell state
+</span><span class="n">qc_bell</span> <span class="o">=</span> <span class="n">create_bell_state</span><span class="p">(</span><span class="s">'phi_plus'</span><span class="p">)</span>
+<span class="n">backend_statevector</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'statevector_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_bell</span><span class="p">,</span> <span class="n">backend_statevector</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">statevector</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_statevector</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Bell State Vector:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">statevector</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="bài-2-quantum-teleportation-circuit"><strong>Bài 2: Quantum Teleportation Circuit</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_teleportation</span><span class="p">(</span><span class="n">initial_state</span><span class="o">=</span><span class="s">'random'</span><span class="p">):</span>
+    <span class="s">"""Triển khai quantum teleportation protocol"""</span>
+    
+    <span class="c1"># 3 qubits: Alice's qubit, Alice's Bell qubit, Bob's Bell qubit
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 1: Chuẩn bị trạng thái cần teleport
+</span>    <span class="k">if</span> <span class="n">initial_state</span> <span class="o">==</span> <span class="s">'random'</span><span class="p">:</span>
+        <span class="c1"># Tạo trạng thái ngẫu nhiên
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Rotation X
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Rotation Y
+</span>    <span class="k">elif</span> <span class="n">initial_state</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">initial_state</span> <span class="o">==</span> <span class="s">'superposition'</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 2: Tạo Bell state giữa qubit 1 và 2
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 3: Bell measurement (Alice đo qubit 0 và 1)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 4: Measurement
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="c1"># Bước 5: Classical communication và correction
+</span>    <span class="c1"># (Trong thực tế, Bob sẽ nhận thông tin cổ điển và áp dụng correction)
+</span>    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">teleportation_with_correction</span><span class="p">(</span><span class="n">initial_state</span><span class="o">=</span><span class="s">'random'</span><span class="p">):</span>
+    <span class="s">"""Teleportation với correction được áp dụng"""</span>
+    
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Chuẩn bị trạng thái
+</span>    <span class="k">if</span> <span class="n">initial_state</span> <span class="o">==</span> <span class="s">'random'</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">initial_state</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">initial_state</span> <span class="o">==</span> <span class="s">'superposition'</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Tạo Bell state
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Bell measurement
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="c1"># Measurement
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="c1"># Correction (dựa trên kết quả đo)
+</span>    <span class="c1"># Trong thực tế, Bob sẽ áp dụng X và Z gates dựa trên classical bits
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">c_if</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Apply X if bit 0 is 1
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">2</span><span class="p">).</span><span class="n">c_if</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Apply Z if bit 1 is 1
+</span>    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test teleportation
+</span><span class="n">initial_states</span> <span class="o">=</span> <span class="p">[</span><span class="s">'0'</span><span class="p">,</span> <span class="s">'1'</span><span class="p">,</span> <span class="s">'superposition'</span><span class="p">,</span> <span class="s">'random'</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">initial_states</span><span class="p">:</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">quantum_teleportation</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Teleportation: </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+    
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Measurement results: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="bài-3-teleportation-với-error-correction"><strong>Bài 3: Teleportation với Error Correction</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">teleportation_with_noise</span><span class="p">(</span><span class="n">error_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">):</span>
+    <span class="s">"""Teleportation với noise và error correction"""</span>
+    
+    <span class="kn">from</span> <span class="nn">qiskit.providers.aer.noise</span> <span class="kn">import</span> <span class="n">NoiseModel</span>
+    <span class="kn">from</span> <span class="nn">qiskit.providers.aer.noise.errors</span> <span class="kn">import</span> <span class="n">depolarizing_error</span>
+    
+    <span class="c1"># Tạo noise model
+</span>    <span class="n">noise_model</span> <span class="o">=</span> <span class="n">NoiseModel</span><span class="p">()</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">depolarizing_error</span><span class="p">(</span><span class="n">error_rate</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">noise_model</span><span class="p">.</span><span class="n">add_all_qubit_quantum_error</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="p">[</span><span class="s">'u1'</span><span class="p">,</span> <span class="s">'u2'</span><span class="p">,</span> <span class="s">'u3'</span><span class="p">])</span>
+    
+    <span class="c1"># Teleportation circuit
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">teleportation_with_correction</span><span class="p">(</span><span class="s">'superposition'</span><span class="p">)</span>
+    
+    <span class="c1"># Chạy với noise
+</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">noise_model</span><span class="o">=</span><span class="n">noise_model</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">counts_with_noise</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+    
+    <span class="c1"># Chạy không có noise để so sánh
+</span>    <span class="n">job_perfect</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">result_perfect</span> <span class="o">=</span> <span class="n">job_perfect</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">counts_perfect</span> <span class="o">=</span> <span class="n">result_perfect</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error rate: </span><span class="si">{</span><span class="n">error_rate</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"With noise: </span><span class="si">{</span><span class="n">counts_with_noise</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Perfect: </span><span class="si">{</span><span class="n">counts_perfect</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">counts_with_noise</span><span class="p">,</span> <span class="n">counts_perfect</span>
+
+<span class="c1"># Test với các error rates khác nhau
+</span><span class="n">error_rates</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="n">rate</span> <span class="ow">in</span> <span class="n">error_rates</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Testing with error rate: </span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">noisy</span><span class="p">,</span> <span class="n">perfect</span> <span class="o">=</span> <span class="n">teleportation_with_noise</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="bài-4-multi-qubit-teleportation"><strong>Bài 4: Multi-qubit Teleportation</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">multi_qubit_teleportation</span><span class="p">(</span><span class="n">n_qubits</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="s">"""Teleportation cho nhiều qubit"""</span>
+    
+    <span class="c1"># Số qubit: n qubit cần teleport + n Bell pairs
+</span>    <span class="n">total_qubits</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">n_qubits</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">total_qubits</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Chuẩn bị trạng thái cần teleport
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>  <span class="c1"># Superposition state
+</span>    
+    <span class="c1"># Tạo Bell states
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">n_qubits</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">,</span> <span class="n">n_qubits</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Bell measurements
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">n_qubits</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Measurements
+</span>    <span class="n">measurement_qubits</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">))</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">n_qubits</span><span class="p">))</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="n">measurement_qubits</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">n_qubits</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Test multi-qubit teleportation
+</span><span class="n">qc_multi</span> <span class="o">=</span> <span class="n">multi_qubit_teleportation</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Multi-qubit Teleportation:"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">qc_multi</span><span class="p">)</span>
+
+<span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+<span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc_multi</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+<span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Results: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="-bài-tập-thực-hành">🔬 <strong>Bài tập thực hành:</strong></h2>
+
+<h3 id="bài-tập-1-bell-state-discrimination"><strong>Bài tập 1: Bell State Discrimination</strong></h3>
+<p>Tạo circuit để phân biệt các Bell states:</p>
+<ul>
+  <li>Input: Bell state chưa biết</li>
+  <li>Output: Classical bits xác định Bell state</li>
+</ul>
+
+<h3 id="bài-tập-2-teleportation-với-different-gates"><strong>Bài tập 2: Teleportation với Different Gates</strong></h3>
+<p>Teleport qubit qua các gates khác nhau:</p>
+<ul>
+  <li>Hadamard gate</li>
+  <li>Phase gate</li>
+  <li>Rotation gates</li>
+</ul>
+
+<h3 id="bài-tập-3-teleportation-network"><strong>Bài tập 3: Teleportation Network</strong></h3>
+<p>Tạo network teleportation:</p>
+<ul>
+  <li>Alice → Bob → Charlie</li>
+  <li>Multiple Bell states</li>
+  <li>Error propagation analysis</li>
+</ul>
+
+<h3 id="bài-tập-4-teleportation-với-real-hardware"><strong>Bài tập 4: Teleportation với Real Hardware</strong></h3>
+<p>Chạy teleportation trên:</p>
+<ul>
+  <li>IBM Quantum Experience</li>
+  <li>So sánh với simulator</li>
+  <li>Analyze error rates</li>
+</ul>
+
+<hr />
+
+<h2 id="-tài-liệu-tham-khảo">📚 <strong>Tài liệu tham khảo:</strong></h2>
+
+<h3 id="papers"><strong>Papers:</strong></h3>
+<ul>
+  <li>“Teleporting an Unknown Quantum State” - Bennett et al. (1993)</li>
+  <li>“Quantum Teleportation” - Bouwmeester et al. (1997)</li>
+  <li>“Bell States” - Bell (1964)</li>
+</ul>
+
+<h3 id="online-resources"><strong>Online Resources:</strong></h3>
+<ul>
+  <li>Qiskit Textbook: Quantum Teleportation</li>
+  <li>IBM Quantum Experience: Teleportation Tutorial</li>
+</ul>
+
+<hr />
+
+<h2 id="-kiểm-tra-kiến-thức">🎯 <strong>Kiểm tra kiến thức:</strong></h2>
+
+<ol>
+  <li><strong>Câu hỏi:</strong> Tại sao cần classical communication trong teleportation?</li>
+  <li><strong>Câu hỏi:</strong> Làm thế nào để tạo Bell states?</li>
+  <li><strong>Câu hỏi:</strong> Các loại errors trong teleportation?</li>
+  <li><strong>Câu hỏi:</strong> Ứng dụng của quantum teleportation?</li>
+</ol>
+
+<hr />
+
+<h2 id="-chuẩn-bị-cho-day-24">🚀 <strong>Chuẩn bị cho Day 24:</strong></h2>
+<ul>
+  <li>Ôn lại error correction basics</li>
+  <li>Hiểu syndrome measurement</li>
+  <li>Chuẩn bị cho quantum error correction codes</li>
+</ul>
+
+<hr />
+
+<p><em>“Quantum teleportation allows us to transfer quantum information from one location to another using entanglement and classical communication.”</em> - IBM Research</p>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 26: Shor’s Algorithm for Factoring - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 26: Shor’s Algorithm for Factoring">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day26.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 26: Shor’s Algorithm for Factoring">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 26: Shor’s Algorithm for Factoring</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-26-shors-algorithm-for-factoring">Day 26: Shor’s Algorithm for Factoring</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Hiểu nguyên lý hoạt động của Shor’s Algorithm</li>
+  <li>Triển khai quantum period finding</li>
+  <li>Áp dụng modular arithmetic trong quantum computing</li>
+  <li>Hiểu tác động đến RSA cryptography</li>
+  <li>Giải quyết các thách thức implementation</li>
+</ul>
+
+<h2 id="-shors-algorithm---tổng-quan">🧠 Shor’s Algorithm - Tổng Quan</h2>
+
+<h3 id="tại-sao-shors-algorithm-quan-trọng">Tại sao Shor’s Algorithm quan trọng?</h3>
+<ul>
+  <li><strong>Cryptographic breakthrough</strong>: Có thể phá vỡ RSA encryption</li>
+  <li><strong>Quantum advantage</strong>: Giải quyết factoring nhanh hơn classical algorithms</li>
+  <li><strong>Period finding</strong>: Ứng dụng quantum Fourier transform</li>
+  <li><strong>Modular arithmetic</strong>: Kết hợp classical và quantum computation</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit</span> <span class="kn">import</span> <span class="n">Parameter</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms</span> <span class="kn">import</span> <span class="n">Shor</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms.factorizers</span> <span class="kn">import</span> <span class="n">Shor</span> <span class="k">as</span> <span class="n">ShorFactorizer</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">QFT</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
+<span class="kn">import</span> <span class="nn">math</span>
+</code></pre></div></div>
+
+<h2 id="-mathematical-foundation">🔧 Mathematical Foundation</h2>
+
+<h3 id="1-factoring-problem-và-rsa">1. Factoring Problem và RSA</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">rsa_factoring_problem</span><span class="p">():</span>
+    <span class="s">"""
+    Giải thích bài toán factoring và RSA
+    """</span>
+    <span class="c1"># RSA: n = p * q (public key)
+</span>    <span class="c1"># Private key: d = e^(-1) mod φ(n)
+</span>    <span class="c1"># φ(n) = (p-1)(q-1)
+</span>    
+    <span class="c1"># Example RSA parameters
+</span>    <span class="n">p</span> <span class="o">=</span> <span class="mi">61</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="mi">53</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>
+    <span class="n">phi_n</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="mi">17</span>  <span class="c1"># Public exponent
+</span>    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"RSA Parameters:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"p = </span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s">, q = </span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"n = p * q = </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"φ(n) = (p-1)(q-1) = </span><span class="si">{</span><span class="n">phi_n</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Public key: (n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s">, e=</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">)"</span><span class="p">)</span>
+    
+    <span class="c1"># If we can factor n, we can find p and q
+</span>    <span class="c1"># Then calculate φ(n) and find private key d
+</span>    <span class="n">d</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">phi_n</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Private key d = </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">n</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span>
+
+<span class="c1"># Demo RSA
+</span><span class="n">n</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">rsa_factoring_problem</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-period-finding-problem">2. Period Finding Problem</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">period_finding_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo period finding - core của Shor's algorithm
+    """</span>
+    <span class="c1"># Given: f(x) = a^x mod N
+</span>    <span class="c1"># Find: smallest r such that f(x+r) = f(x)
+</span>    
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c1"># Number to factor
+</span>    <span class="n">a</span> <span class="o">=</span> <span class="mi">7</span>   <span class="c1"># Base for modular exponentiation
+</span>    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Period Finding for f(x) = </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">^x mod </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate function values
+</span>    <span class="n">function_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+        <span class="n">function_values</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"f(</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s">) = </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">^</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s"> mod </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s"> = </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Find period
+</span>    <span class="n">period</span> <span class="o">=</span> <span class="bp">None</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">function_values</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">function_values</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">==</span> <span class="n">function_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">period</span> <span class="o">=</span> <span class="n">r</span>
+            <span class="k">break</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Period r = </span><span class="si">{</span><span class="n">period</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Verify period
+</span>    <span class="k">if</span> <span class="n">period</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Verification: f(0) = </span><span class="si">{</span><span class="n">function_values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s">, f(</span><span class="si">{</span><span class="n">period</span><span class="si">}</span><span class="s">) = </span><span class="si">{</span><span class="n">function_values</span><span class="p">[</span><span class="n">period</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">function_values</span><span class="p">,</span> <span class="n">period</span>
+
+<span class="c1"># Demo period finding
+</span><span class="n">func_values</span><span class="p">,</span> <span class="n">period</span> <span class="o">=</span> <span class="n">period_finding_demo</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="3-quantum-period-finding">3. Quantum Period Finding</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_period_finding_circuit</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">precision_qubits</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+    <span class="s">"""
+    Tạo quantum circuit cho period finding
+    """</span>
+    <span class="c1"># Number of qubits needed
+</span>    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">bin</span><span class="p">(</span><span class="n">N</span><span class="p">)[</span><span class="mi">2</span><span class="p">:])</span>  <span class="c1"># Bits needed to represent N
+</span>    <span class="n">total_qubits</span> <span class="o">=</span> <span class="n">precision_qubits</span> <span class="o">+</span> <span class="n">n</span>
+    
+    <span class="c1"># Create circuit
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">total_qubits</span><span class="p">,</span> <span class="n">precision_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Initialize counting register to |0⟩
+</span>    <span class="c1"># Initialize work register to |1⟩
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Apply Hadamard to counting register
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Apply controlled modular exponentiation
+</span>    <span class="c1"># This is the key part of Shor's algorithm
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">):</span>
+        <span class="c1"># Apply controlled-U^(2^i) where U|x⟩ = |ax mod N⟩
+</span>        <span class="c1"># This is simplified - actual implementation is more complex
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">precision_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Apply inverse QFT to counting register
+</span>    <span class="n">qft</span> <span class="o">=</span> <span class="n">QFT</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">qft</span><span class="p">.</span><span class="n">inverse</span><span class="p">(),</span> <span class="n">qubits</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">),</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># Measure counting register
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">))</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Quantum Period Finding Circuit:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Tạo quantum period finding circuit
+</span><span class="n">period_circuit</span> <span class="o">=</span> <span class="n">quantum_period_finding_circuit</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-shors-algorithm-implementation">🎯 Shor’s Algorithm Implementation</h2>
+
+<h3 id="1-classical-part---gcd-và-modular-arithmetic">1. Classical Part - GCD và Modular Arithmetic</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">classical_shor_components</span><span class="p">():</span>
+    <span class="s">"""
+    Các thành phần classical của Shor's algorithm
+    """</span>
+    <span class="k">def</span> <span class="nf">gcd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+        <span class="s">"""Euclidean algorithm for GCD"""</span>
+        <span class="k">while</span> <span class="n">b</span><span class="p">:</span>
+            <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">%</span> <span class="n">b</span>
+        <span class="k">return</span> <span class="n">a</span>
+    
+    <span class="k">def</span> <span class="nf">mod_pow</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">exponent</span><span class="p">,</span> <span class="n">modulus</span><span class="p">):</span>
+        <span class="s">"""Modular exponentiation using square-and-multiply"""</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">base</span> <span class="o">%</span> <span class="n">modulus</span>
+        
+        <span class="k">while</span> <span class="n">exponent</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">exponent</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span> <span class="o">*</span> <span class="n">base</span><span class="p">)</span> <span class="o">%</span> <span class="n">modulus</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="p">(</span><span class="n">base</span> <span class="o">*</span> <span class="n">base</span><span class="p">)</span> <span class="o">%</span> <span class="n">modulus</span>
+            <span class="n">exponent</span> <span class="o">//=</span> <span class="mi">2</span>
+        
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="k">def</span> <span class="nf">find_period_classical</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="s">"""Find period of f(x) = a^x mod N using classical method"""</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span> <span class="o">-</span> <span class="n">seen</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+            <span class="n">seen</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span>
+        
+        <span class="k">return</span> <span class="bp">None</span>
+    
+    <span class="c1"># Test classical components
+</span>    <span class="n">N</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mi">7</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Testing classical components for N=</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s">, a=</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"GCD(</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s">) = </span><span class="si">{</span><span class="n">gcd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">^5 mod </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s"> = </span><span class="si">{</span><span class="n">mod_pow</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="n">period</span> <span class="o">=</span> <span class="n">find_period_classical</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Period of f(x) = </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">^x mod </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">period</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">gcd</span><span class="p">,</span> <span class="n">mod_pow</span><span class="p">,</span> <span class="n">find_period_classical</span>
+
+<span class="c1"># Test classical components
+</span><span class="n">gcd_func</span><span class="p">,</span> <span class="n">mod_pow_func</span><span class="p">,</span> <span class="n">find_period_func</span> <span class="o">=</span> <span class="n">classical_shor_components</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-quantum-part---phase-estimation">2. Quantum Part - Phase Estimation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_phase_estimation_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo quantum phase estimation cho period finding
+    """</span>
+    <span class="k">def</span> <span class="nf">create_phase_estimation_circuit</span><span class="p">(</span><span class="n">phase</span><span class="p">,</span> <span class="n">precision_qubits</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="s">"""Create phase estimation circuit for given phase"""</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">precision_qubits</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">precision_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize eigenstate |u⟩
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Apply Hadamard to counting qubits
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">):</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Apply controlled phase rotations
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">):</span>
+            <span class="c1"># Apply U^(2^i) where U|u⟩ = e^(2πiφ)|u⟩
+</span>            <span class="n">angle</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">phase</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">i</span><span class="p">)</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">cp</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">precision_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Apply inverse QFT
+</span>        <span class="n">qft</span> <span class="o">=</span> <span class="n">QFT</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">qft</span><span class="p">.</span><span class="n">inverse</span><span class="p">(),</span> <span class="n">qubits</span><span class="o">=</span><span class="nb">range</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">),</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        
+        <span class="c1"># Measure
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">precision_qubits</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">qc</span>
+    
+    <span class="c1"># Test with known phase
+</span>    <span class="n">phase</span> <span class="o">=</span> <span class="mf">0.125</span>  <span class="c1"># 1/8
+</span>    <span class="n">qc</span> <span class="o">=</span> <span class="n">create_phase_estimation_circuit</span><span class="p">(</span><span class="n">phase</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Phase Estimation Circuit for φ = </span><span class="si">{</span><span class="n">phase</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+    
+    <span class="c1"># Execute
+</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Measurement results: </span><span class="si">{</span><span class="n">counts</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Convert measurement to phase estimate
+</span>    <span class="k">for</span> <span class="n">bitstring</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">:</span>  <span class="c1"># Significant result
+</span>            <span class="n">measured_phase</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">bitstring</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Measured phase: </span><span class="si">{</span><span class="n">measured_phase</span><span class="si">}</span><span class="s"> (expected: </span><span class="si">{</span><span class="n">phase</span><span class="si">}</span><span class="s">)"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span><span class="p">,</span> <span class="n">counts</span>
+
+<span class="c1"># Demo phase estimation
+</span><span class="n">phase_circuit</span><span class="p">,</span> <span class="n">phase_counts</span> <span class="o">=</span> <span class="n">quantum_phase_estimation_demo</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="3-complete-shors-algorithm">3. Complete Shor’s Algorithm</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">shor_algorithm_implementation</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="s">"""
+    Triển khai Shor's algorithm hoàn chỉnh
+    """</span>
+    <span class="k">if</span> <span class="n">a</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="c1"># Choose random a
+</span>        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Shor's Algorithm for N = </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s">, a = </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Step 1: Check if N is even
+</span>    <span class="k">if</span> <span class="n">N</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">2</span><span class="p">,</span> <span class="n">N</span> <span class="o">//</span> <span class="mi">2</span>
+    
+    <span class="c1"># Step 2: Check if N is a perfect power
+</span>    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">log2</span><span class="p">(</span><span class="n">N</span><span class="p">))</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">N</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">k</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">root</span> <span class="o">**</span> <span class="n">k</span> <span class="o">==</span> <span class="n">N</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">root</span><span class="p">,</span> <span class="n">N</span> <span class="o">//</span> <span class="n">root</span>
+    
+    <span class="c1"># Step 3: Choose random a and check GCD
+</span>    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+        <span class="n">gcd_val</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="n">gcd</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">gcd_val</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">gcd_val</span><span class="p">,</span> <span class="n">N</span> <span class="o">//</span> <span class="n">gcd_val</span>
+        <span class="k">if</span> <span class="n">gcd_val</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">break</span>
+    
+    <span class="c1"># Step 4: Find period using quantum period finding
+</span>    <span class="c1"># This is the quantum part - simplified for demonstration
+</span>    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Finding period of f(x) = </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s">^x mod </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Classical period finding (in practice, this would be quantum)
+</span>    <span class="n">period</span> <span class="o">=</span> <span class="n">find_period_classical</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">period</span> <span class="ow">is</span> <span class="bp">None</span> <span class="ow">or</span> <span class="n">period</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Period not found or odd - try different a"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+    
+    <span class="c1"># Step 5: Use period to find factors
+</span>    <span class="n">half_period</span> <span class="o">=</span> <span class="n">period</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="n">candidate</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">half_period</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">candidate</span> <span class="o">==</span> <span class="n">N</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"Period gives no useful information - try different a"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+    
+    <span class="n">factor1</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="n">gcd</span><span class="p">(</span><span class="n">candidate</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    <span class="n">factor2</span> <span class="o">=</span> <span class="n">math</span><span class="p">.</span><span class="n">gcd</span><span class="p">(</span><span class="n">candidate</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">factor1</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">factor1</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">factor1</span><span class="p">,</span> <span class="n">N</span> <span class="o">//</span> <span class="n">factor1</span>
+    <span class="k">elif</span> <span class="n">factor2</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">factor2</span> <span class="o">&lt;</span> <span class="n">N</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">factor2</span><span class="p">,</span> <span class="n">N</span> <span class="o">//</span> <span class="n">factor2</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="s">"No factors found - try different a"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span><span class="p">,</span> <span class="bp">None</span>
+
+<span class="c1"># Test Shor's algorithm
+</span><span class="n">test_numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">33</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">N</span> <span class="ow">in</span> <span class="n">test_numbers</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="si">{</span><span class="s">'='</span><span class="o">*</span><span class="mi">50</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="n">factor1</span><span class="p">,</span> <span class="n">factor2</span> <span class="o">=</span> <span class="n">shor_algorithm_implementation</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">factor1</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Factors of </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">factor1</span><span class="si">}</span><span class="s"> and </span><span class="si">{</span><span class="n">factor2</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Verification: </span><span class="si">{</span><span class="n">factor1</span><span class="si">}</span><span class="s"> * </span><span class="si">{</span><span class="n">factor2</span><span class="si">}</span><span class="s"> = </span><span class="si">{</span><span class="n">factor1</span> <span class="o">*</span> <span class="n">factor2</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Could not factor </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-rsa-cryptography-và-quantum-threat">🔐 RSA Cryptography và Quantum Threat</h2>
+
+<h3 id="1-rsa-encryptiondecryption">1. RSA Encryption/Decryption</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">rsa_cryptography_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo RSA encryption và quantum threat
+    """</span>
+    <span class="c1"># Generate RSA keys
+</span>    <span class="n">p</span> <span class="o">=</span> <span class="mi">61</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="mi">53</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>
+    <span class="n">phi_n</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="mi">17</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">phi_n</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"RSA Key Generation:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Public key: (n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s">, e=</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">)"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Private key: d=</span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Encrypt message
+</span>    <span class="n">message</span> <span class="o">=</span> <span class="mi">123</span>
+    <span class="n">encrypted</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">decrypted</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">encrypted</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Encryption/Decryption:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Original message: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Encrypted: </span><span class="si">{</span><span class="n">encrypted</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Decrypted: </span><span class="si">{</span><span class="n">decrypted</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Quantum threat simulation
+</span>    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Quantum Threat Analysis:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"To break RSA, we need to factor n = </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Classical factoring complexity: O(exp(n^(1/3)))"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Shor's algorithm complexity: O((log n)^3)"</span><span class="p">)</span>
+    
+    <span class="c1"># Simulate quantum factoring
+</span>    <span class="n">factor1</span><span class="p">,</span> <span class="n">factor2</span> <span class="o">=</span> <span class="n">shor_algorithm_implementation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">factor1</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Quantum factoring found factors: </span><span class="si">{</span><span class="n">factor1</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">factor2</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Private key can be calculated: d = e^(-1) mod φ(n)"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"where φ(n) = (p-1)(q-1) = (</span><span class="si">{</span><span class="n">factor1</span><span class="si">}</span><span class="s">-1)(</span><span class="si">{</span><span class="n">factor2</span><span class="si">}</span><span class="s">-1)"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">n</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">encrypted</span><span class="p">,</span> <span class="n">decrypted</span>
+
+<span class="c1"># Demo RSA và quantum threat
+</span><span class="n">rsa_n</span><span class="p">,</span> <span class="n">rsa_e</span><span class="p">,</span> <span class="n">rsa_d</span><span class="p">,</span> <span class="n">rsa_enc</span><span class="p">,</span> <span class="n">rsa_dec</span> <span class="o">=</span> <span class="n">rsa_cryptography_demo</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-post-quantum-cryptography">2. Post-Quantum Cryptography</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">post_quantum_cryptography</span><span class="p">():</span>
+    <span class="s">"""
+    Giới thiệu post-quantum cryptography
+    """</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Post-Quantum Cryptography Alternatives:"</span><span class="p">)</span>
+    
+    <span class="n">alternatives</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">"Lattice-based"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"examples"</span><span class="p">:</span> <span class="p">[</span><span class="s">"NTRU"</span><span class="p">,</span> <span class="s">"LWE"</span><span class="p">,</span> <span class="s">"SIS"</span><span class="p">],</span>
+            <span class="s">"security"</span><span class="p">:</span> <span class="s">"Based on lattice problems"</span><span class="p">,</span>
+            <span class="s">"quantum_resistant"</span><span class="p">:</span> <span class="s">"Yes"</span>
+        <span class="p">},</span>
+        <span class="s">"Code-based"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"examples"</span><span class="p">:</span> <span class="p">[</span><span class="s">"McEliece"</span><span class="p">,</span> <span class="s">"Niederreiter"</span><span class="p">],</span>
+            <span class="s">"security"</span><span class="p">:</span> <span class="s">"Based on error-correcting codes"</span><span class="p">,</span>
+            <span class="s">"quantum_resistant"</span><span class="p">:</span> <span class="s">"Yes"</span>
+        <span class="p">},</span>
+        <span class="s">"Hash-based"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"examples"</span><span class="p">:</span> <span class="p">[</span><span class="s">"XMSS"</span><span class="p">,</span> <span class="s">"SPHINCS+"</span><span class="p">],</span>
+            <span class="s">"security"</span><span class="p">:</span> <span class="s">"Based on hash functions"</span><span class="p">,</span>
+            <span class="s">"quantum_resistant"</span><span class="p">:</span> <span class="s">"Yes"</span>
+        <span class="p">},</span>
+        <span class="s">"Multivariate"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"examples"</span><span class="p">:</span> <span class="p">[</span><span class="s">"Rainbow"</span><span class="p">,</span> <span class="s">"HFE"</span><span class="p">],</span>
+            <span class="s">"security"</span><span class="p">:</span> <span class="s">"Based on multivariate polynomials"</span><span class="p">,</span>
+            <span class="s">"quantum_resistant"</span><span class="p">:</span> <span class="s">"Yes"</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">details</span> <span class="ow">in</span> <span class="n">alternatives</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="si">{</span><span class="n">method</span><span class="si">}</span><span class="s">:"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Examples: </span><span class="si">{</span><span class="s">', '</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">details</span><span class="p">[</span><span class="s">'examples'</span><span class="p">])</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Security: </span><span class="si">{</span><span class="n">details</span><span class="p">[</span><span class="s">'security'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Quantum Resistant: </span><span class="si">{</span><span class="n">details</span><span class="p">[</span><span class="s">'quantum_resistant'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">alternatives</span>
+
+<span class="c1"># Demo post-quantum cryptography
+</span><span class="n">pqc_methods</span> <span class="o">=</span> <span class="n">post_quantum_cryptography</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-implementation-challenges">🔄 Implementation Challenges</h2>
+
+<h3 id="1-quantum-error-correction">1. Quantum Error Correction</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_error_correction_shor</span><span class="p">():</span>
+    <span class="s">"""
+    Error correction challenges cho Shor's algorithm
+    """</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Quantum Error Correction Challenges for Shor's Algorithm:"</span><span class="p">)</span>
+    
+    <span class="n">challenges</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">"Coherence Time"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"issue"</span><span class="p">:</span> <span class="s">"Qubits lose coherence during long computations"</span><span class="p">,</span>
+            <span class="s">"impact"</span><span class="p">:</span> <span class="s">"Limits circuit depth and accuracy"</span><span class="p">,</span>
+            <span class="s">"solution"</span><span class="p">:</span> <span class="s">"Error correction codes, surface codes"</span>
+        <span class="p">},</span>
+        <span class="s">"Gate Errors"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"issue"</span><span class="p">:</span> <span class="s">"Imperfect quantum gates introduce errors"</span><span class="p">,</span>
+            <span class="s">"impact"</span><span class="p">:</span> <span class="s">"Accumulates during computation"</span><span class="p">,</span>
+            <span class="s">"solution"</span><span class="p">:</span> <span class="s">"Fault-tolerant quantum computing"</span>
+        <span class="p">},</span>
+        <span class="s">"Measurement Errors"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"issue"</span><span class="p">:</span> <span class="s">"Imperfect measurements affect results"</span><span class="p">,</span>
+            <span class="s">"impact"</span><span class="p">:</span> <span class="s">"Reduces success probability"</span><span class="p">,</span>
+            <span class="s">"solution"</span><span class="p">:</span> <span class="s">"Repeated measurements, error mitigation"</span>
+        <span class="p">},</span>
+        <span class="s">"Scalability"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"issue"</span><span class="p">:</span> <span class="s">"Large number of qubits needed for factoring"</span><span class="p">,</span>
+            <span class="s">"impact"</span><span class="p">:</span> <span class="s">"Current devices insufficient"</span><span class="p">,</span>
+            <span class="s">"solution"</span><span class="p">:</span> <span class="s">"Modular quantum computing, distributed algorithms"</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="n">challenge</span><span class="p">,</span> <span class="n">details</span> <span class="ow">in</span> <span class="n">challenges</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="si">{</span><span class="n">challenge</span><span class="si">}</span><span class="s">:"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Issue: </span><span class="si">{</span><span class="n">details</span><span class="p">[</span><span class="s">'issue'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Impact: </span><span class="si">{</span><span class="n">details</span><span class="p">[</span><span class="s">'impact'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Solution: </span><span class="si">{</span><span class="n">details</span><span class="p">[</span><span class="s">'solution'</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">challenges</span>
+
+<span class="c1"># Demo error correction challenges
+</span><span class="n">error_challenges</span> <span class="o">=</span> <span class="n">quantum_error_correction_shor</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-resource-requirements">2. Resource Requirements</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">resource_requirements_analysis</span><span class="p">():</span>
+    <span class="s">"""
+    Phân tích resource requirements cho Shor's algorithm
+    """</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Resource Requirements for Shor's Algorithm:"</span><span class="p">)</span>
+    
+    <span class="c1"># Estimate qubits needed for different key sizes
+</span>    <span class="n">key_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">512</span><span class="p">,</span> <span class="mi">1024</span><span class="p">,</span> <span class="mi">2048</span><span class="p">,</span> <span class="mi">4096</span><span class="p">]</span>
+    
+    <span class="k">for</span> <span class="n">key_size</span> <span class="ow">in</span> <span class="n">key_sizes</span><span class="p">:</span>
+        <span class="c1"># Rough estimate: 2n qubits for n-bit number
+</span>        <span class="n">qubits_needed</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">key_size</span>
+        <span class="c1"># Additional qubits for error correction
+</span>        <span class="n">error_correction_qubits</span> <span class="o">=</span> <span class="n">qubits_needed</span> <span class="o">*</span> <span class="mi">100</span>  <span class="c1"># Conservative estimate
+</span>        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">RSA-</span><span class="si">{</span><span class="n">key_size</span><span class="si">}</span><span class="s">:"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Logical qubits: </span><span class="si">{</span><span class="n">qubits_needed</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Physical qubits (with error correction): </span><span class="si">{</span><span class="n">error_correction_qubits</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Circuit depth: ~</span><span class="si">{</span><span class="n">key_size</span><span class="o">**</span><span class="mi">3</span><span class="si">}</span><span class="s"> gates"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Estimated runtime: ~</span><span class="si">{</span><span class="n">key_size</span><span class="o">**</span><span class="mi">3</span><span class="si">}</span><span class="s"> seconds (ideal)"</span><span class="p">)</span>
+    
+    <span class="c1"># Current quantum computer capabilities
+</span>    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Current Quantum Computer Capabilities:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  IBM Q System: ~100 qubits"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Google Sycamore: ~53 qubits"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Error rates: ~0.1% per gate"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Coherence time: ~100 microseconds"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">key_sizes</span>
+
+<span class="c1"># Demo resource requirements
+</span><span class="n">resource_analysis</span> <span class="o">=</span> <span class="n">resource_requirements_analysis</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-performance-analysis">📊 Performance Analysis</h2>
+
+<h3 id="1-classical-vs-quantum-complexity">1. Classical vs Quantum Complexity</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">complexity_comparison</span><span class="p">():</span>
+    <span class="s">"""
+    So sánh complexity classical vs quantum factoring
+    """</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    
+    <span class="k">def</span> <span class="nf">trial_division</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="s">"""Classical trial division"""</span>
+        <span class="n">factors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mi">2</span>
+        <span class="k">while</span> <span class="n">d</span> <span class="o">*</span> <span class="n">d</span> <span class="o">&lt;=</span> <span class="n">n</span><span class="p">:</span>
+            <span class="k">while</span> <span class="n">n</span> <span class="o">%</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">factors</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+                <span class="n">n</span> <span class="o">//=</span> <span class="n">d</span>
+            <span class="n">d</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">factors</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">factors</span>
+    
+    <span class="k">def</span> <span class="nf">quantum_factoring_simulation</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="s">"""Simulate quantum factoring (simplified)"""</span>
+        <span class="c1"># This is a simplified simulation
+</span>        <span class="c1"># Real quantum factoring would use actual quantum hardware
+</span>        <span class="n">time</span><span class="p">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>  <span class="c1"># Simulate quantum computation time
+</span>        <span class="k">return</span> <span class="n">shor_algorithm_implementation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    
+    <span class="c1"># Test numbers
+</span>    <span class="n">test_numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">39</span><span class="p">]</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Classical vs Quantum Factoring Performance:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="s">'Number'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">8</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Classical (ms)'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">15</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Quantum (ms)'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">15</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Speedup'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">10</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"-"</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">test_numbers</span><span class="p">:</span>
+        <span class="c1"># Classical timing
+</span>        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">classical_factors</span> <span class="o">=</span> <span class="n">trial_division</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">classical_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span>
+        
+        <span class="c1"># Quantum timing (simulated)
+</span>        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">quantum_factors</span> <span class="o">=</span> <span class="n">quantum_factoring_simulation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">quantum_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span>
+        
+        <span class="n">speedup</span> <span class="o">=</span> <span class="n">classical_time</span> <span class="o">/</span> <span class="n">quantum_time</span> <span class="k">if</span> <span class="n">quantum_time</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s">'inf'</span><span class="p">)</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">8</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">classical_time</span><span class="si">:</span><span class="o">&lt;</span><span class="mf">15.2</span><span class="n">f</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">quantum_time</span><span class="si">:</span><span class="o">&lt;</span><span class="mf">15.2</span><span class="n">f</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">speedup</span><span class="si">:</span><span class="o">&lt;</span><span class="mf">10.2</span><span class="n">f</span><span class="si">}</span><span class="s">x"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">test_numbers</span>
+
+<span class="c1"># Demo complexity comparison
+</span><span class="n">complexity_results</span> <span class="o">=</span> <span class="n">complexity_comparison</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-success-probability-analysis">2. Success Probability Analysis</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">success_probability_analysis</span><span class="p">():</span>
+    <span class="s">"""
+    Phân tích success probability của Shor's algorithm
+    """</span>
+    <span class="k">def</span> <span class="nf">analyze_success_probability</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">num_trials</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="s">"""Analyze success probability for given N"""</span>
+        <span class="n">successes</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_trials</span><span class="p">):</span>
+            <span class="n">factor1</span><span class="p">,</span> <span class="n">factor2</span> <span class="o">=</span> <span class="n">shor_algorithm_implementation</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">factor1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+                <span class="n">successes</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+        <span class="n">success_rate</span> <span class="o">=</span> <span class="n">successes</span> <span class="o">/</span> <span class="n">num_trials</span>
+        <span class="k">return</span> <span class="n">success_rate</span>
+    
+    <span class="c1"># Test different numbers
+</span>    <span class="n">test_numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">33</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">39</span><span class="p">,</span> <span class="mi">49</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">65</span><span class="p">]</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Success Probability Analysis:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="s">'Number'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">8</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Success Rate'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">15</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Factors'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">15</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"-"</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">N</span> <span class="ow">in</span> <span class="n">test_numbers</span><span class="p">:</span>
+        <span class="n">success_rate</span> <span class="o">=</span> <span class="n">analyze_success_probability</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">num_trials</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+        <span class="n">factor1</span><span class="p">,</span> <span class="n">factor2</span> <span class="o">=</span> <span class="n">shor_algorithm_implementation</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+        <span class="n">factors_str</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">factor1</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">factor2</span><span class="si">}</span><span class="s">"</span> <span class="k">if</span> <span class="n">factor1</span> <span class="k">else</span> <span class="s">"None"</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">N</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">8</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">success_rate</span><span class="si">:</span><span class="o">&lt;</span><span class="mf">15.3</span><span class="n">f</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">factors_str</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">15</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">test_numbers</span>
+
+<span class="c1"># Demo success probability analysis
+</span><span class="n">success_analysis</span> <span class="o">=</span> <span class="n">success_probability_analysis</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-thực-hành">📚 Bài Tập Thực Hành</h2>
+
+<h3 id="bài-tập-1-implement-modular-exponentiation">Bài tập 1: Implement Modular Exponentiation</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">modular_exponentiation_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Bài tập implement modular exponentiation
+    """</span>
+    <span class="k">def</span> <span class="nf">mod_exp_naive</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">exponent</span><span class="p">,</span> <span class="n">modulus</span><span class="p">):</span>
+        <span class="s">"""Naive implementation"""</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">exponent</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span> <span class="o">*</span> <span class="n">base</span><span class="p">)</span> <span class="o">%</span> <span class="n">modulus</span>
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="k">def</span> <span class="nf">mod_exp_efficient</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">exponent</span><span class="p">,</span> <span class="n">modulus</span><span class="p">):</span>
+        <span class="s">"""Efficient square-and-multiply implementation"""</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">base</span> <span class="o">%</span> <span class="n">modulus</span>
+        
+        <span class="k">while</span> <span class="n">exponent</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">exponent</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span> <span class="o">*</span> <span class="n">base</span><span class="p">)</span> <span class="o">%</span> <span class="n">modulus</span>
+            <span class="n">base</span> <span class="o">=</span> <span class="p">(</span><span class="n">base</span> <span class="o">*</span> <span class="n">base</span><span class="p">)</span> <span class="o">%</span> <span class="n">modulus</span>
+            <span class="n">exponent</span> <span class="o">//=</span> <span class="mi">2</span>
+        
+        <span class="k">return</span> <span class="n">result</span>
+    
+    <span class="c1"># Test cases
+</span>    <span class="n">test_cases</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">17</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">23</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+    <span class="p">]</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Modular Exponentiation Exercise:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="s">'Base'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">6</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Exp'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">6</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Mod'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">6</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Naive'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">10</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Efficient'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">10</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Match'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">6</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"-"</span> <span class="o">*</span> <span class="mi">50</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">base</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">mod</span> <span class="ow">in</span> <span class="n">test_cases</span><span class="p">:</span>
+        <span class="n">naive_result</span> <span class="o">=</span> <span class="n">mod_exp_naive</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">mod</span><span class="p">)</span>
+        <span class="n">efficient_result</span> <span class="o">=</span> <span class="n">mod_exp_efficient</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">exp</span><span class="p">,</span> <span class="n">mod</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="s">"✓"</span> <span class="k">if</span> <span class="n">naive_result</span> <span class="o">==</span> <span class="n">efficient_result</span> <span class="k">else</span> <span class="s">"✗"</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">base</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">6</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">exp</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">6</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">mod</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">6</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">naive_result</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">10</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">efficient_result</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">10</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">match</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">6</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">test_cases</span>
+
+<span class="c1"># Chạy modular exponentiation exercise
+</span><span class="n">mod_exp_exercise</span> <span class="o">=</span> <span class="n">modular_exponentiation_exercise</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-2-period-finding-implementation">Bài tập 2: Period Finding Implementation</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">period_finding_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Bài tập implement period finding
+    """</span>
+    <span class="k">def</span> <span class="nf">find_period_brute_force</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">):</span>
+        <span class="s">"""Brute force period finding"""</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="mi">1</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">i</span> <span class="o">-</span> <span class="n">seen</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+            <span class="n">seen</span><span class="p">[</span><span class="n">x</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span>
+        
+        <span class="k">return</span> <span class="bp">None</span>
+    
+    <span class="k">def</span> <span class="nf">find_period_quantum_simulation</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">precision</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+        <span class="s">"""Simulate quantum period finding"""</span>
+        <span class="c1"># This is a simplified simulation
+</span>        <span class="c1"># Real quantum period finding would use QFT
+</span>        
+        <span class="c1"># Create superposition of states
+</span>        <span class="n">states</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">precision</span><span class="p">):</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+            <span class="n">states</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        
+        <span class="c1"># Find period using frequency analysis
+</span>        <span class="n">value_counts</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">states</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">value_counts</span><span class="p">:</span>
+                <span class="n">value_counts</span><span class="p">[</span><span class="n">value</span><span class="p">].</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">value_counts</span><span class="p">[</span><span class="n">value</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="p">]</span>
+        
+        <span class="c1"># Find most common period
+</span>        <span class="n">periods</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">value</span><span class="p">,</span> <span class="n">x_list</span> <span class="ow">in</span> <span class="n">value_counts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_list</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x_list</span><span class="p">)):</span>
+                    <span class="n">period</span> <span class="o">=</span> <span class="n">x_list</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_list</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">periods</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">period</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">periods</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">periods</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">None</span>
+    
+    <span class="c1"># Test cases
+</span>    <span class="n">test_cases</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+    <span class="p">]</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Period Finding Exercise:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="s">'a'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">4</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'N'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">4</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Brute Force'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">12</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="s">'Quantum Sim'</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">12</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"-"</span> <span class="o">*</span> <span class="mi">35</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">N</span> <span class="ow">in</span> <span class="n">test_cases</span><span class="p">:</span>
+        <span class="n">brute_period</span> <span class="o">=</span> <span class="n">find_period_brute_force</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+        <span class="n">quantum_period</span> <span class="o">=</span> <span class="n">find_period_quantum_simulation</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">a</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">4</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">N</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">4</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">brute_period</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">12</span><span class="si">}</span><span class="s"> </span><span class="si">{</span><span class="n">quantum_period</span><span class="si">:</span><span class="o">&lt;</span><span class="mi">12</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">test_cases</span>
+
+<span class="c1"># Chạy period finding exercise
+</span><span class="n">period_exercise</span> <span class="o">=</span> <span class="n">period_finding_exercise</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-3-rsa-breaking-simulation">Bài tập 3: RSA Breaking Simulation</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">rsa_breaking_simulation</span><span class="p">():</span>
+    <span class="s">"""
+    Bài tập simulate breaking RSA với Shor's algorithm
+    """</span>
+    <span class="k">def</span> <span class="nf">generate_rsa_keys</span><span class="p">(</span><span class="n">bit_length</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+        <span class="s">"""Generate small RSA keys for demonstration"""</span>
+        <span class="c1"># Generate small primes
+</span>        <span class="n">primes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="mi">23</span><span class="p">,</span> <span class="mi">29</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">37</span><span class="p">,</span> <span class="mi">41</span><span class="p">,</span> <span class="mi">43</span><span class="p">,</span> <span class="mi">47</span><span class="p">]</span>
+        
+        <span class="c1"># Choose two random primes
+</span>        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">(</span><span class="n">primes</span><span class="p">)</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">(</span><span class="n">primes</span><span class="p">)</span>
+        <span class="k">while</span> <span class="n">q</span> <span class="o">==</span> <span class="n">p</span><span class="p">:</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">(</span><span class="n">primes</span><span class="p">)</span>
+        
+        <span class="n">n</span> <span class="o">=</span> <span class="n">p</span> <span class="o">*</span> <span class="n">q</span>
+        <span class="n">phi_n</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">q</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Small exponent for simplicity
+</span>        
+        <span class="c1"># Calculate private key
+</span>        <span class="n">d</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">phi_n</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">n</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span>
+    
+    <span class="k">def</span> <span class="nf">break_rsa_with_shor</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="s">"""Attempt to break RSA using Shor's algorithm"""</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Attempting to break RSA with n = </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s">, e = </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        
+        <span class="c1"># Try Shor's algorithm
+</span>        <span class="n">factor1</span><span class="p">,</span> <span class="n">factor2</span> <span class="o">=</span> <span class="n">shor_algorithm_implementation</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">factor1</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Success! Found factors: </span><span class="si">{</span><span class="n">factor1</span><span class="si">}</span><span class="s">, </span><span class="si">{</span><span class="n">factor2</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+            
+            <span class="c1"># Calculate private key
+</span>            <span class="n">phi_n</span> <span class="o">=</span> <span class="p">(</span><span class="n">factor1</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">factor2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="nb">pow</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">phi_n</span><span class="p">)</span>
+            
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Private key d = </span><span class="si">{</span><span class="n">d</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">d</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Failed to find factors"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">None</span>
+    
+    <span class="c1"># Generate RSA keys
+</span>    <span class="n">n</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">d_original</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">generate_rsa_keys</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Generated RSA Keys:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Public key: (n=</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s">, e=</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">)"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Private key: d=</span><span class="si">{</span><span class="n">d_original</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Actual factors: p=</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s">, q=</span><span class="si">{</span><span class="n">q</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Attempt to break
+</span>    <span class="n">d_recovered</span> <span class="o">=</span> <span class="n">break_rsa_with_shor</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">d_recovered</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Recovery successful: </span><span class="si">{</span><span class="n">d_recovered</span> <span class="o">==</span> <span class="n">d_original</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">n</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">d_original</span><span class="p">,</span> <span class="n">d_recovered</span>
+
+<span class="c1"># Chạy RSA breaking simulation
+</span><span class="n">rsa_breaking</span> <span class="o">=</span> <span class="n">rsa_breaking_simulation</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-kết-quả-mong-đợi">🎯 Kết Quả Mong Đợi</h2>
+<ul>
+  <li>Hiểu rõ nguyên lý Shor’s algorithm và ứng dụng cho factoring</li>
+  <li>Có thể triển khai quantum period finding</li>
+  <li>Hiểu tác động đến RSA cryptography</li>
+  <li>Giải quyết được các thách thức implementation</li>
+</ul>
+
+<h2 id="-tài-liệu-tham-khảo">📖 Tài Liệu Tham Khảo</h2>
+<ul>
+  <li><a href="https://arxiv.org/abs/quant-ph/9508027">Shor’s Algorithm Paper</a></li>
+  <li><a href="https://qiskit.org/documentation/stubs/qiskit.algorithms.factorizers.Shor.html">Qiskit Shor Implementation</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/RSA_(cryptosystem)">RSA Cryptography</a></li>
+  <li><a href="https://csrc.nist.gov/projects/post-quantum-cryptography">Post-Quantum Cryptography</a></li>
+</ul>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

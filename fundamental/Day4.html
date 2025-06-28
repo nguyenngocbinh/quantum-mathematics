@@ -3,19 +3,19 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>🌟 Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1 - Quantum Mathematics</title>
-    <meta name="description" content="Lộ trình 15 ngày nhập môn Toán học Lượng tử">
+    <title>🧩 Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors) - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
     <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
     <!-- Additional head elements -->
 <meta name="robots" content="index, follow">
 <meta name="author" content="Nguyen Ngoc Binh">
-<meta property="og:title" content="🌟 Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1">
-<meta property="og:description" content="Lộ trình 15 ngày nhập môn Toán học Lượng tử">
+<meta property="og:title" content="🧩 Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors)">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/Day5.html">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/fundamental/Day4.html">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="🌟 Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1">
-<meta name="twitter:description" content="Lộ trình 15 ngày nhập môn Toán học Lượng tử">
+<meta name="twitter:title" content="🧩 Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors)">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
 
 <!-- Favicon -->
 <link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
@@ -63,128 +63,89 @@
             <article class="post">
 
   <header class="post-header">
-    <h1 class="post-title">🌟 Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1</h1>
+    <h1 class="post-title">🧩 Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors)</h1>
   </header>
 
   <div class="post-content">
-    <h1 id="-ngày-5-xác-suất-cơ-bản-và-nguyên-lý-tổng-xác-suất--1">🌟 <strong>Ngày 5: Xác suất Cơ bản và Nguyên lý Tổng Xác suất = 1</strong></h1>
+    
+<h1 id="-ngày-4-trị-riêng-eigenvalues-và-vector-riêng-eigenvectors">🧩 <strong>Ngày 4: Trị riêng (Eigenvalues) và Vector riêng (Eigenvectors)</strong></h1>
 
 <hr />
 
-<h2 id="1-xác-suất-là-gì"><strong>1. Xác suất là gì?</strong></h2>
+<h2 id="1-khái-niệm-đơn-giản-nhất"><strong>1. Khái niệm đơn giản nhất</strong></h2>
 
-<p>✅ Xác suất đo lường khả năng xảy ra của một sự kiện, giá trị nằm trong khoảng từ 0 đến 1:</p>
+<p><strong>Vector riêng</strong> là một vector khi bị tác động bởi một ma trận sẽ <strong>không đổi hướng</strong>, chỉ thay đổi độ lớn.</p>
+
+<p><strong>Trị riêng</strong> là con số cho biết độ lớn bị thay đổi bao nhiêu.</p>
+
+<hr />
+
+<h3 id="công-thức-cơ-bản"><strong>Công thức cơ bản:</strong></h3>
+
+<p>Cho ma trận <strong>A</strong> và vector <strong>v</strong>, nếu:</p>
+
+\[A \times \mathbf{v} = \lambda \times \mathbf{v}\]
 
 <ul>
-  <li>Xác suất = 1 ⇒ chắc chắn xảy ra</li>
-  <li>Xác suất = 0 ⇒ không thể xảy ra</li>
-  <li>Xác suất giữa 0 và 1 ⇒ có khả năng xảy ra với tỷ lệ tương ứng</li>
+  <li><strong>v</strong> là <strong>vector riêng</strong></li>
+  <li><strong>λ</strong> (lambda) là <strong>trị riêng</strong></li>
+  <li>Nghĩa là: Sau khi nhân ma trận A vào v, vector v vẫn cùng hướng, chỉ bị kéo dài hoặc rút ngắn bởi λ.</li>
 </ul>
-
-<p><strong>Tổng tất cả các khả năng phải bằng 1</strong>, đó là nguyên lý chuẩn hóa trong xác suất.</p>
 
 <hr />
 
-<h2 id="2-ví-dụ-đơn-giản-tung-đồng-xu"><strong>2. Ví dụ Đơn giản: Tung đồng xu</strong></h2>
+<h2 id="2-ví-dụ-trực-quan"><strong>2. Ví dụ trực quan:</strong></h2>
+
+<p>Giả sử:</p>
+
+\[A = \begin{bmatrix} 2 &amp; 0 \\ 0 &amp; 3 \end{bmatrix}\]
+
+<p>Vector:</p>
+
+\[\mathbf{v}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}\]
+
+<p>Tính:</p>
+
+\[A \times \mathbf{v}_1 = \begin{bmatrix} 2 &amp; 0 \\ 0 &amp; 3 \end{bmatrix} \times \begin{bmatrix} 1 \\ 0 \end{bmatrix} = \begin{bmatrix} 2 \\ 0 \end{bmatrix} = 2 \times \mathbf{v}_1\]
+
+<p>Vậy:</p>
 
 <ul>
-  <li>Có 2 khả năng: Sấp ($S$) hoặc Ngửa ($N$)</li>
-  <li>Nếu đồng xu cân bằng:</li>
+  <li><strong>v₁</strong> là vector riêng</li>
+  <li><strong>λ = 2</strong> là trị riêng tương ứng</li>
 </ul>
-
-\[P(S) = 0.5, \quad P(N) = 0.5\]
-
-<p>Tổng xác suất:</p>
-
-\[P(S) + P(N) = 0.5 + 0.5 = 1\]
 
 <hr />
 
-<h2 id="3-ví-dụ-gieo-xúc-xắc"><strong>3. Ví dụ: Gieo xúc xắc</strong></h2>
+<h2 id="3-vì-sao-quan-trọng-trong-lượng-tử"><strong>3. Vì sao quan trọng trong lượng tử?</strong></h2>
+
+<p>Trong lượng tử:</p>
 
 <ul>
-  <li>6 mặt: 1, 2, 3, 4, 5, 6</li>
-  <li>Xác suất ra mỗi mặt:</li>
+  <li><strong>Vector riêng</strong> = Trạng thái ổn định khi đo đạc</li>
+  <li><strong>Trị riêng</strong> = Giá trị đo được (kết quả vật lý, ví dụ năng lượng, vị trí…)</li>
 </ul>
 
-\[P(1) = P(2) = \ldots = P(6) = \frac{1}{6}\]
-
-<p>Tổng xác suất:</p>
-
-\[P(1) + P(2) + \ldots + P(6) = 6 \times \frac{1}{6} = 1\]
+<p>Bạn chỉ đo được giá trị <strong>trị riêng</strong>, không thể biết toàn bộ trạng thái nếu chưa đo.</p>
 
 <hr />
 
-<h2 id="4-liên-hệ-với-cơ-học-lượng-tử"><strong>4. Liên hệ với Cơ học Lượng tử</strong></h2>
+<h2 id="4-bài-tập-tự-làm-cho-bạn"><strong>4. Bài tập tự làm cho bạn:</strong></h2>
 
-<p>Trong toán lượng tử:</p>
+<p>Cho ma trận:</p>
 
-<ul>
-  <li>Biên độ $a, b$ là số phức mô tả trạng thái lượng tử</li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>Xác suất đo được trạng thái $</td>
-          <td>0⟩$ là $</td>
-          <td>a</td>
-          <td>^2$, trạng thái $</td>
-          <td>1⟩$ là $</td>
-          <td>b</td>
-          <td>^2$</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>Phải có:</li>
-</ul>
-
-\[|a|^2 + |b|^2 = 1\]
-
-<p>Đây chính là nguyên lý tổng xác suất = 1, rất giống với xác suất cổ điển.</p>
-
-<hr />
-
-<h1 id="-bài-tập-ngày-5-cho-bạn">🎯 <strong>Bài tập Ngày 5 cho bạn</strong></h1>
+\[B = \begin{bmatrix} 4 &amp; 0 \\ 0 &amp; 5 \end{bmatrix}\]
 
 <ol>
-  <li>
-    <p>Một đồng xu không cân bằng, xác suất sấp là 0.3</p>
-
-    <ul>
-      <li>Tính xác suất ra ngửa?</li>
-    </ul>
-  </li>
-  <li>
-    <p>Một hệ lượng tử có:</p>
-  </li>
+  <li>Tìm vector riêng và trị riêng của ma trận B</li>
+  <li>Kiểm tra lại phép tính như ví dụ trên</li>
 </ol>
 
-\[|\psi⟩ = \sqrt{0.6} \, |0⟩ + \sqrt{0.4} \, |1⟩\]
+<p><strong>Gợi ý:</strong> Thử với:</p>
 
-<ul>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>Xác suất đo được $</td>
-          <td>0⟩$ là bao nhiêu?</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>
-    <table>
-      <tbody>
-        <tr>
-          <td>Xác suất đo được $</td>
-          <td>1⟩$ là bao nhiêu?</td>
-        </tr>
-      </tbody>
-    </table>
-  </li>
-  <li>Tổng xác suất có đúng bằng 1 không?</li>
-</ul>
+\[\mathbf{v}_1 = \begin{bmatrix} 1 \\ 0 \end{bmatrix}, \quad \mathbf{v}_2 = \begin{bmatrix} 0 \\ 1 \end{bmatrix}\]
+
+<hr />
 
 
   </div>

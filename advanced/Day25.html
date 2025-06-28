@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 25: Thuật Toán Grover - Tìm Kiếm Lượng Tử - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 25: Thuật Toán Grover - Tìm Kiếm Lượng Tử">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day25.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 25: Thuật Toán Grover - Tìm Kiếm Lượng Tử">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 25: Thuật Toán Grover - Tìm Kiếm Lượng Tử</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-25-thuật-toán-grover---tìm-kiếm-lượng-tử">Day 25: Thuật Toán Grover - Tìm Kiếm Lượng Tử</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Hiểu thuật toán Grover và nguyên lý hoạt động</li>
+  <li>Triển khai thuật toán Grover trong Qiskit</li>
+  <li>Phân tích hiệu suất và ứng dụng thực tế</li>
+</ul>
+
+<h2 id="-thuật-toán-grover---tổng-quan">🔍 Thuật Toán Grover - Tổng Quan</h2>
+
+<h3 id="nguyên-lý-cơ-bản">Nguyên lý cơ bản</h3>
+<p>Thuật toán Grover là thuật toán lượng tử để tìm kiếm trong cơ sở dữ liệu không có cấu trúc với độ phức tạp O(√N) thay vì O(N) của thuật toán cổ điển.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_histogram</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+
+<span class="k">def</span> <span class="nf">grover_oracle</span><span class="p">(</span><span class="n">marked_state</span><span class="p">):</span>
+    <span class="s">"""
+    Tạo oracle cho thuật toán Grover
+    marked_state: trạng thái cần tìm (ví dụ: '11' cho 2 qubit)
+    """</span>
+    <span class="n">n_qubits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">marked_state</span><span class="p">)</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Đánh dấu trạng thái cần tìm bằng phase kickback
+</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">marked_state</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="s">'0'</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Áp dụng multi-controlled Z gate
+</span>    <span class="k">if</span> <span class="n">n_qubits</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">n_qubits</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">n_qubits</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">ccz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Sử dụng Toffoli gates cho nhiều qubit hơn
+</span>        <span class="n">qc</span><span class="p">.</span><span class="n">mct</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">n_qubits</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Đảo ngược các X gates
+</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">marked_state</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="s">'0'</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="k">def</span> <span class="nf">grover_diffusion</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+    <span class="s">"""
+    Tạo diffusion operator (Grover diffusion)
+    """</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Áp dụng Hadamard trên tất cả qubit
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Áp dụng X trên tất cả qubit
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Áp dụng multi-controlled Z
+</span>    <span class="k">if</span> <span class="n">n_qubits</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">n_qubits</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">n_qubits</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">ccz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">mct</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">n_qubits</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Đảo ngược X gates
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Đảo ngược Hadamard gates
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h2 id="-triển-khai-thuật-toán-grover">🔧 Triển Khai Thuật Toán Grover</h2>
+
+<h3 id="1-grover-cho-2-qubit-tìm-kiếm-trong-4-trạng-thái">1. Grover cho 2 qubit (tìm kiếm trong 4 trạng thái)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">grover_2_qubit</span><span class="p">(</span><span class="n">marked_state</span><span class="o">=</span><span class="s">'11'</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="s">"""
+    Thuật toán Grover cho 2 qubit
+    marked_state: trạng thái cần tìm ('00', '01', '10', '11')
+    iterations: số lần lặp Grover
+    """</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 1: Khởi tạo siêu vị đều
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 2: Lặp Grover
+</span>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+        <span class="c1"># Oracle
+</span>        <span class="n">oracle</span> <span class="o">=</span> <span class="n">grover_oracle</span><span class="p">(</span><span class="n">marked_state</span><span class="p">)</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">qc</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">oracle</span><span class="p">)</span>
+        
+        <span class="c1"># Diffusion
+</span>        <span class="n">diffusion</span> <span class="o">=</span> <span class="n">grover_diffusion</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">qc</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">diffusion</span><span class="p">)</span>
+    
+    <span class="c1"># Bước 3: Đo lường
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+
+<span class="c1"># Thử nghiệm với các trạng thái khác nhau
+</span><span class="k">def</span> <span class="nf">test_grover_2_qubit</span><span class="p">():</span>
+    <span class="n">marked_states</span> <span class="o">=</span> <span class="p">[</span><span class="s">'00'</span><span class="p">,</span> <span class="s">'01'</span><span class="p">,</span> <span class="s">'10'</span><span class="p">,</span> <span class="s">'11'</span><span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">marked_states</span><span class="p">:</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">grover_2_qubit</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">state</span><span class="p">]</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Tìm kiếm </span><span class="si">{</span><span class="n">state</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="n">state</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div></div>
+
+<h3 id="2-grover-cho-3-qubit-tìm-kiếm-trong-8-trạng-thái">2. Grover cho 3 qubit (tìm kiếm trong 8 trạng thái)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">grover_3_qubit</span><span class="p">(</span><span class="n">marked_state</span><span class="o">=</span><span class="s">'111'</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="s">"""
+    Thuật toán Grover cho 3 qubit
+    marked_state: trạng thái cần tìm
+    iterations: số lần lặp (tối ưu cho 3 qubit là 2 lần)
+    """</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    
+    <span class="c1"># Khởi tạo siêu vị đều
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Lặp Grover
+</span>    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iterations</span><span class="p">):</span>
+        <span class="c1"># Oracle
+</span>        <span class="n">oracle</span> <span class="o">=</span> <span class="n">grover_oracle</span><span class="p">(</span><span class="n">marked_state</span><span class="p">)</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">qc</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">oracle</span><span class="p">)</span>
+        
+        <span class="c1"># Diffusion
+</span>        <span class="n">diffusion</span> <span class="o">=</span> <span class="n">grover_diffusion</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">qc</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">diffusion</span><span class="p">)</span>
+    
+    <span class="c1"># Đo lường
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h2 id="-phân-tích-hiệu-suất">📊 Phân Tích Hiệu Suất</h2>
+
+<h3 id="1-tính-toán-số-lần-lặp-tối-ưu">1. Tính toán số lần lặp tối ưu</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">optimal_grover_iterations</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+    <span class="s">"""
+    Tính số lần lặp tối ưu cho thuật toán Grover
+    """</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">n_qubits</span>
+    <span class="n">optimal</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="o">/</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">optimal</span>
+
+<span class="k">def</span> <span class="nf">grover_success_probability</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">iterations</span><span class="p">):</span>
+    <span class="s">"""
+    Tính xác suất thành công của thuật toán Grover
+    """</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">2</span><span class="o">**</span><span class="n">n_qubits</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arcsin</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+    <span class="n">angle</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">iterations</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">theta</span>
+    <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">sin</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+
+<span class="c1"># Phân tích cho các số qubit khác nhau
+</span><span class="k">def</span> <span class="nf">analyze_grover_performance</span><span class="p">():</span>
+    <span class="n">qubit_counts</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+    <span class="n">analysis</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">qubit_counts</span><span class="p">:</span>
+        <span class="n">optimal_iters</span> <span class="o">=</span> <span class="n">optimal_grover_iterations</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+        <span class="n">success_prob</span> <span class="o">=</span> <span class="n">grover_success_probability</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">optimal_iters</span><span class="p">)</span>
+        
+        <span class="n">analysis</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'database_size'</span><span class="p">:</span> <span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">,</span>
+            <span class="s">'optimal_iterations'</span><span class="p">:</span> <span class="n">optimal_iters</span><span class="p">,</span>
+            <span class="s">'success_probability'</span><span class="p">:</span> <span class="n">success_prob</span><span class="p">,</span>
+            <span class="s">'classical_complexity'</span><span class="p">:</span> <span class="mi">2</span><span class="o">**</span><span class="n">n</span><span class="p">,</span>
+            <span class="s">'quantum_complexity'</span><span class="p">:</span> <span class="n">optimal_iters</span>
+        <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">analysis</span>
+</code></pre></div></div>
+
+<h3 id="2-so-sánh-với-tìm-kiếm-cổ-điển">2. So sánh với tìm kiếm cổ điển</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">classical_search_simulation</span><span class="p">(</span><span class="n">database_size</span><span class="p">,</span> <span class="n">marked_element</span><span class="p">):</span>
+    <span class="s">"""
+    Mô phỏng tìm kiếm cổ điển
+    """</span>
+    <span class="kn">import</span> <span class="nn">random</span>
+    
+    <span class="c1"># Tạo database ngẫu nhiên
+</span>    <span class="n">database</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">database_size</span><span class="p">))</span>
+    <span class="n">random</span><span class="p">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">database</span><span class="p">)</span>
+    
+    <span class="c1"># Tìm kiếm tuần tự
+</span>    <span class="n">comparisons</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">database</span><span class="p">):</span>
+        <span class="n">comparisons</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">element</span> <span class="o">==</span> <span class="n">marked_element</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">comparisons</span>
+    
+    <span class="k">return</span> <span class="n">comparisons</span>
+
+<span class="k">def</span> <span class="nf">compare_search_methods</span><span class="p">():</span>
+    <span class="s">"""
+    So sánh hiệu suất tìm kiếm cổ điển vs lượng tử
+    """</span>
+    <span class="n">sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">]</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="n">sizes</span><span class="p">:</span>
+        <span class="c1"># Mô phỏng cổ điển
+</span>        <span class="n">classical_avg</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">([</span>
+            <span class="n">classical_search_simulation</span><span class="p">(</span><span class="n">size</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> 
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+        <span class="p">])</span>
+        
+        <span class="c1"># Tính toán lượng tử
+</span>        <span class="n">n_qubits</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">log2</span><span class="p">(</span><span class="n">size</span><span class="p">))</span>
+        <span class="n">quantum_iters</span> <span class="o">=</span> <span class="n">optimal_grover_iterations</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+        
+        <span class="n">results</span><span class="p">[</span><span class="n">size</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'classical_average'</span><span class="p">:</span> <span class="n">classical_avg</span><span class="p">,</span>
+            <span class="s">'quantum_iterations'</span><span class="p">:</span> <span class="n">quantum_iters</span><span class="p">,</span>
+            <span class="s">'speedup'</span><span class="p">:</span> <span class="n">classical_avg</span> <span class="o">/</span> <span class="n">quantum_iters</span>
+        <span class="p">}</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div></div>
+
+<h2 id="-ứng-dụng-thực-tế">🎯 Ứng Dụng Thực Tế</h2>
+
+<h3 id="1-tìm-kiếm-trong-cơ-sở-dữ-liệu">1. Tìm kiếm trong cơ sở dữ liệu</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">database_search_example</span><span class="p">():</span>
+    <span class="s">"""
+    Ví dụ tìm kiếm trong database đơn giản
+    """</span>
+    <span class="c1"># Database: ['Alice', 'Bob', 'Charlie', 'David']
+</span>    <span class="c1"># Tìm kiếm 'Charlie' (index 2)
+</span>    
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    
+    <span class="c1"># Khởi tạo
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Oracle cho 'Charlie' (binary: 10)
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Đảo bit thứ 2
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Diffusion
+</span>    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h3 id="2-giải-bài-toán-sat">2. Giải bài toán SAT</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">sat_oracle</span><span class="p">(</span><span class="n">clause</span><span class="p">):</span>
+    <span class="s">"""
+    Tạo oracle cho bài toán SAT
+    clause: tuple của các literal (ví dụ: (1, -2, 3) cho x1 OR NOT x2 OR x3)
+    """</span>
+    <span class="n">n_vars</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">clause</span><span class="p">)</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_vars</span><span class="p">)</span>
+    
+    <span class="c1"># Áp dụng logic của clause
+</span>    <span class="k">for</span> <span class="n">literal</span> <span class="ow">in</span> <span class="n">clause</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">literal</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Multi-controlled Z
+</span>    <span class="k">if</span> <span class="n">n_vars</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">z</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">n_vars</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cz</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">mct</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_vars</span><span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">n_vars</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Đảo ngược
+</span>    <span class="k">for</span> <span class="n">literal</span> <span class="ow">in</span> <span class="n">clause</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">literal</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">literal</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-thực-hành">📚 Bài Tập Thực Hành</h2>
+
+<h3 id="bài-tập-1-tối-ưu-hóa-số-lần-lặp">Bài tập 1: Tối ưu hóa số lần lặp</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">find_optimal_iterations</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+    <span class="s">"""
+    Tìm số lần lặp tối ưu bằng thực nghiệm
+    """</span>
+    <span class="n">iterations_range</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">iters</span> <span class="ow">in</span> <span class="n">iterations_range</span><span class="p">:</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">grover_3_qubit</span><span class="p">(</span><span class="s">'111'</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="n">iters</span><span class="p">)</span>
+        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+        
+        <span class="n">success_rate</span> <span class="o">=</span> <span class="n">counts</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="s">'111'</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">iters</span><span class="p">]</span> <span class="o">=</span> <span class="n">success_rate</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-2-grover-với-nhiều-giải-pháp">Bài tập 2: Grover với nhiều giải pháp</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">grover_multiple_solutions</span><span class="p">(</span><span class="n">marked_states</span><span class="p">,</span> <span class="n">iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="s">"""
+    Thuật toán Grover với nhiều trạng thái được đánh dấu
+    """</span>
+    <span class="n">n_qubits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">marked_states</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">,</span> <span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Khởi tạo
+</span>    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Oracle cho nhiều trạng thái
+</span>    <span class="k">for</span> <span class="n">state</span> <span class="ow">in</span> <span class="n">marked_states</span><span class="p">:</span>
+        <span class="n">oracle</span> <span class="o">=</span> <span class="n">grover_oracle</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">qc</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">oracle</span><span class="p">)</span>
+    
+    <span class="c1"># Diffusion
+</span>    <span class="n">diffusion</span> <span class="o">=</span> <span class="n">grover_diffusion</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+    <span class="n">qc</span> <span class="o">=</span> <span class="n">qc</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">diffusion</span><span class="p">)</span>
+    
+    <span class="n">qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">qc</span>
+</code></pre></div></div>
+
+<h2 id="-kết-quả-mong-đợi">🎯 Kết Quả Mong Đợi</h2>
+<ul>
+  <li>Hiểu rõ nguyên lý hoạt động của thuật toán Grover</li>
+  <li>Có thể triển khai thuật toán cho các bài toán tìm kiếm khác nhau</li>
+  <li>Phân tích được hiệu suất và so sánh với phương pháp cổ điển</li>
+</ul>
+
+<h2 id="-tài-liệu-tham-khảo">📖 Tài Liệu Tham Khảo</h2>
+<ul>
+  <li><a href="https://qiskit.org/textbook/ch-algorithms/grover.html">Qiskit Grover Algorithm</a></li>
+  <li><a href="https://qiskit.org/documentation/tutorials/algorithms/06_grover.html">Quantum Search Algorithms</a></li>
+</ul>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 

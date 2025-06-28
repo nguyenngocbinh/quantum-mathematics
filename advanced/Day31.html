@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Day 31: Quantum Cryptography Protocols - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Day 31: Quantum Cryptography Protocols">
+<meta property="og:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/advanced/Day31.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Day 31: Quantum Cryptography Protocols">
+<meta name="twitter:description" content="Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 15 ngày nhập môn Toán học Lượng tử</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">Lộ trình</a></li>
+                <li><a href="/quantum-mathematics/Day1.html">Ngày 1</a></li>
+                <li><a href="/quantum-mathematics/Day2.html">Ngày 2</a></li>
+                <li><a href="/quantum-mathematics/Day3.html">Ngày 3</a></li>
+                <li><a href="/quantum-mathematics/Day4.html">Ngày 4</a></li>
+                <li><a href="/quantum-mathematics/Day5.html">Ngày 5</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Day 31: Quantum Cryptography Protocols</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="day-31-quantum-cryptography-protocols">Day 31: Quantum Cryptography Protocols</h1>
+
+<h2 id="-mục-tiêu">🎯 Mục tiêu</h2>
+<ul>
+  <li>Hiểu nguyên lý cơ bản của quantum cryptography</li>
+  <li>Triển khai BB84 protocol cho quantum key distribution</li>
+  <li>Phát hiện eavesdropping trong quantum communication</li>
+  <li>Phân tích bảo mật của quantum cryptography protocols</li>
+</ul>
+
+<h2 id="-quantum-cryptography---tổng-quan">🔐 Quantum Cryptography - Tổng Quan</h2>
+
+<h3 id="tại-sao-quantum-cryptography">Tại sao Quantum Cryptography?</h3>
+<ul>
+  <li><strong>Unconditional security</strong>: Dựa trên nguyên lý vật lý lượng tử</li>
+  <li><strong>Eavesdropping detection</strong>: Phát hiện người nghe lén tự động</li>
+  <li><strong>Key distribution</strong>: Tạo khóa bí mật hoàn hảo</li>
+  <li><strong>Future-proof</strong>: An toàn trước quantum computers</li>
+  <li><strong>Information theory</strong>: Bảo mật dựa trên uncertainty principle</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">random_statevector</span><span class="p">,</span> <span class="n">Statevector</span>
+<span class="kn">from</span> <span class="nn">qiskit.visualization</span> <span class="kn">import</span> <span class="n">plot_bloch_multivector</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Dict</span>
+</code></pre></div></div>
+
+<h2 id="-bb84-protocol-implementation">🔑 BB84 Protocol Implementation</h2>
+
+<h3 id="1-bb84-protocol-fundamentals">1. BB84 Protocol Fundamentals</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">BB84Protocol</span><span class="p">:</span>
+    <span class="s">"""
+    Triển khai BB84 Quantum Key Distribution Protocol
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">basis_choices</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Z'</span><span class="p">,</span> <span class="s">'X'</span><span class="p">]</span>  <span class="c1"># Computational và Hadamard basis
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">bit_values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        
+    <span class="k">def</span> <span class="nf">alice_prepare_qubit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bit</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">basis</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">QuantumCircuit</span><span class="p">:</span>
+        <span class="s">"""
+        Alice chuẩn bị qubit theo bit và basis
+        """</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">basis</span> <span class="o">==</span> <span class="s">'Z'</span><span class="p">:</span>  <span class="c1"># Computational basis
+</span>            <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># |1⟩ state
+</span>        <span class="k">elif</span> <span class="n">basis</span> <span class="o">==</span> <span class="s">'X'</span><span class="p">:</span>  <span class="c1"># Hadamard basis
+</span>            <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># |+⟩ state
+</span>            <span class="k">else</span><span class="p">:</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># |-⟩ state
+</span>                
+        <span class="k">return</span> <span class="n">qc</span>
+    
+    <span class="k">def</span> <span class="nf">bob_measure_qubit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qc</span><span class="p">:</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">basis</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="s">"""
+        Bob đo qubit theo basis được chọn
+        """</span>
+        <span class="c1"># Tạo circuit mới để đo
+</span>        <span class="n">measure_qc</span> <span class="o">=</span> <span class="n">qc</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+        
+        <span class="k">if</span> <span class="n">basis</span> <span class="o">==</span> <span class="s">'X'</span><span class="p">:</span>
+            <span class="n">measure_qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># Chuyển về computational basis
+</span>        
+        <span class="n">measure_qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="c1"># Thực hiện đo
+</span>        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">measure_qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Lấy kết quả đo
+</span>        <span class="n">measured_bit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">counts</span><span class="p">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">measured_bit</span>
+
+<span class="c1"># Test BB84 preparation
+</span><span class="n">bb84</span> <span class="o">=</span> <span class="n">BB84Protocol</span><span class="p">()</span>
+
+<span class="k">print</span><span class="p">(</span><span class="s">"BB84 Protocol - Alice's Qubit Preparation:"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">basis</span> <span class="ow">in</span> <span class="p">[</span><span class="s">'Z'</span><span class="p">,</span> <span class="s">'X'</span><span class="p">]:</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">bb84</span><span class="p">.</span><span class="n">alice_prepare_qubit</span><span class="p">(</span><span class="n">bit</span><span class="p">,</span> <span class="n">basis</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Bit: </span><span class="si">{</span><span class="n">bit</span><span class="si">}</span><span class="s">, Basis: </span><span class="si">{</span><span class="n">basis</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h3 id="2-complete-bb84-key-generation">2. Complete BB84 Key Generation</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">bb84_key_generation</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="s">"""
+    Tạo khóa BB84 hoàn chỉnh
+    """</span>
+    <span class="n">bb84</span> <span class="o">=</span> <span class="n">BB84Protocol</span><span class="p">()</span>
+    
+    <span class="c1"># Alice's choices
+</span>    <span class="n">alice_bits</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)]</span>
+    <span class="n">alice_bases</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="s">'Z'</span><span class="p">,</span> <span class="s">'X'</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)]</span>
+    
+    <span class="c1"># Bob's choices
+</span>    <span class="n">bob_bases</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="s">'Z'</span><span class="p">,</span> <span class="s">'X'</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)]</span>
+    
+    <span class="c1"># Prepare and measure qubits
+</span>    <span class="n">bob_bits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">matching_bases</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="c1"># Alice prepares qubit
+</span>        <span class="n">qc</span> <span class="o">=</span> <span class="n">bb84</span><span class="p">.</span><span class="n">alice_prepare_qubit</span><span class="p">(</span><span class="n">alice_bits</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alice_bases</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        
+        <span class="c1"># Bob measures qubit
+</span>        <span class="n">measured_bit</span> <span class="o">=</span> <span class="n">bb84</span><span class="p">.</span><span class="n">bob_measure_qubit</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">bob_bases</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">bob_bits</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">measured_bit</span><span class="p">)</span>
+        
+        <span class="c1"># Check if bases match
+</span>        <span class="k">if</span> <span class="n">alice_bases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">bob_bases</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">matching_bases</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Generate key from matching bases
+</span>    <span class="n">alice_key</span> <span class="o">=</span> <span class="p">[</span><span class="n">alice_bits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">matching_bases</span><span class="p">]</span>
+    <span class="n">bob_key</span> <span class="o">=</span> <span class="p">[</span><span class="n">bob_bits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">matching_bases</span><span class="p">]</span>
+    
+    <span class="c1"># Calculate error rate
+</span>    <span class="n">error_rate</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">alice_key</span> <span class="k">else</span> <span class="mi">0</span>
+    
+    <span class="k">return</span> <span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">,</span> <span class="n">error_rate</span>
+
+<span class="c1"># Test BB84 key generation
+</span><span class="k">print</span><span class="p">(</span><span class="s">"BB84 Key Generation Demo:"</span><span class="p">)</span>
+<span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">,</span> <span class="n">error_rate</span> <span class="o">=</span> <span class="n">bb84_key_generation</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Generated key length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Alice's key (first 10 bits): </span><span class="si">{</span><span class="n">alice_key</span><span class="p">[</span><span class="si">:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Bob's key (first 10 bits): </span><span class="si">{</span><span class="n">bob_key</span><span class="p">[</span><span class="si">:</span><span class="mi">10</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error rate: </span><span class="si">{</span><span class="n">error_rate</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Keys match: </span><span class="si">{</span><span class="n">alice_key</span> <span class="o">==</span> <span class="n">bob_key</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="️-eavesdropping-detection">🕵️ Eavesdropping Detection</h2>
+
+<h3 id="1-intercept-resend-attack">1. Intercept-Resend Attack</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Eavesdropper</span><span class="p">:</span>
+    <span class="s">"""
+    Mô phỏng eavesdropper (Eve) thực hiện intercept-resend attack
+    """</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">intercepted_bits</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">intercepted_bases</span> <span class="o">=</span> <span class="p">[]</span>
+        
+    <span class="k">def</span> <span class="nf">intercept_and_resend</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">qc</span><span class="p">:</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">basis</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">QuantumCircuit</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="s">"""
+        Eve chặn qubit, đo và gửi lại
+        """</span>
+        <span class="c1"># Eve đo qubit với basis ngẫu nhiên
+</span>        <span class="n">eve_basis</span> <span class="o">=</span> <span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="s">'Z'</span><span class="p">,</span> <span class="s">'X'</span><span class="p">])</span>
+        <span class="n">eve_bit</span> <span class="o">=</span> <span class="n">bb84</span><span class="p">.</span><span class="n">bob_measure_qubit</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">eve_basis</span><span class="p">)</span>
+        
+        <span class="c1"># Eve tạo lại qubit và gửi cho Bob
+</span>        <span class="n">new_qc</span> <span class="o">=</span> <span class="n">bb84</span><span class="p">.</span><span class="n">alice_prepare_qubit</span><span class="p">(</span><span class="n">eve_bit</span><span class="p">,</span> <span class="n">eve_basis</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">new_qc</span><span class="p">,</span> <span class="n">eve_bit</span>
+
+<span class="k">def</span> <span class="nf">bb84_with_eavesdropping</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="s">"""
+    BB84 với eavesdropping detection
+    """</span>
+    <span class="n">bb84</span> <span class="o">=</span> <span class="n">BB84Protocol</span><span class="p">()</span>
+    <span class="n">eve</span> <span class="o">=</span> <span class="n">Eavesdropper</span><span class="p">()</span>
+    
+    <span class="c1"># Alice's choices
+</span>    <span class="n">alice_bits</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)]</span>
+    <span class="n">alice_bases</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="s">'Z'</span><span class="p">,</span> <span class="s">'X'</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)]</span>
+    
+    <span class="c1"># Bob's choices
+</span>    <span class="n">bob_bases</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="s">'Z'</span><span class="p">,</span> <span class="s">'X'</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)]</span>
+    
+    <span class="c1"># Prepare, intercept, and measure qubits
+</span>    <span class="n">bob_bits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">matching_bases</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">):</span>
+        <span class="c1"># Alice prepares qubit
+</span>        <span class="n">qc</span> <span class="o">=</span> <span class="n">bb84</span><span class="p">.</span><span class="n">alice_prepare_qubit</span><span class="p">(</span><span class="n">alice_bits</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">alice_bases</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        
+        <span class="c1"># Eve intercepts (with 50% probability)
+</span>        <span class="k">if</span> <span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.5</span><span class="p">:</span>
+            <span class="n">qc</span><span class="p">,</span> <span class="n">eve_bit</span> <span class="o">=</span> <span class="n">eve</span><span class="p">.</span><span class="n">intercept_and_resend</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">alice_bases</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">eve</span><span class="p">.</span><span class="n">intercepted_bits</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">eve_bit</span><span class="p">)</span>
+            <span class="n">eve</span><span class="p">.</span><span class="n">intercepted_bases</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">alice_bases</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        
+        <span class="c1"># Bob measures qubit
+</span>        <span class="n">measured_bit</span> <span class="o">=</span> <span class="n">bb84</span><span class="p">.</span><span class="n">bob_measure_qubit</span><span class="p">(</span><span class="n">qc</span><span class="p">,</span> <span class="n">bob_bases</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">bob_bits</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">measured_bit</span><span class="p">)</span>
+        
+        <span class="c1"># Check if bases match
+</span>        <span class="k">if</span> <span class="n">alice_bases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">bob_bases</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">matching_bases</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Generate key from matching bases
+</span>    <span class="n">alice_key</span> <span class="o">=</span> <span class="p">[</span><span class="n">alice_bits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">matching_bases</span><span class="p">]</span>
+    <span class="n">bob_key</span> <span class="o">=</span> <span class="p">[</span><span class="n">bob_bits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">matching_bases</span><span class="p">]</span>
+    
+    <span class="c1"># Calculate error rate
+</span>    <span class="n">error_rate</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">alice_key</span> <span class="k">else</span> <span class="mi">0</span>
+    
+    <span class="c1"># Expected error rate from eavesdropping
+</span>    <span class="n">expected_error_rate</span> <span class="o">=</span> <span class="mf">0.25</span>  <span class="c1"># 25% error rate from intercept-resend
+</span>    
+    <span class="k">return</span> <span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">,</span> <span class="n">error_rate</span><span class="p">,</span> <span class="n">expected_error_rate</span>
+
+<span class="c1"># Test eavesdropping detection
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">BB84 with Eavesdropping Detection:"</span><span class="p">)</span>
+<span class="n">alice_key_eve</span><span class="p">,</span> <span class="n">bob_key_eve</span><span class="p">,</span> <span class="n">error_rate_eve</span><span class="p">,</span> <span class="n">expected_error</span> <span class="o">=</span> <span class="n">bb84_with_eavesdropping</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Generated key length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">alice_key_eve</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error rate: </span><span class="si">{</span><span class="n">error_rate_eve</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Expected error rate from eavesdropping: </span><span class="si">{</span><span class="n">expected_error</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Eavesdropping detected: </span><span class="si">{</span><span class="n">error_rate_eve</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>  <span class="c1"># Threshold for detection
+</span></code></pre></div></div>
+
+<h3 id="2-privacy-amplification">2. Privacy Amplification</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">privacy_amplification</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">target_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="s">"""
+    Privacy amplification để loại bỏ thông tin bị lộ
+    """</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">target_length</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">key</span>
+    
+    <span class="c1"># Sử dụng hash function để tạo key mới
+</span>    <span class="n">key_str</span> <span class="o">=</span> <span class="s">''</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">key</span><span class="p">))</span>
+    <span class="n">hash_object</span> <span class="o">=</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">key_str</span><span class="p">.</span><span class="n">encode</span><span class="p">())</span>
+    <span class="n">hash_hex</span> <span class="o">=</span> <span class="n">hash_object</span><span class="p">.</span><span class="n">hexdigest</span><span class="p">()</span>
+    
+    <span class="c1"># Chuyển hash thành binary
+</span>    <span class="n">hash_binary</span> <span class="o">=</span> <span class="nb">bin</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">hash_hex</span><span class="p">,</span> <span class="mi">16</span><span class="p">))[</span><span class="mi">2</span><span class="p">:].</span><span class="n">zfill</span><span class="p">(</span><span class="mi">256</span><span class="p">)</span>
+    
+    <span class="c1"># Lấy target_length bits đầu tiên
+</span>    <span class="n">amplified_key</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">hash_binary</span><span class="p">[:</span><span class="n">target_length</span><span class="p">]]</span>
+    
+    <span class="k">return</span> <span class="n">amplified_key</span>
+
+<span class="k">def</span> <span class="nf">secure_key_generation</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">200</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]]:</span>
+    <span class="s">"""
+    Tạo khóa bảo mật hoàn chỉnh với privacy amplification
+    """</span>
+    <span class="c1"># Generate initial key
+</span>    <span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">,</span> <span class="n">error_rate</span> <span class="o">=</span> <span class="n">bb84_key_generation</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Check for eavesdropping
+</span>    <span class="k">if</span> <span class="n">error_rate</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Eavesdropping detected! Error rate: </span><span class="si">{</span><span class="n">error_rate</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[],</span> <span class="p">[]</span>
+    
+    <span class="c1"># Privacy amplification
+</span>    <span class="n">target_length</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">bob_key</span><span class="p">))</span> <span class="o">//</span> <span class="mi">2</span>  <span class="c1"># Reduce key length
+</span>    <span class="n">final_alice_key</span> <span class="o">=</span> <span class="n">privacy_amplification</span><span class="p">(</span><span class="n">alice_key</span><span class="p">,</span> <span class="n">target_length</span><span class="p">)</span>
+    <span class="n">final_bob_key</span> <span class="o">=</span> <span class="n">privacy_amplification</span><span class="p">(</span><span class="n">bob_key</span><span class="p">,</span> <span class="n">target_length</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">final_alice_key</span><span class="p">,</span> <span class="n">final_bob_key</span>
+
+<span class="c1"># Test secure key generation
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Secure Key Generation with Privacy Amplification:"</span><span class="p">)</span>
+<span class="n">final_alice_key</span><span class="p">,</span> <span class="n">final_bob_key</span> <span class="o">=</span> <span class="n">secure_key_generation</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">final_alice_key</span> <span class="ow">and</span> <span class="n">final_bob_key</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Final key length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">final_alice_key</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Final keys match: </span><span class="si">{</span><span class="n">final_alice_key</span> <span class="o">==</span> <span class="n">final_bob_key</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Key entropy: </span><span class="si">{</span><span class="nb">sum</span><span class="p">(</span><span class="n">final_alice_key</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">final_alice_key</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Key generation failed due to eavesdropping detection"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-advanced-quantum-cryptography-protocols">🔒 Advanced Quantum Cryptography Protocols</h2>
+
+<h3 id="1-bbm92-protocol-entanglement-based">1. BBM92 Protocol (Entanglement-based)</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">bbm92_protocol</span><span class="p">(</span><span class="n">n_pairs</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="s">"""
+    BBM92 protocol sử dụng entangled pairs
+    """</span>
+    <span class="c1"># Tạo Bell pairs
+</span>    <span class="n">bell_pairs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_pairs</span><span class="p">):</span>
+        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">qc</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">bell_pairs</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">qc</span><span class="p">)</span>
+    
+    <span class="c1"># Alice và Bob đo với basis ngẫu nhiên
+</span>    <span class="n">alice_bases</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="s">'Z'</span><span class="p">,</span> <span class="s">'X'</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_pairs</span><span class="p">)]</span>
+    <span class="n">bob_bases</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="s">'Z'</span><span class="p">,</span> <span class="s">'X'</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_pairs</span><span class="p">)]</span>
+    
+    <span class="n">alice_bits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">bob_bits</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">matching_bases</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_pairs</span><span class="p">):</span>
+        <span class="c1"># Alice measures first qubit
+</span>        <span class="n">alice_qc</span> <span class="o">=</span> <span class="n">bell_pairs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">alice_bases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s">'X'</span><span class="p">:</span>
+            <span class="n">alice_qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">alice_qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># Bob measures second qubit
+</span>        <span class="n">bob_qc</span> <span class="o">=</span> <span class="n">bell_pairs</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">bob_bases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="s">'X'</span><span class="p">:</span>
+            <span class="n">bob_qc</span><span class="p">.</span><span class="n">h</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">bob_qc</span><span class="p">.</span><span class="n">measure</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        
+        <span class="c1"># Execute measurements
+</span>        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        
+        <span class="n">alice_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">alice_qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">alice_result</span> <span class="o">=</span> <span class="n">alice_job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">alice_bit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">alice_result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">().</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span>
+        
+        <span class="n">bob_job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">bob_qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">bob_result</span> <span class="o">=</span> <span class="n">bob_job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">bob_bit</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">bob_result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">().</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">])</span>
+        
+        <span class="n">alice_bits</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">alice_bit</span><span class="p">)</span>
+        <span class="n">bob_bits</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">bob_bit</span><span class="p">)</span>
+        
+        <span class="c1"># Check if bases match
+</span>        <span class="k">if</span> <span class="n">alice_bases</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">bob_bases</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">matching_bases</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Generate key
+</span>    <span class="n">alice_key</span> <span class="o">=</span> <span class="p">[</span><span class="n">alice_bits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">matching_bases</span><span class="p">]</span>
+    <span class="n">bob_key</span> <span class="o">=</span> <span class="p">[</span><span class="n">bob_bits</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">matching_bases</span><span class="p">]</span>
+    
+    <span class="c1"># Calculate error rate
+</span>    <span class="n">error_rate</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">a</span> <span class="o">!=</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">)</span> <span class="k">if</span> <span class="n">alice_key</span> <span class="k">else</span> <span class="mi">0</span>
+    
+    <span class="k">return</span> <span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">,</span> <span class="n">error_rate</span>
+
+<span class="c1"># Test BBM92 protocol
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">BBM92 Protocol (Entanglement-based):"</span><span class="p">)</span>
+<span class="n">bbm92_alice</span><span class="p">,</span> <span class="n">bbm92_bob</span><span class="p">,</span> <span class="n">bbm92_error</span> <span class="o">=</span> <span class="n">bbm92_protocol</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"BBM92 key length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">bbm92_alice</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"BBM92 error rate: </span><span class="si">{</span><span class="n">bbm92_error</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"BBM92 keys match: </span><span class="si">{</span><span class="n">bbm92_alice</span> <span class="o">==</span> <span class="n">bbm92_bob</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-quantum-digital-signatures">2. Quantum Digital Signatures</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_digital_signature</span><span class="p">():</span>
+    <span class="s">"""
+    Quantum digital signature sử dụng quantum states
+    """</span>
+    <span class="k">def</span> <span class="nf">create_signature_state</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">private_key</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">QuantumCircuit</span><span class="p">:</span>
+        <span class="s">"""
+        Tạo quantum signature state
+        """</span>
+        <span class="c1"># Encode message và private key vào quantum state
+</span>        <span class="n">qc</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">private_key</span><span class="p">))</span>
+        
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">private_key</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">qc</span><span class="p">.</span><span class="n">x</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Apply message-dependent rotations
+</span>        <span class="n">message_hash</span> <span class="o">=</span> <span class="n">hashlib</span><span class="p">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">message</span><span class="p">.</span><span class="n">encode</span><span class="p">()).</span><span class="n">hexdigest</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">char</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">message_hash</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">private_key</span><span class="p">)]):</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">char</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">8</span>
+            <span class="n">qc</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="n">i</span> <span class="o">%</span> <span class="nb">len</span><span class="p">(</span><span class="n">private_key</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">qc</span>
+    
+    <span class="k">def</span> <span class="nf">verify_signature</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">signature_qc</span><span class="p">:</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">public_key</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="s">"""
+        Xác thực quantum signature
+        """</span>
+        <span class="c1"># Measure signature state
+</span>        <span class="n">measure_qc</span> <span class="o">=</span> <span class="n">signature_qc</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">measure_qc</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">measure_qc</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Verify against public key
+</span>        <span class="n">most_likely_state</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">counts</span><span class="p">.</span><span class="n">get</span><span class="p">)</span>
+        <span class="n">measured_bits</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">most_likely_state</span><span class="p">]</span>
+        
+        <span class="c1"># Simple verification (trong thực tế sẽ phức tạp hơn)
+</span>        <span class="k">return</span> <span class="n">measured_bits</span> <span class="o">==</span> <span class="n">public_key</span>
+    
+    <span class="k">return</span> <span class="n">create_signature_state</span><span class="p">,</span> <span class="n">verify_signature</span>
+
+<span class="c1"># Test quantum digital signature
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Quantum Digital Signature Demo:"</span><span class="p">)</span>
+<span class="n">create_sig</span><span class="p">,</span> <span class="n">verify_sig</span> <span class="o">=</span> <span class="n">quantum_digital_signature</span><span class="p">()</span>
+
+<span class="c1"># Generate keys
+</span><span class="n">private_key</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+<span class="n">public_key</span> <span class="o">=</span> <span class="n">private_key</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>  <span class="c1"># Simplified
+</span>
+<span class="c1"># Create signature
+</span><span class="n">message</span> <span class="o">=</span> <span class="s">"Hello Quantum World!"</span>
+<span class="n">signature_qc</span> <span class="o">=</span> <span class="n">create_sig</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">private_key</span><span class="p">)</span>
+
+<span class="c1"># Verify signature
+</span><span class="n">is_valid</span> <span class="o">=</span> <span class="n">verify_sig</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">signature_qc</span><span class="p">,</span> <span class="n">public_key</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Message: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Private key: </span><span class="si">{</span><span class="n">private_key</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Public key: </span><span class="si">{</span><span class="n">public_key</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Signature valid: </span><span class="si">{</span><span class="n">is_valid</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-security-analysis">📊 Security Analysis</h2>
+
+<h3 id="1-key-rate-analysis">1. Key Rate Analysis</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">analyze_key_rate</span><span class="p">(</span><span class="n">n_trials</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> <span class="n">qubit_counts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">500</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+    <span class="s">"""
+    Phân tích key rate cho các protocol khác nhau
+    """</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'BB84'</span><span class="p">:</span> <span class="p">{</span><span class="s">'key_lengths'</span><span class="p">:</span> <span class="p">[],</span> <span class="s">'error_rates'</span><span class="p">:</span> <span class="p">[],</span> <span class="s">'success_rate'</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+        <span class="s">'BBM92'</span><span class="p">:</span> <span class="p">{</span><span class="s">'key_lengths'</span><span class="p">:</span> <span class="p">[],</span> <span class="s">'error_rates'</span><span class="p">:</span> <span class="p">[],</span> <span class="s">'success_rate'</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="k">for</span> <span class="n">n_qubits</span> <span class="ow">in</span> <span class="n">qubit_counts</span><span class="p">:</span>
+        <span class="n">bb84_success</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">bbm92_success</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_trials</span><span class="p">):</span>
+            <span class="c1"># BB84
+</span>            <span class="k">try</span><span class="p">:</span>
+                <span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">,</span> <span class="n">error_rate</span> <span class="o">=</span> <span class="n">bb84_key_generation</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">alice_key</span> <span class="ow">and</span> <span class="n">error_rate</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+                    <span class="n">results</span><span class="p">[</span><span class="s">'BB84'</span><span class="p">][</span><span class="s">'key_lengths'</span><span class="p">].</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">))</span>
+                    <span class="n">results</span><span class="p">[</span><span class="s">'BB84'</span><span class="p">][</span><span class="s">'error_rates'</span><span class="p">].</span><span class="n">append</span><span class="p">(</span><span class="n">error_rate</span><span class="p">)</span>
+                    <span class="n">bb84_success</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+            
+            <span class="c1"># BBM92
+</span>            <span class="k">try</span><span class="p">:</span>
+                <span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">,</span> <span class="n">error_rate</span> <span class="o">=</span> <span class="n">bbm92_protocol</span><span class="p">(</span><span class="n">n_qubits</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">alice_key</span> <span class="ow">and</span> <span class="n">error_rate</span> <span class="o">&lt;</span> <span class="mf">0.1</span><span class="p">:</span>
+                    <span class="n">results</span><span class="p">[</span><span class="s">'BBM92'</span><span class="p">][</span><span class="s">'key_lengths'</span><span class="p">].</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">alice_key</span><span class="p">))</span>
+                    <span class="n">results</span><span class="p">[</span><span class="s">'BBM92'</span><span class="p">][</span><span class="s">'error_rates'</span><span class="p">].</span><span class="n">append</span><span class="p">(</span><span class="n">error_rate</span><span class="p">)</span>
+                    <span class="n">bbm92_success</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">pass</span>
+        
+        <span class="n">results</span><span class="p">[</span><span class="s">'BB84'</span><span class="p">][</span><span class="s">'success_rate'</span><span class="p">]</span> <span class="o">=</span> <span class="n">bb84_success</span> <span class="o">/</span> <span class="n">n_trials</span>
+        <span class="n">results</span><span class="p">[</span><span class="s">'BBM92'</span><span class="p">][</span><span class="s">'success_rate'</span><span class="p">]</span> <span class="o">=</span> <span class="n">bbm92_success</span> <span class="o">/</span> <span class="n">n_trials</span>
+    
+    <span class="k">return</span> <span class="n">results</span>
+
+<span class="c1"># Analyze key rates
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Key Rate Analysis:"</span><span class="p">)</span>
+<span class="n">key_analysis</span> <span class="o">=</span> <span class="n">analyze_key_rate</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">protocol</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">key_analysis</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="s">'key_lengths'</span><span class="p">]:</span>
+        <span class="n">avg_key_length</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'key_lengths'</span><span class="p">])</span>
+        <span class="n">avg_error_rate</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'error_rates'</span><span class="p">])</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">protocol</span><span class="si">}</span><span class="s">:"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Average key length: </span><span class="si">{</span><span class="n">avg_key_length</span><span class="si">:</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Average error rate: </span><span class="si">{</span><span class="n">avg_error_rate</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Success rate: </span><span class="si">{</span><span class="n">data</span><span class="p">[</span><span class="s">'success_rate'</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="2-eavesdropping-detection-sensitivity">2. Eavesdropping Detection Sensitivity</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">eavesdropping_sensitivity_analysis</span><span class="p">():</span>
+    <span class="s">"""
+    Phân tích độ nhạy của eavesdropping detection
+    """</span>
+    <span class="n">eavesdropping_rates</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+    <span class="n">detection_results</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">eve_rate</span> <span class="ow">in</span> <span class="n">eavesdropping_rates</span><span class="p">:</span>
+        <span class="n">detected_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">total_trials</span> <span class="o">=</span> <span class="mi">20</span>
+        
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">total_trials</span><span class="p">):</span>
+            <span class="c1"># Simulate eavesdropping with given rate
+</span>            <span class="n">alice_key</span><span class="p">,</span> <span class="n">bob_key</span><span class="p">,</span> <span class="n">error_rate</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">bb84_with_eavesdropping</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+            
+            <span class="c1"># Check if eavesdropping is detected
+</span>            <span class="k">if</span> <span class="n">error_rate</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="p">:</span>  <span class="c1"># Detection threshold
+</span>                <span class="n">detected_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+        <span class="n">detection_rate</span> <span class="o">=</span> <span class="n">detected_count</span> <span class="o">/</span> <span class="n">total_trials</span>
+        <span class="n">detection_results</span><span class="p">.</span><span class="n">append</span><span class="p">((</span><span class="n">eve_rate</span><span class="p">,</span> <span class="n">detection_rate</span><span class="p">))</span>
+    
+    <span class="k">return</span> <span class="n">detection_results</span>
+
+<span class="c1"># Analyze eavesdropping detection
+</span><span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Eavesdropping Detection Sensitivity:"</span><span class="p">)</span>
+<span class="n">sensitivity_results</span> <span class="o">=</span> <span class="n">eavesdropping_sensitivity_analysis</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">eve_rate</span><span class="p">,</span> <span class="n">detection_rate</span> <span class="ow">in</span> <span class="n">sensitivity_results</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Eavesdropping rate: </span><span class="si">{</span><span class="n">eve_rate</span><span class="si">:</span><span class="p">.</span><span class="mi">1</span><span class="n">f</span><span class="si">}</span><span class="s">, Detection rate: </span><span class="si">{</span><span class="n">detection_rate</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-thực-hành">🎯 Bài tập thực hành</h2>
+
+<h3 id="bài-tập-1-implement-e91-protocol">Bài tập 1: Implement E91 Protocol</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">e91_protocol_implementation</span><span class="p">():</span>
+    <span class="s">"""
+    Triển khai E91 protocol sử dụng 3-qubit GHZ states
+    """</span>
+    <span class="c1"># TODO: Implement E91 protocol
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-2-quantum-coin-flipping">Bài tập 2: Quantum Coin Flipping</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_coin_flipping</span><span class="p">():</span>
+    <span class="s">"""
+    Triển khai quantum coin flipping protocol
+    """</span>
+    <span class="c1"># TODO: Implement quantum coin flipping
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h3 id="bài-tập-3-quantum-commitment-scheme">Bài tập 3: Quantum Commitment Scheme</h3>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">quantum_commitment</span><span class="p">():</span>
+    <span class="s">"""
+    Triển khai quantum commitment scheme
+    """</span>
+    <span class="c1"># TODO: Implement quantum commitment
+</span>    <span class="k">pass</span>
+</code></pre></div></div>
+
+<h2 id="-tài-liệu-tham-khảo">📚 Tài liệu tham khảo</h2>
+
+<ol>
+  <li><strong>BB84 Protocol</strong>: Bennett, C.H. &amp; Brassard, G. (1984). Quantum cryptography: Public key distribution and coin tossing.</li>
+  <li><strong>BBM92 Protocol</strong>: Bennett, C.H., Brassard, G. &amp; Mermin, N.D. (1992). Quantum cryptography without Bell’s theorem.</li>
+  <li><strong>E91 Protocol</strong>: Ekert, A.K. (1991). Quantum cryptography based on Bell’s theorem.</li>
+  <li><strong>Privacy Amplification</strong>: Bennett, C.H., Brassard, G., Crépeau, C. &amp; Maurer, U.M. (1995). Generalized privacy amplification.</li>
+</ol>
+
+<h2 id="-hướng-dẫn-tiếp-theo">🔮 Hướng dẫn tiếp theo</h2>
+
+<ul>
+  <li><strong>Day 32</strong>: Quantum Random Number Generation</li>
+  <li><strong>Day 33</strong>: Quantum Simulation Projects</li>
+  <li><strong>Day 34</strong>: Quantum Computing on Real Hardware</li>
+  <li><strong>Day 35</strong>: Capstone Project và Portfolio Building</li>
+</ul>
+
+<hr />
+
+<p><em>“Quantum cryptography provides the only method for distributing secret keys with information-theoretic security.”</em> - Artur Ekert</p>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>Email: nguyenngocbinhneu@gmail.com</p>
+        </div>
+    </footer>
+
+    <script>
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Add progress bar for reading
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Create progress bar if it doesn't exist
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 3px;
+                    background: linear-gradient(90deg, #3498db, #2c3e50);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+    </script>
+</body>
+</html> 
