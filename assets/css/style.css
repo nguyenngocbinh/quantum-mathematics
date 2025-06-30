@@ -421,6 +421,65 @@ pre::before {
   font-weight: 500;
 }
 
+/* Copy button for code blocks */
+.copy-button {
+  position: absolute;
+  top: var(--spacing-sm);
+  right: var(--spacing-sm);
+  background: var(--bg-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  opacity: 0.7;
+  z-index: 10;
+}
+
+.copy-button:hover {
+  background: var(--bg-secondary);
+  color: var(--text-color);
+  opacity: 1;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.copy-button.copied {
+  background: var(--accent-color);
+  color: var(--accent-inverse);
+  border-color: var(--accent-color);
+}
+
+.copy-button::before {
+  content: '📋';
+  font-size: 0.875rem;
+}
+
+.copy-button.copied::before {
+  content: '✅';
+}
+
+/* Code block wrapper */
+.code-block-wrapper {
+  position: relative;
+  margin: var(--spacing-lg) 0;
+}
+
+.code-block-wrapper pre {
+  margin: 0;
+  padding-top: calc(var(--spacing-lg) + var(--spacing-md));
+}
+
+.code-block-wrapper .copy-button {
+  top: var(--spacing-xs);
+  right: var(--spacing-xs);
+}
+
 code {
   background-color: var(--bg-inset);
   padding: var(--spacing-xs) var(--spacing-sm);
