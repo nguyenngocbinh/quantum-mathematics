@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ngày 23: Quantum Capital Allocation - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Ngày 23: Quantum Capital Allocation">
+<meta property="og:description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/credit-risk/Day23.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ngày 23: Quantum Capital Allocation">
+<meta name="twitter:description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 65 ngày toàn diện Toán học Lượng tử, Lập trình Quantum & Credit Risk Management</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">🏠 Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">📋 Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">🗺️ Lộ trình</a></li>
+                
+                <!-- Fundamental Days 1-15 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">📚 Nền tảng (Ngày 1-15)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/fundamental/Fundamental_Curriculum.html">📖 Curriculum Tổng quan</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 1: Toán học cơ bản (1-5)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day1.html">Ngày 1: Vector & Không gian vector</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day2.html">Ngày 2: Tích vô hướng</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day3.html">Ngày 3: Ma trận</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day4.html">Ngày 4: Trị riêng & Vector riêng</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day5.html">Ngày 5: Xác suất cơ bản</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 2: Toán lượng tử (6-10)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day6.html">Ngày 6: Không gian Hilbert</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day7.html">Ngày 7: Trạng thái lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day8.html">Ngày 8: Siêu vị</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day9.html">Ngày 9: Phép đo lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day10.html">Ngày 10: Toán tử</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 3: Khái niệm nâng cao (11-15)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day11.html">Ngày 11: Rối lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day12.html">Ngày 12: Toán tử Hermitian</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day13.html">Ngày 13: Nguyên lý Bất định</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day14.html">Ngày 14: Máy tính lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day15.html">Ngày 15: Tổng kết</a></li>
+                    </ul>
+                </li>
+
+                <!-- Advanced Days 16-35 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">🚀 Lập trình Quantum (Ngày 16-35)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/advanced/Advanced_Curriculum.html">📖 Curriculum Nâng cao</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 4: Python & Qiskit (16-20)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day16.html">Ngày 16: Setup Qiskit</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day17.html">Ngày 17: Cổng lượng tử cơ bản</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day18.html">Ngày 18: Cổng điều khiển</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day19.html">Ngày 19: Circuit Design</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day20.html">Ngày 20: Measurement</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 5: Thuật toán cơ bản (21-25)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day21.html">Ngày 21: QFT</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day22.html">Ngày 22: Phase Estimation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day23.html">Ngày 23: Teleportation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day24.html">Ngày 24: Error Correction</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day25.html">Ngày 25: Grover's Algorithm</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 6: Thuật toán nâng cao (26-30)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day26.html">Ngày 26: Shor's Algorithm</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day27.html">Ngày 27: Quantum ML</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day28.html">Ngày 28: QAOA</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day29.html">Ngày 29: VQE ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day30.html">Ngày 30: Quantum NN ✅</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 7: Ứng dụng thực tế (31-35)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day31.html">Ngày 31: Cryptography ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day32.html">Ngày 32: QRNG ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day33.html">Ngày 33: Simulation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day34.html">Ngày 34: Real Hardware</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day35.html">Ngày 35: Capstone Project</a></li>
+                    </ul>
+                </li>
+
+                <!-- Credit Risk Days 1-30 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">💼 Credit Risk (Ngày 1-30)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/credit-risk/Credit_Risk_Curriculum.html">📖 Curriculum Credit Risk</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 8: Nền tảng Credit Risk (1-10)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day1.html">Ngày 1: Credit Risk & QC</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day2.html">Ngày 2: Mô hình xác suất</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day3.html">Ngày 3: Credit Scoring</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day4.html">Ngày 4: Portfolio Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day5.html">Ngày 5: Stress Testing</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day6.html">Ngày 6: Quantum Probability</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day7.html">Ngày 7: Quantum Random Walks</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day8.html">Ngày 8: Quantum Monte Carlo</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day9.html">Ngày 9: Quantum Optimization</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day10.html">Ngày 10: Quantum ML Finance</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 9: Quantum Algorithms (11-20)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day11.html">Ngày 11: Quantum Feature Maps</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day12.html">Ngày 12: Quantum SVM</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day13.html">Ngày 13: Quantum Neural Networks</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day14.html">Ngày 14: Quantum Clustering</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day15.html">Ngày 15: Quantum Anomaly Detection</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day16.html">Ngày 16: Quantum Portfolio Optimization</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day17.html">Ngày 17: Quantum Risk Measures</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day18.html">Ngày 18: Quantum Correlation</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day19.html">Ngày 19: Quantum Time Series</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day20.html">Ngày 20: Quantum Derivatives</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 10: Ứng dụng thực tế (21-30)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day21.html">Ngày 21: Quantum Stress Testing</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day22.html">Ngày 22: Regulatory Compliance</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day23.html">Ngày 23: Capital Allocation</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day24.html">Ngày 24: Liquidity Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day25.html">Ngày 25: Systemic Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day26.html">Ngày 26: Platform Architecture</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day27.html">Ngày 27: System Integration</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day28.html">Ngày 28: Performance Benchmarking</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day29.html">Ngày 29: Production Deployment</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day30.html">Ngày 30: Capstone Project</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Ngày 23: Quantum Capital Allocation</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="ngày-23-quantum-capital-allocation">Ngày 23: Quantum Capital Allocation</h1>
+
+<h2 id="-mục-tiêu-học-tập">🎯 Mục tiêu học tập</h2>
+
+<ul>
+  <li>Hiểu sâu về quantum capital allocation và classical capital allocation</li>
+  <li>Nắm vững cách quantum computing cải thiện capital allocation</li>
+  <li>Implement quantum capital allocation algorithms</li>
+  <li>So sánh performance giữa quantum và classical capital allocation</li>
+</ul>
+
+<h2 id="-lý-thuyết">📚 Lý thuyết</h2>
+
+<h3 id="capital-allocation-fundamentals"><strong>Capital Allocation Fundamentals</strong></h3>
+
+<h4 id="1-classical-capital-allocation"><strong>1. Classical Capital Allocation</strong></h4>
+
+<p><strong>Risk-Adjusted Return:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>RAROC = (Return - Risk_Free_Rate) / Economic_Capital
+</code></pre></div></div>
+
+<p><strong>Capital Allocation Methods:</strong></p>
+<ul>
+  <li><strong>Euler Allocation</strong>: Marginal capital contribution</li>
+  <li><strong>Proportional Allocation</strong>: Proportional to risk</li>
+  <li><strong>Optimization-based</strong>: Portfolio optimization</li>
+</ul>
+
+<h4 id="2-quantum-capital-allocation"><strong>2. Quantum Capital Allocation</strong></h4>
+
+<p><strong>Quantum State Representation:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|ψ⟩ = Σᵢ αᵢ|assetᵢ⟩
+</code></pre></div></div>
+
+<p><strong>Quantum Capital Operator:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>H_capital = Σᵢ Capitalᵢ × Risk_Weightᵢ × |assetᵢ⟩⟨assetᵢ|
+</code></pre></div></div>
+
+<p><strong>Quantum Allocation:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Allocation_quantum = ⟨ψ|H_capital|ψ⟩
+</code></pre></div></div>
+
+<h3 id="quantum-allocation-methods"><strong>Quantum Allocation Methods</strong></h3>
+
+<h4 id="1-quantum-risk-contribution"><strong>1. Quantum Risk Contribution:</strong></h4>
+<ul>
+  <li><strong>Marginal Risk</strong>: Quantum marginal risk calculation</li>
+  <li><strong>Risk Decomposition</strong>: Quantum risk decomposition</li>
+  <li><strong>Capital Attribution</strong>: Quantum capital attribution</li>
+</ul>
+
+<h4 id="2-quantum-portfolio-optimization"><strong>2. Quantum Portfolio Optimization:</strong></h4>
+<ul>
+  <li><strong>Risk-Return Optimization</strong>: Quantum risk-return optimization</li>
+  <li><strong>Constraint Handling</strong>: Quantum constraint satisfaction</li>
+  <li><strong>Multi-objective Optimization</strong>: Quantum multi-objective optimization</li>
+</ul>
+
+<h4 id="3-quantum-diversification"><strong>3. Quantum Diversification:</strong></h4>
+<ul>
+  <li><strong>Correlation Modeling</strong>: Quantum correlation modeling</li>
+  <li><strong>Diversification Benefits</strong>: Quantum diversification calculation</li>
+  <li><strong>Concentration Risk</strong>: Quantum concentration risk assessment</li>
+</ul>
+
+<h2 id="-thực-hành">💻 Thực hành</h2>
+
+<h3 id="project-23-quantum-capital-allocation-framework"><strong>Project 23: Quantum Capital Allocation Framework</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">RealAmplitudes</span><span class="p">,</span> <span class="n">ZZFeatureMap</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms</span> <span class="kn">import</span> <span class="n">VQE</span><span class="p">,</span> <span class="n">QAOA</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span><span class="p">,</span> <span class="n">COBYLA</span>
+<span class="kn">from</span> <span class="nn">qiskit.opflow</span> <span class="kn">import</span> <span class="n">PauliSumOp</span><span class="p">,</span> <span class="n">StateFn</span><span class="p">,</span> <span class="n">CircuitSampler</span>
+
+<span class="k">class</span> <span class="nc">ClassicalCapitalAllocation</span><span class="p">:</span>
+    <span class="s">"""Classical capital allocation methods"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">risk_free_rate</span> <span class="o">=</span> <span class="mf">0.02</span>
+        
+    <span class="k">def</span> <span class="nf">calculate_raroc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">returns</span><span class="p">,</span> <span class="n">capital</span><span class="p">):</span>
+        <span class="s">"""Calculate Risk-Adjusted Return on Capital"""</span>
+        <span class="n">excess_return</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span> <span class="o">-</span> <span class="bp">self</span><span class="p">.</span><span class="n">risk_free_rate</span>
+        <span class="k">return</span> <span class="n">excess_return</span> <span class="o">/</span> <span class="n">capital</span>
+    
+    <span class="k">def</span> <span class="nf">euler_allocation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">,</span> <span class="n">correlation_matrix</span><span class="p">):</span>
+        <span class="s">"""Euler capital allocation"""</span>
+        <span class="c1"># Simplified Euler allocation
+</span>        <span class="n">total_capital</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">asset</span><span class="p">[</span><span class="s">'capital'</span><span class="p">]</span> <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">portfolio</span><span class="p">)</span>
+        <span class="n">allocations</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">portfolio</span><span class="p">:</span>
+            <span class="c1"># Marginal contribution (simplified)
+</span>            <span class="n">marginal_contribution</span> <span class="o">=</span> <span class="n">asset</span><span class="p">[</span><span class="s">'capital'</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_capital</span>
+            <span class="n">allocations</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">marginal_contribution</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">allocations</span>
+    
+    <span class="k">def</span> <span class="nf">proportional_allocation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">):</span>
+        <span class="s">"""Proportional capital allocation"""</span>
+        <span class="n">total_risk</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">asset</span><span class="p">[</span><span class="s">'risk'</span><span class="p">]</span> <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">portfolio</span><span class="p">)</span>
+        <span class="n">allocations</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">portfolio</span><span class="p">:</span>
+            <span class="n">allocation</span> <span class="o">=</span> <span class="n">asset</span><span class="p">[</span><span class="s">'risk'</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_risk</span>
+            <span class="n">allocations</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">allocation</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">allocations</span>
+
+<span class="k">class</span> <span class="nc">QuantumCapitalAllocation</span><span class="p">:</span>
+    <span class="s">"""Quantum capital allocation implementation"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_qubits</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span> <span class="o">=</span> <span class="n">num_qubits</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">create_capital_circuit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">):</span>
+        <span class="s">"""Create quantum circuit for capital allocation"""</span>
+        <span class="n">feature_map</span> <span class="o">=</span> <span class="n">ZZFeatureMap</span><span class="p">(</span><span class="n">feature_dimension</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">portfolio</span><span class="p">),</span> <span class="n">reps</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">ansatz</span> <span class="o">=</span> <span class="n">RealAmplitudes</span><span class="p">(</span><span class="n">num_qubits</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">circuit</span> <span class="o">=</span> <span class="n">feature_map</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">ansatz</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">circuit</span>
+    
+    <span class="k">def</span> <span class="nf">quantum_capital_allocation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">):</span>
+        <span class="s">"""Quantum capital allocation"""</span>
+        <span class="n">circuit</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_capital_circuit</span><span class="p">(</span><span class="n">portfolio</span><span class="p">)</span>
+        
+        <span class="c1"># Quantum allocation calculation
+</span>        <span class="n">allocations</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">asset</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">portfolio</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">:</span>
+                <span class="c1"># Simplified quantum allocation
+</span>                <span class="n">quantum_factor</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+                <span class="n">allocation</span> <span class="o">=</span> <span class="n">asset</span><span class="p">[</span><span class="s">'capital'</span><span class="p">]</span> <span class="o">*</span> <span class="n">quantum_factor</span>
+                <span class="n">allocations</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">allocation</span><span class="p">)</span>
+        
+        <span class="c1"># Normalize allocations
+</span>        <span class="n">total_allocation</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">allocations</span><span class="p">)</span>
+        <span class="n">normalized_allocations</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">/</span> <span class="n">total_allocation</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">allocations</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">normalized_allocations</span>
+    
+    <span class="k">def</span> <span class="nf">quantum_risk_contribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">):</span>
+        <span class="s">"""Quantum risk contribution calculation"""</span>
+        <span class="n">contributions</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">asset</span> <span class="ow">in</span> <span class="n">portfolio</span><span class="p">:</span>
+            <span class="c1"># Quantum risk contribution
+</span>            <span class="n">quantum_contribution</span> <span class="o">=</span> <span class="n">asset</span><span class="p">[</span><span class="s">'risk'</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">))</span>
+            <span class="n">contributions</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">quantum_contribution</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">contributions</span>
+
+<span class="k">def</span> <span class="nf">compare_capital_allocation</span><span class="p">():</span>
+    <span class="s">"""Compare classical and quantum capital allocation"""</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"=== Classical vs Quantum Capital Allocation ===</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Generate test portfolio
+</span>    <span class="n">portfolio</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">asset</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'asset_id'</span><span class="p">:</span> <span class="sa">f</span><span class="s">'Asset_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">,</span>
+            <span class="s">'capital'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="mi">1000000</span><span class="p">),</span>
+            <span class="s">'risk'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">),</span>
+            <span class="s">'return'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">portfolio</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">asset</span><span class="p">)</span>
+    
+    <span class="c1"># Classical allocation
+</span>    <span class="n">classical_allocator</span> <span class="o">=</span> <span class="n">ClassicalCapitalAllocation</span><span class="p">()</span>
+    <span class="n">classical_euler</span> <span class="o">=</span> <span class="n">classical_allocator</span><span class="p">.</span><span class="n">euler_allocation</span><span class="p">(</span><span class="n">portfolio</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+    <span class="n">classical_proportional</span> <span class="o">=</span> <span class="n">classical_allocator</span><span class="p">.</span><span class="n">proportional_allocation</span><span class="p">(</span><span class="n">portfolio</span><span class="p">)</span>
+    
+    <span class="c1"># Quantum allocation
+</span>    <span class="n">quantum_allocator</span> <span class="o">=</span> <span class="n">QuantumCapitalAllocation</span><span class="p">(</span><span class="n">num_qubits</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+    <span class="n">quantum_allocation</span> <span class="o">=</span> <span class="n">quantum_allocator</span><span class="p">.</span><span class="n">quantum_capital_allocation</span><span class="p">(</span><span class="n">portfolio</span><span class="p">)</span>
+    <span class="n">quantum_risk_contrib</span> <span class="o">=</span> <span class="n">quantum_allocator</span><span class="p">.</span><span class="n">quantum_risk_contribution</span><span class="p">(</span><span class="n">portfolio</span><span class="p">)</span>
+    
+    <span class="c1"># Results comparison
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"Capital Allocation Results:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">asset</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">portfolio</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Asset </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">:"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Classical Euler: </span><span class="si">{</span><span class="n">classical_euler</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Classical Proportional: </span><span class="si">{</span><span class="n">classical_proportional</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Quantum: </span><span class="si">{</span><span class="n">quantum_allocation</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Visualization
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    
+    <span class="c1"># Allocation comparison
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">portfolio</span><span class="p">))</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="mf">0.25</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">width</span><span class="p">,</span> <span class="n">classical_euler</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Classical Euler'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">classical_proportional</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Classical Proportional'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="p">,</span> <span class="n">quantum_allocation</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Quantum'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Asset'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Allocation'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Capital Allocation Comparison'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">'classical_euler'</span><span class="p">:</span> <span class="n">classical_euler</span><span class="p">,</span>
+        <span class="s">'classical_proportional'</span><span class="p">:</span> <span class="n">classical_proportional</span><span class="p">,</span>
+        <span class="s">'quantum_allocation'</span><span class="p">:</span> <span class="n">quantum_allocation</span><span class="p">,</span>
+        <span class="s">'quantum_risk_contrib'</span><span class="p">:</span> <span class="n">quantum_risk_contrib</span>
+    <span class="p">}</span>
+
+<span class="c1"># Run demo
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">allocation_results</span> <span class="o">=</span> <span class="n">compare_capital_allocation</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-kết-quả-và-phân-tích">📊 Kết quả và Phân tích</h2>
+
+<h3 id="quantum-capital-allocation-advantages"><strong>Quantum Capital Allocation Advantages:</strong></h3>
+
+<h4 id="1-quantum-properties"><strong>1. Quantum Properties:</strong></h4>
+<ul>
+  <li><strong>Superposition</strong>: Parallel allocation evaluation</li>
+  <li><strong>Entanglement</strong>: Complex asset correlations</li>
+  <li><strong>Quantum Parallelism</strong>: Exponential speedup potential</li>
+</ul>
+
+<h4 id="2-capital-specific-benefits"><strong>2. Capital-specific Benefits:</strong></h4>
+<ul>
+  <li><strong>Non-linear Optimization</strong>: Quantum circuits capture complex allocation relationships</li>
+  <li><strong>High-dimensional Space</strong>: Handle many assets efficiently</li>
+  <li><strong>Quantum Advantage</strong>: Potential speedup for large portfolios</li>
+</ul>
+
+<h2 id="-bài-tập-về-nhà">🎯 Bài tập về nhà</h2>
+
+<h3 id="exercise-1-quantum-capital-optimization"><strong>Exercise 1: Quantum Capital Optimization</strong></h3>
+<p>Implement quantum capital optimization methods.</p>
+
+<h3 id="exercise-2-quantum-risk-attribution"><strong>Exercise 2: Quantum Risk Attribution</strong></h3>
+<p>Build quantum risk attribution framework.</p>
+
+<h3 id="exercise-3-quantum-diversification-analysis"><strong>Exercise 3: Quantum Diversification Analysis</strong></h3>
+<p>Develop quantum diversification analysis methods.</p>
+
+<h3 id="exercise-4-quantum-capital-validation"><strong>Exercise 4: Quantum Capital Validation</strong></h3>
+<p>Create validation framework cho quantum capital allocation.</p>
+
+<hr />
+
+<blockquote>
+  <p><em>“Quantum capital allocation leverages quantum superposition and entanglement to provide superior capital optimization.”</em> - Quantum Finance Research</p>
+</blockquote>
+
+<blockquote>
+  <p>Ngày tiếp theo: <a href="/quantum-mathematics/credit-risk/Day24.html">Quantum Credit Rating Models</a></p>
+</blockquote>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>📧 Email: nguyenngocbinhneu@gmail.com | 🌟 65 ngày từ Toán học đến Quantum Finance</p>
+            <p>🎯 <strong>Tiến độ học tập:</strong> Fundamental (1-15) → Advanced (16-35) → Credit Risk (1-30)</p>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            dropdowns.forEach(dropdown => {
+                const toggle = dropdown.querySelector('.dropdown-toggle');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Close other dropdowns
+                    dropdowns.forEach(other => {
+                        if (other !== dropdown) {
+                            other.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current dropdown
+                    dropdown.classList.toggle('active');
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    dropdowns.forEach(dropdown => {
+                        dropdown.classList.remove('active');
+                    });
+                }
+            });
+        });
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Enhanced reading progress bar
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 4px;
+                    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+
+        // Add learning progress tracker
+        function updateLearningProgress() {
+            const currentPage = window.location.pathname;
+            let currentDay = 0;
+            let totalDays = 65;
+            let curriculum = '';
+            
+            // Check which curriculum we're in
+            if (currentPage.includes('/fundamental/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]);
+                    curriculum = 'Fundamental';
+                }
+            } else if (currentPage.includes('/advanced/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]) + 15; // Add fundamental days
+                    curriculum = 'Advanced';
+                }
+            } else if (currentPage.includes('/credit-risk/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]) + 35; // Add fundamental + advanced days
+                    curriculum = 'Credit Risk';
+                }
+            }
+            
+            if (currentDay > 0) {
+                const progressPercent = (currentDay / totalDays) * 100;
+                
+                // Create or update progress indicator
+                let progressIndicator = document.querySelector('.learning-progress');
+                if (!progressIndicator) {
+                    progressIndicator = document.createElement('div');
+                    progressIndicator.className = 'learning-progress';
+                    progressIndicator.style.cssText = `
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        background: rgba(102, 126, 234, 0.9);
+                        color: white;
+                        padding: 10px 15px;
+                        border-radius: 25px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                        z-index: 999;
+                    `;
+                    document.body.appendChild(progressIndicator);
+                }
+                
+                progressIndicator.textContent = `📚 ${curriculum} - Ngày ${currentDay}/65 (${progressPercent.toFixed(0)}%)`;
+            }
+        }
+        
+        // Initialize learning progress tracker
+        updateLearningProgress();
+    </script>
+
+    <style>
+        /* Enhanced dropdown styles */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 300px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 8px 0;
+            z-index: 1000;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-menu li {
+            list-style: none;
+            margin: 0;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: #f5f5f5;
+            color: #667eea;
+        }
+        
+        .submenu-header {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 8px 16px 4px 16px;
+            margin: 4px 0;
+        }
+        
+        .divider {
+            border-top: 1px solid #e0e0e0;
+            margin: 4px 0;
+        }
+        
+        .dropdown-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .dropdown-toggle:after {
+            content: ' ▼';
+            font-size: 10px;
+            margin-left: 5px;
+        }
+        
+        .dropdown.active .dropdown-toggle:after {
+            content: ' ▲';
+        }
+        
+        /* Responsive navigation */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                border: none;
+                background: #f8f9fa;
+                margin-top: 8px;
+            }
+            
+            .nav-links > li {
+                margin: 4px 0;
+            }
+        }
+        
+        /* Enhanced site subtitle */
+        .site-subtitle {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+    </style>
+</body>
+</html>

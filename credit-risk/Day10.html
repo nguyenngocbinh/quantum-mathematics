@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ngày 10: Quantum Machine Learning Basics cho Finance - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Ngày 10: Quantum Machine Learning Basics cho Finance">
+<meta property="og:description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/credit-risk/Day10.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ngày 10: Quantum Machine Learning Basics cho Finance">
+<meta name="twitter:description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 65 ngày toàn diện Toán học Lượng tử, Lập trình Quantum & Credit Risk Management</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">🏠 Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">📋 Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">🗺️ Lộ trình</a></li>
+                
+                <!-- Fundamental Days 1-15 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">📚 Nền tảng (Ngày 1-15)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/fundamental/Fundamental_Curriculum.html">📖 Curriculum Tổng quan</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 1: Toán học cơ bản (1-5)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day1.html">Ngày 1: Vector & Không gian vector</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day2.html">Ngày 2: Tích vô hướng</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day3.html">Ngày 3: Ma trận</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day4.html">Ngày 4: Trị riêng & Vector riêng</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day5.html">Ngày 5: Xác suất cơ bản</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 2: Toán lượng tử (6-10)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day6.html">Ngày 6: Không gian Hilbert</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day7.html">Ngày 7: Trạng thái lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day8.html">Ngày 8: Siêu vị</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day9.html">Ngày 9: Phép đo lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day10.html">Ngày 10: Toán tử</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 3: Khái niệm nâng cao (11-15)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day11.html">Ngày 11: Rối lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day12.html">Ngày 12: Toán tử Hermitian</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day13.html">Ngày 13: Nguyên lý Bất định</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day14.html">Ngày 14: Máy tính lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day15.html">Ngày 15: Tổng kết</a></li>
+                    </ul>
+                </li>
+
+                <!-- Advanced Days 16-35 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">🚀 Lập trình Quantum (Ngày 16-35)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/advanced/Advanced_Curriculum.html">📖 Curriculum Nâng cao</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 4: Python & Qiskit (16-20)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day16.html">Ngày 16: Setup Qiskit</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day17.html">Ngày 17: Cổng lượng tử cơ bản</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day18.html">Ngày 18: Cổng điều khiển</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day19.html">Ngày 19: Circuit Design</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day20.html">Ngày 20: Measurement</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 5: Thuật toán cơ bản (21-25)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day21.html">Ngày 21: QFT</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day22.html">Ngày 22: Phase Estimation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day23.html">Ngày 23: Teleportation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day24.html">Ngày 24: Error Correction</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day25.html">Ngày 25: Grover's Algorithm</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 6: Thuật toán nâng cao (26-30)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day26.html">Ngày 26: Shor's Algorithm</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day27.html">Ngày 27: Quantum ML</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day28.html">Ngày 28: QAOA</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day29.html">Ngày 29: VQE ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day30.html">Ngày 30: Quantum NN ✅</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 7: Ứng dụng thực tế (31-35)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day31.html">Ngày 31: Cryptography ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day32.html">Ngày 32: QRNG ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day33.html">Ngày 33: Simulation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day34.html">Ngày 34: Real Hardware</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day35.html">Ngày 35: Capstone Project</a></li>
+                    </ul>
+                </li>
+
+                <!-- Credit Risk Days 1-30 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">💼 Credit Risk (Ngày 1-30)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/credit-risk/Credit_Risk_Curriculum.html">📖 Curriculum Credit Risk</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 8: Nền tảng Credit Risk (1-10)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day1.html">Ngày 1: Credit Risk & QC</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day2.html">Ngày 2: Mô hình xác suất</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day3.html">Ngày 3: Credit Scoring</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day4.html">Ngày 4: Portfolio Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day5.html">Ngày 5: Stress Testing</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day6.html">Ngày 6: Quantum Probability</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day7.html">Ngày 7: Quantum Random Walks</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day8.html">Ngày 8: Quantum Monte Carlo</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day9.html">Ngày 9: Quantum Optimization</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day10.html">Ngày 10: Quantum ML Finance</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 9: Quantum Algorithms (11-20)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day11.html">Ngày 11: Quantum Feature Maps</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day12.html">Ngày 12: Quantum SVM</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day13.html">Ngày 13: Quantum Neural Networks</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day14.html">Ngày 14: Quantum Clustering</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day15.html">Ngày 15: Quantum Anomaly Detection</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day16.html">Ngày 16: Quantum Portfolio Optimization</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day17.html">Ngày 17: Quantum Risk Measures</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day18.html">Ngày 18: Quantum Correlation</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day19.html">Ngày 19: Quantum Time Series</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day20.html">Ngày 20: Quantum Derivatives</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 10: Ứng dụng thực tế (21-30)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day21.html">Ngày 21: Quantum Stress Testing</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day22.html">Ngày 22: Regulatory Compliance</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day23.html">Ngày 23: Capital Allocation</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day24.html">Ngày 24: Liquidity Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day25.html">Ngày 25: Systemic Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day26.html">Ngày 26: Platform Architecture</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day27.html">Ngày 27: System Integration</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day28.html">Ngày 28: Performance Benchmarking</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day29.html">Ngày 29: Production Deployment</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day30.html">Ngày 30: Capstone Project</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Ngày 10: Quantum Machine Learning Basics cho Finance</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="ngày-10-quantum-machine-learning-basics-cho-finance">Ngày 10: Quantum Machine Learning Basics cho Finance</h1>
+
+<h2 id="-mục-tiêu-học-tập">🎯 Mục tiêu học tập</h2>
+
+<ul>
+  <li>Hiểu fundamentals của quantum machine learning</li>
+  <li>Implement quantum feature maps cho financial data</li>
+  <li>Xây dựng quantum neural networks cho credit risk</li>
+  <li>So sánh quantum ML với classical ML cho finance applications</li>
+</ul>
+
+<h2 id="-lý-thuyết">📚 Lý thuyết</h2>
+
+<h3 id="quantum-machine-learning-fundamentals"><strong>Quantum Machine Learning Fundamentals</strong></h3>
+
+<h4 id="1-quantum-feature-maps"><strong>1. Quantum Feature Maps</strong></h4>
+<p>Quantum feature maps encode classical data vào quantum states:</p>
+
+<p><strong>Mathematical Foundation:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>φ(x) = U(x)|0⟩^⊗n
+</code></pre></div></div>
+
+<p>Trong đó:</p>
+<ul>
+  <li>φ(x): Quantum feature map</li>
+  <li>U(x): Parameterized quantum circuit</li>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>0⟩^⊗n: Initial quantum state</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<h4 id="2-quantum-kernels"><strong>2. Quantum Kernels</strong></h4>
+<p>Quantum kernels leverage quantum feature maps:</p>
+
+<p><strong>Kernel Function:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>K(x_i, x_j) = |⟨φ(x_i)|φ(x_j)⟩|²
+</code></pre></div></div>
+
+<h4 id="3-quantum-neural-networks"><strong>3. Quantum Neural Networks</strong></h4>
+<p>Parameterized quantum circuits cho supervised learning:</p>
+
+<p><strong>Cost Function:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>C(θ) = Σᵢ L(f(x_i; θ), y_i)
+</code></pre></div></div>
+
+<h3 id="quantum-ml-advantages-cho-finance"><strong>Quantum ML Advantages cho Finance</strong></h3>
+
+<h4 id="1-high-dimensional-feature-spaces"><strong>1. High-Dimensional Feature Spaces:</strong></h4>
+<ul>
+  <li>Exponential feature space với linear qubit growth</li>
+  <li>Non-linear feature interactions</li>
+  <li>Quantum entanglement cho complex correlations</li>
+</ul>
+
+<h4 id="2-quantum-speedup-potential"><strong>2. Quantum Speedup Potential:</strong></h4>
+<ul>
+  <li>Quantum kernel estimation</li>
+  <li>Quantum gradient computation</li>
+  <li>Quantum optimization algorithms</li>
+</ul>
+
+<h4 id="3-financial-applications"><strong>3. Financial Applications:</strong></h4>
+<ul>
+  <li>Credit scoring với quantum features</li>
+  <li>Portfolio optimization</li>
+  <li>Risk factor modeling</li>
+  <li>Market prediction</li>
+</ul>
+
+<h2 id="-thực-hành">💻 Thực hành</h2>
+
+<h3 id="project-10-quantum-machine-learning-framework-cho-finance"><strong>Project 10: Quantum Machine Learning Framework cho Finance</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span><span class="p">,</span> <span class="n">classification_report</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">ZZFeatureMap</span><span class="p">,</span> <span class="n">RealAmplitudes</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span>
+<span class="kn">from</span> <span class="nn">qiskit_machine_learning.algorithms</span> <span class="kn">import</span> <span class="n">VQC</span>
+<span class="kn">from</span> <span class="nn">qiskit_machine_learning.kernels</span> <span class="kn">import</span> <span class="n">QuantumKernel</span>
+<span class="kn">import</span> <span class="nn">pennylane</span> <span class="k">as</span> <span class="n">qml</span>
+
+<span class="k">class</span> <span class="nc">QuantumFeatureMap</span><span class="p">:</span>
+    <span class="s">"""Quantum feature map implementation"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_dimension</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">feature_dimension</span> <span class="o">=</span> <span class="n">feature_dimension</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">reps</span> <span class="o">=</span> <span class="n">reps</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">create_feature_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="s">"""
+        Create quantum feature map circuit
+        """</span>
+        <span class="c1"># Use ZZFeatureMap for encoding
+</span>        <span class="n">feature_map</span> <span class="o">=</span> <span class="n">ZZFeatureMap</span><span class="p">(</span>
+            <span class="n">feature_dimension</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">feature_dimension</span><span class="p">,</span>
+            <span class="n">reps</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">reps</span><span class="p">,</span>
+            <span class="n">insert_barriers</span><span class="o">=</span><span class="bp">True</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Bind parameters
+</span>        <span class="n">circuit</span> <span class="o">=</span> <span class="n">feature_map</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">circuit</span>
+    
+    <span class="k">def</span> <span class="nf">compute_kernel_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="s">"""
+        Compute quantum kernel matrix
+        """</span>
+        <span class="k">if</span> <span class="n">X2</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">X2</span> <span class="o">=</span> <span class="n">X1</span>
+            
+        <span class="n">n1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X1</span><span class="p">)</span>
+        <span class="n">n2</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">X2</span><span class="p">)</span>
+        <span class="n">kernel_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n1</span><span class="p">,</span> <span class="n">n2</span><span class="p">))</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n1</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n2</span><span class="p">):</span>
+                <span class="c1"># Create circuits for both data points
+</span>                <span class="n">circuit1</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_feature_map</span><span class="p">(</span><span class="n">X1</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+                <span class="n">circuit2</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_feature_map</span><span class="p">(</span><span class="n">X2</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                
+                <span class="c1"># Compute overlap
+</span>                <span class="n">overlap</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_compute_overlap</span><span class="p">(</span><span class="n">circuit1</span><span class="p">,</span> <span class="n">circuit2</span><span class="p">)</span>
+                <span class="n">kernel_matrix</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">overlap</span>
+                
+        <span class="k">return</span> <span class="n">kernel_matrix</span>
+    
+    <span class="k">def</span> <span class="nf">_compute_overlap</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">circuit1</span><span class="p">,</span> <span class="n">circuit2</span><span class="p">):</span>
+        <span class="s">"""
+        Compute overlap between two quantum states
+        """</span>
+        <span class="c1"># Create combined circuit
+</span>        <span class="n">combined_circuit</span> <span class="o">=</span> <span class="n">circuit1</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">circuit2</span><span class="p">.</span><span class="n">inverse</span><span class="p">())</span>
+        
+        <span class="c1"># Add measurement
+</span>        <span class="n">combined_circuit</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="c1"># Execute circuit
+</span>        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">combined_circuit</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Calculate overlap (probability of measuring |0⟩^⊗n)
+</span>        <span class="n">zero_state</span> <span class="o">=</span> <span class="s">'0'</span> <span class="o">*</span> <span class="n">combined_circuit</span><span class="p">.</span><span class="n">num_qubits</span>
+        <span class="n">overlap</span> <span class="o">=</span> <span class="n">counts</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">zero_state</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
+        
+        <span class="k">return</span> <span class="n">overlap</span>
+
+<span class="k">class</span> <span class="nc">QuantumNeuralNetwork</span><span class="p">:</span>
+    <span class="s">"""Quantum Neural Network for classification"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_dimension</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">feature_dimension</span> <span class="o">=</span> <span class="n">feature_dimension</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">num_classes</span> <span class="o">=</span> <span class="n">num_classes</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">create_variational_circuit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="s">"""
+        Create variational quantum circuit
+        """</span>
+        <span class="c1"># Feature map
+</span>        <span class="n">feature_map</span> <span class="o">=</span> <span class="n">ZZFeatureMap</span><span class="p">(</span>
+            <span class="n">feature_dimension</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">feature_dimension</span><span class="p">,</span>
+            <span class="n">reps</span><span class="o">=</span><span class="mi">1</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Variational form
+</span>        <span class="n">var_form</span> <span class="o">=</span> <span class="n">RealAmplitudes</span><span class="p">(</span>
+            <span class="n">num_qubits</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">feature_dimension</span><span class="p">,</span>
+            <span class="n">reps</span><span class="o">=</span><span class="mi">2</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Combine circuits
+</span>        <span class="n">circuit</span> <span class="o">=</span> <span class="n">feature_map</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">var_form</span><span class="p">)</span>
+        
+        <span class="c1"># Bind parameters
+</span>        <span class="n">circuit</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">]))</span>
+        
+        <span class="k">return</span> <span class="n">circuit</span>
+    
+    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+        <span class="s">"""
+        Make prediction using quantum circuit
+        """</span>
+        <span class="n">circuit</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_variational_circuit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">circuit</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="c1"># Execute circuit
+</span>        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Calculate prediction probability
+</span>        <span class="n">prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_extract_prediction</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">prediction</span>
+    
+    <span class="k">def</span> <span class="nf">_extract_prediction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">counts</span><span class="p">):</span>
+        <span class="s">"""
+        Extract prediction from measurement counts
+        """</span>
+        <span class="n">total_shots</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">counts</span><span class="p">.</span><span class="n">values</span><span class="p">())</span>
+        
+        <span class="c1"># Simple heuristic: count states with even number of 1s
+</span>        <span class="n">even_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">state</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">state</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="s">'1'</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">even_count</span> <span class="o">+=</span> <span class="n">count</span>
+                
+        <span class="k">return</span> <span class="n">even_count</span> <span class="o">/</span> <span class="n">total_shots</span>
+
+<span class="k">def</span> <span class="nf">generate_financial_data</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">200</span><span class="p">):</span>
+    <span class="s">"""
+    Generate synthetic financial data for credit risk
+    """</span>
+    <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+    
+    <span class="c1"># Generate features
+</span>    <span class="n">income</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+    <span class="n">debt_ratio</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+    <span class="n">payment_history</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+    <span class="n">credit_utilization</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+    <span class="n">age</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mi">65</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">)</span>
+    
+    <span class="c1"># Create features matrix
+</span>    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">column_stack</span><span class="p">([</span>
+        <span class="n">income</span><span class="p">,</span> <span class="n">debt_ratio</span><span class="p">,</span> <span class="n">payment_history</span><span class="p">,</span> <span class="n">credit_utilization</span><span class="p">,</span> <span class="n">age</span>
+    <span class="p">])</span>
+    
+    <span class="c1"># Generate labels (0: good credit, 1: bad credit)
+</span>    <span class="c1"># Simple rule: high debt ratio + low payment history = bad credit
+</span>    <span class="n">y</span> <span class="o">=</span> <span class="p">((</span><span class="n">debt_ratio</span> <span class="o">&gt;</span> <span class="mf">0.6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">payment_history</span> <span class="o">&lt;</span> <span class="mf">0.7</span><span class="p">)).</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    
+    <span class="c1"># Add some noise
+</span>    <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">(</span><span class="n">n_samples</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.1</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">+</span> <span class="n">noise</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span>
+    
+    <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span>
+
+<span class="k">def</span> <span class="nf">quantum_ml_demo</span><span class="p">():</span>
+    <span class="s">"""
+    Demo quantum machine learning cho credit risk
+    """</span>
+    <span class="c1"># Generate data
+</span>    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">generate_financial_data</span><span class="p">()</span>
+    
+    <span class="c1"># Split data
+</span>    <span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span>
+    <span class="p">)</span>
+    
+    <span class="c1"># Standardize features
+</span>    <span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+    <span class="n">X_train_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="p">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+    <span class="n">X_test_scaled</span> <span class="o">=</span> <span class="n">scaler</span><span class="p">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Data Summary:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Training samples: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Test samples: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Feature dimension: </span><span class="si">{</span><span class="n">X_train</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Class distribution: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">bincount</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># 1. Quantum Feature Map Analysis
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">1. Quantum Feature Map Analysis:"</span><span class="p">)</span>
+    <span class="n">feature_map</span> <span class="o">=</span> <span class="n">QuantumFeatureMap</span><span class="p">(</span><span class="n">feature_dimension</span><span class="o">=</span><span class="n">X_train</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="c1"># Compute kernel matrix for training data
+</span>    <span class="n">kernel_matrix</span> <span class="o">=</span> <span class="n">feature_map</span><span class="p">.</span><span class="n">compute_kernel_matrix</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">[:</span><span class="mi">10</span><span class="p">,</span> <span class="p">:])</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">kernel_matrix</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'viridis'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">colorbar</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Quantum Kernel Matrix'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Sample Index'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Sample Index'</span><span class="p">)</span>
+    
+    <span class="c1"># 2. Quantum Neural Network
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">2. Quantum Neural Network Training:"</span><span class="p">)</span>
+    <span class="n">qnn</span> <span class="o">=</span> <span class="n">QuantumNeuralNetwork</span><span class="p">(</span><span class="n">feature_dimension</span><span class="o">=</span><span class="n">X_train</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="c1"># Initialize parameters
+</span>    <span class="n">num_params</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">X_train</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span>  <span class="c1"># RealAmplitudes parameters
+</span>    <span class="n">params</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">(</span><span class="n">num_params</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span>
+    
+    <span class="c1"># Simple training loop
+</span>    <span class="n">predictions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X_train_scaled</span><span class="p">[:</span><span class="mi">20</span><span class="p">]:</span>  <span class="c1"># Use subset for demo
+</span>        <span class="n">pred</span> <span class="o">=</span> <span class="n">qnn</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">predictions</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">pred</span><span class="p">)</span>
+    
+    <span class="n">predictions</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">predictions</span><span class="p">)</span>
+    <span class="n">binary_predictions</span> <span class="o">=</span> <span class="p">(</span><span class="n">predictions</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">).</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate accuracy
+</span>    <span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_train</span><span class="p">[:</span><span class="mi">20</span><span class="p">],</span> <span class="n">binary_predictions</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Training Accuracy: </span><span class="si">{</span><span class="n">accuracy</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># 3. Comparison with Classical ML
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">3. Classical ML Comparison:"</span><span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+    <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+    
+    <span class="c1"># Logistic Regression
+</span>    <span class="n">lr</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">lr</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">lr_pred</span> <span class="o">=</span> <span class="n">lr</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_scaled</span><span class="p">)</span>
+    <span class="n">lr_accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">lr_pred</span><span class="p">)</span>
+    
+    <span class="c1"># SVM
+</span>    <span class="n">svm</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">(</span><span class="n">kernel</span><span class="o">=</span><span class="s">'rbf'</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">svm</span><span class="p">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">svm_pred</span> <span class="o">=</span> <span class="n">svm</span><span class="p">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_scaled</span><span class="p">)</span>
+    <span class="n">svm_accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">svm_pred</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Logistic Regression Accuracy: </span><span class="si">{</span><span class="n">lr_accuracy</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"SVM Accuracy: </span><span class="si">{</span><span class="n">svm_accuracy</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Visualization
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_train_scaled</span><span class="p">[:</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_train_scaled</span><span class="p">[:</span><span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> 
+               <span class="n">c</span><span class="o">=</span><span class="n">binary_predictions</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'viridis'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Income (scaled)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Debt Ratio (scaled)'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Quantum NN Predictions'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">colorbar</span><span class="p">()</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Quantum NN'</span><span class="p">,</span> <span class="s">'Logistic Regression'</span><span class="p">,</span> <span class="s">'SVM'</span><span class="p">]</span>
+    <span class="n">accuracies</span> <span class="o">=</span> <span class="p">[</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">lr_accuracy</span><span class="p">,</span> <span class="n">svm_accuracy</span><span class="p">]</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s">'red'</span><span class="p">,</span> <span class="s">'blue'</span><span class="p">,</span> <span class="s">'green'</span><span class="p">]</span>
+    
+    <span class="n">bars</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="n">methods</span><span class="p">,</span> <span class="n">accuracies</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Accuracy'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Model Comparison'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Add value labels on bars
+</span>    <span class="k">for</span> <span class="n">bar</span><span class="p">,</span> <span class="n">acc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bars</span><span class="p">,</span> <span class="n">accuracies</span><span class="p">):</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">text</span><span class="p">(</span><span class="n">bar</span><span class="p">.</span><span class="n">get_x</span><span class="p">()</span> <span class="o">+</span> <span class="n">bar</span><span class="p">.</span><span class="n">get_width</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">bar</span><span class="p">.</span><span class="n">get_height</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.01</span><span class="p">,</span>
+                <span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">acc</span><span class="si">:</span><span class="p">.</span><span class="mi">3</span><span class="n">f</span><span class="si">}</span><span class="s">'</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s">'center'</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s">'bottom'</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">'quantum_accuracy'</span><span class="p">:</span> <span class="n">accuracy</span><span class="p">,</span>
+        <span class="s">'lr_accuracy'</span><span class="p">:</span> <span class="n">lr_accuracy</span><span class="p">,</span>
+        <span class="s">'svm_accuracy'</span><span class="p">:</span> <span class="n">svm_accuracy</span><span class="p">,</span>
+        <span class="s">'kernel_matrix'</span><span class="p">:</span> <span class="n">kernel_matrix</span>
+    <span class="p">}</span>
+
+<span class="c1"># Run demo
+</span><span class="n">results</span> <span class="o">=</span> <span class="n">quantum_ml_demo</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-bài-tập-về-nhà">📊 Bài tập về nhà</h2>
+
+<h3 id="bài-tập-1-quantum-feature-engineering"><strong>Bài tập 1: Quantum Feature Engineering</strong></h3>
+<ul>
+  <li>Implement custom quantum feature maps cho financial data</li>
+  <li>Compare different quantum encoding strategies</li>
+  <li>Analyze feature space dimensionality</li>
+</ul>
+
+<h3 id="bài-tập-2-quantum-model-optimization"><strong>Bài tập 2: Quantum Model Optimization</strong></h3>
+<ul>
+  <li>Optimize quantum neural network parameters</li>
+  <li>Implement quantum gradient descent</li>
+  <li>Compare optimization algorithms</li>
+</ul>
+
+<h3 id="bài-tập-3-real-financial-data-application"><strong>Bài tập 3: Real Financial Data Application</strong></h3>
+<ul>
+  <li>Apply quantum ML to real credit risk dataset</li>
+  <li>Implement cross-validation cho quantum models</li>
+  <li>Document model performance và limitations</li>
+</ul>
+
+<h2 id="-tài-liệu-tham-khảo">🔗 Tài liệu tham khảo</h2>
+
+<h3 id="papers"><strong>Papers:</strong></h3>
+<ul>
+  <li>“Quantum Machine Learning” - Schuld, Petruccione</li>
+  <li>“Quantum Feature Maps and Kernels” - Various authors</li>
+  <li>“Quantum Neural Networks” - Research papers</li>
+</ul>
+
+<h3 id="books"><strong>Books:</strong></h3>
+<ul>
+  <li>“Quantum Machine Learning” - Schuld, Petruccione</li>
+  <li>“Quantum Computing for Finance” - Orús, Mugel, Lizaso</li>
+</ul>
+
+<h3 id="online-resources"><strong>Online Resources:</strong></h3>
+<ul>
+  <li><a href="https://qiskit.org/ecosystem/machine-learning/">Qiskit Machine Learning</a></li>
+  <li><a href="https://pennylane.ai/qml/tutorials/">PennyLane Tutorials</a></li>
+  <li><a href="https://quantum-journal.org/">Quantum ML Research Papers</a></li>
+</ul>
+
+<h2 id="-kết-luận">🎯 Kết luận</h2>
+
+<p>Ngày 10 đã cover:</p>
+<ul>
+  <li>✅ Quantum machine learning fundamentals</li>
+  <li>✅ Quantum feature maps và kernels</li>
+  <li>✅ Quantum neural networks cho finance</li>
+  <li>✅ Advanced quantum ML applications</li>
+</ul>
+
+<p><strong>Chuẩn bị cho Phase 2</strong>: Quantum Algorithms cho Credit Risk (Ngày 11-20).</p>
+
+<hr />
+
+<blockquote>
+  <p><em>“Quantum machine learning represents a paradigm shift in how we approach complex financial modeling problems.”</em> - Quantum ML Research</p>
+</blockquote>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>📧 Email: nguyenngocbinhneu@gmail.com | 🌟 65 ngày từ Toán học đến Quantum Finance</p>
+            <p>🎯 <strong>Tiến độ học tập:</strong> Fundamental (1-15) → Advanced (16-35) → Credit Risk (1-30)</p>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            dropdowns.forEach(dropdown => {
+                const toggle = dropdown.querySelector('.dropdown-toggle');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Close other dropdowns
+                    dropdowns.forEach(other => {
+                        if (other !== dropdown) {
+                            other.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current dropdown
+                    dropdown.classList.toggle('active');
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    dropdowns.forEach(dropdown => {
+                        dropdown.classList.remove('active');
+                    });
+                }
+            });
+        });
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Enhanced reading progress bar
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 4px;
+                    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+
+        // Add learning progress tracker
+        function updateLearningProgress() {
+            const currentPage = window.location.pathname;
+            let currentDay = 0;
+            let totalDays = 65;
+            let curriculum = '';
+            
+            // Check which curriculum we're in
+            if (currentPage.includes('/fundamental/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]);
+                    curriculum = 'Fundamental';
+                }
+            } else if (currentPage.includes('/advanced/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]) + 15; // Add fundamental days
+                    curriculum = 'Advanced';
+                }
+            } else if (currentPage.includes('/credit-risk/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]) + 35; // Add fundamental + advanced days
+                    curriculum = 'Credit Risk';
+                }
+            }
+            
+            if (currentDay > 0) {
+                const progressPercent = (currentDay / totalDays) * 100;
+                
+                // Create or update progress indicator
+                let progressIndicator = document.querySelector('.learning-progress');
+                if (!progressIndicator) {
+                    progressIndicator = document.createElement('div');
+                    progressIndicator.className = 'learning-progress';
+                    progressIndicator.style.cssText = `
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        background: rgba(102, 126, 234, 0.9);
+                        color: white;
+                        padding: 10px 15px;
+                        border-radius: 25px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                        z-index: 999;
+                    `;
+                    document.body.appendChild(progressIndicator);
+                }
+                
+                progressIndicator.textContent = `📚 ${curriculum} - Ngày ${currentDay}/65 (${progressPercent.toFixed(0)}%)`;
+            }
+        }
+        
+        // Initialize learning progress tracker
+        updateLearningProgress();
+    </script>
+
+    <style>
+        /* Enhanced dropdown styles */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 300px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 8px 0;
+            z-index: 1000;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-menu li {
+            list-style: none;
+            margin: 0;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: #f5f5f5;
+            color: #667eea;
+        }
+        
+        .submenu-header {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 8px 16px 4px 16px;
+            margin: 4px 0;
+        }
+        
+        .divider {
+            border-top: 1px solid #e0e0e0;
+            margin: 4px 0;
+        }
+        
+        .dropdown-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .dropdown-toggle:after {
+            content: ' ▼';
+            font-size: 10px;
+            margin-left: 5px;
+        }
+        
+        .dropdown.active .dropdown-toggle:after {
+            content: ' ▲';
+        }
+        
+        /* Responsive navigation */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                border: none;
+                background: #f8f9fa;
+                margin-top: 8px;
+            }
+            
+            .nav-links > li {
+                margin: 4px 0;
+            }
+        }
+        
+        /* Enhanced site subtitle */
+        .site-subtitle {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+    </style>
+</body>
+</html>

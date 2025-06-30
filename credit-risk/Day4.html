@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ngày 4: Portfolio Credit Risk - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Ngày 4: Portfolio Credit Risk">
+<meta property="og:description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/credit-risk/Day4.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ngày 4: Portfolio Credit Risk">
+<meta name="twitter:description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 65 ngày toàn diện Toán học Lượng tử, Lập trình Quantum & Credit Risk Management</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">🏠 Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">📋 Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">🗺️ Lộ trình</a></li>
+                
+                <!-- Fundamental Days 1-15 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">📚 Nền tảng (Ngày 1-15)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/fundamental/Fundamental_Curriculum.html">📖 Curriculum Tổng quan</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 1: Toán học cơ bản (1-5)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day1.html">Ngày 1: Vector & Không gian vector</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day2.html">Ngày 2: Tích vô hướng</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day3.html">Ngày 3: Ma trận</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day4.html">Ngày 4: Trị riêng & Vector riêng</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day5.html">Ngày 5: Xác suất cơ bản</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 2: Toán lượng tử (6-10)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day6.html">Ngày 6: Không gian Hilbert</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day7.html">Ngày 7: Trạng thái lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day8.html">Ngày 8: Siêu vị</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day9.html">Ngày 9: Phép đo lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day10.html">Ngày 10: Toán tử</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 3: Khái niệm nâng cao (11-15)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day11.html">Ngày 11: Rối lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day12.html">Ngày 12: Toán tử Hermitian</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day13.html">Ngày 13: Nguyên lý Bất định</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day14.html">Ngày 14: Máy tính lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day15.html">Ngày 15: Tổng kết</a></li>
+                    </ul>
+                </li>
+
+                <!-- Advanced Days 16-35 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">🚀 Lập trình Quantum (Ngày 16-35)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/advanced/Advanced_Curriculum.html">📖 Curriculum Nâng cao</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 4: Python & Qiskit (16-20)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day16.html">Ngày 16: Setup Qiskit</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day17.html">Ngày 17: Cổng lượng tử cơ bản</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day18.html">Ngày 18: Cổng điều khiển</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day19.html">Ngày 19: Circuit Design</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day20.html">Ngày 20: Measurement</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 5: Thuật toán cơ bản (21-25)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day21.html">Ngày 21: QFT</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day22.html">Ngày 22: Phase Estimation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day23.html">Ngày 23: Teleportation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day24.html">Ngày 24: Error Correction</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day25.html">Ngày 25: Grover's Algorithm</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 6: Thuật toán nâng cao (26-30)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day26.html">Ngày 26: Shor's Algorithm</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day27.html">Ngày 27: Quantum ML</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day28.html">Ngày 28: QAOA</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day29.html">Ngày 29: VQE ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day30.html">Ngày 30: Quantum NN ✅</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 7: Ứng dụng thực tế (31-35)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day31.html">Ngày 31: Cryptography ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day32.html">Ngày 32: QRNG ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day33.html">Ngày 33: Simulation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day34.html">Ngày 34: Real Hardware</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day35.html">Ngày 35: Capstone Project</a></li>
+                    </ul>
+                </li>
+
+                <!-- Credit Risk Days 1-30 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">💼 Credit Risk (Ngày 1-30)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/credit-risk/Credit_Risk_Curriculum.html">📖 Curriculum Credit Risk</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 8: Nền tảng Credit Risk (1-10)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day1.html">Ngày 1: Credit Risk & QC</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day2.html">Ngày 2: Mô hình xác suất</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day3.html">Ngày 3: Credit Scoring</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day4.html">Ngày 4: Portfolio Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day5.html">Ngày 5: Stress Testing</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day6.html">Ngày 6: Quantum Probability</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day7.html">Ngày 7: Quantum Random Walks</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day8.html">Ngày 8: Quantum Monte Carlo</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day9.html">Ngày 9: Quantum Optimization</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day10.html">Ngày 10: Quantum ML Finance</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 9: Quantum Algorithms (11-20)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day11.html">Ngày 11: Quantum Feature Maps</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day12.html">Ngày 12: Quantum SVM</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day13.html">Ngày 13: Quantum Neural Networks</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day14.html">Ngày 14: Quantum Clustering</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day15.html">Ngày 15: Quantum Anomaly Detection</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day16.html">Ngày 16: Quantum Portfolio Optimization</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day17.html">Ngày 17: Quantum Risk Measures</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day18.html">Ngày 18: Quantum Correlation</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day19.html">Ngày 19: Quantum Time Series</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day20.html">Ngày 20: Quantum Derivatives</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 10: Ứng dụng thực tế (21-30)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day21.html">Ngày 21: Quantum Stress Testing</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day22.html">Ngày 22: Regulatory Compliance</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day23.html">Ngày 23: Capital Allocation</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day24.html">Ngày 24: Liquidity Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day25.html">Ngày 25: Systemic Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day26.html">Ngày 26: Platform Architecture</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day27.html">Ngày 27: System Integration</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day28.html">Ngày 28: Performance Benchmarking</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day29.html">Ngày 29: Production Deployment</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day30.html">Ngày 30: Capstone Project</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Ngày 4: Portfolio Credit Risk</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="ngày-4-portfolio-credit-risk">Ngày 4: Portfolio Credit Risk</h1>
+
+<h2 id="-mục-tiêu-học-tập">🎯 Mục tiêu học tập</h2>
+
+<ul>
+  <li>Hiểu sâu về portfolio credit risk và các mô hình truyền thống</li>
+  <li>Phân tích hạn chế của classical portfolio models</li>
+  <li>Implement quantum-enhanced portfolio credit risk models</li>
+  <li>So sánh performance giữa classical và quantum approaches</li>
+</ul>
+
+<h2 id="-lý-thuyết">📚 Lý thuyết</h2>
+
+<h3 id="portfolio-credit-risk-fundamentals"><strong>Portfolio Credit Risk Fundamentals</strong></h3>
+
+<h4 id="1-portfolio-credit-risk-là-gì"><strong>1. Portfolio Credit Risk là gì?</strong></h4>
+<p>Portfolio credit risk là rủi ro tổng hợp từ tất cả các khoản vay trong danh mục, bao gồm:</p>
+<ul>
+  <li><strong>Individual Default Risk</strong>: Rủi ro vỡ nợ của từng khoản vay</li>
+  <li><strong>Correlation Risk</strong>: Rủi ro tương quan giữa các khoản vay</li>
+  <li><strong>Concentration Risk</strong>: Rủi ro tập trung vào một số đối tượng</li>
+  <li><strong>Systematic Risk</strong>: Rủi ro hệ thống ảnh hưởng toàn bộ danh mục</li>
+</ul>
+
+<h4 id="2-key-portfolio-metrics"><strong>2. Key Portfolio Metrics:</strong></h4>
+<ul>
+  <li><strong>Expected Loss (EL)</strong>: Tổn thất kỳ vọng</li>
+  <li><strong>Unexpected Loss (UL)</strong>: Tổn thất ngoài dự kiến</li>
+  <li><strong>Value at Risk (VaR)</strong>: Giá trị rủi ro</li>
+  <li><strong>Conditional VaR (CVaR)</strong>: VaR có điều kiện</li>
+  <li><strong>Economic Capital</strong>: Vốn kinh tế cần thiết</li>
+</ul>
+
+<h3 id="classical-portfolio-credit-risk-models"><strong>Classical Portfolio Credit Risk Models</strong></h3>
+
+<h4 id="1-creditmetrics-jp-morgan"><strong>1. CreditMetrics (JP Morgan):</strong></h4>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EL = Σ (PDᵢ × LGDᵢ × EADᵢ)
+UL = √(Σ Σ ρᵢⱼ × ULᵢ × ULⱼ)
+</code></pre></div></div>
+
+<p>Trong đó:</p>
+<ul>
+  <li>PD: Probability of Default</li>
+  <li>LGD: Loss Given Default</li>
+  <li>EAD: Exposure at Default</li>
+  <li>ρ: Correlation matrix</li>
+</ul>
+
+<h4 id="2-credit-risk-credit-suisse"><strong>2. Credit Risk+ (Credit Suisse):</strong></h4>
+<ul>
+  <li>Actuarial approach</li>
+  <li>Poisson distribution cho defaults</li>
+  <li>Analytical solution cho portfolio loss</li>
+</ul>
+
+<h4 id="3-kmv-portfolio-manager"><strong>3. KMV Portfolio Manager:</strong></h4>
+<ul>
+  <li>Merton model extension</li>
+  <li>Distance to default approach</li>
+  <li>Monte Carlo simulation</li>
+</ul>
+
+<h4 id="4-creditportfolioview-mckinsey"><strong>4. CreditPortfolioView (McKinsey):</strong></h4>
+<ul>
+  <li>Macroeconomic factors</li>
+  <li>Conditional default probabilities</li>
+  <li>Multi-factor model</li>
+</ul>
+
+<h3 id="hạn-chế-của-classical-models"><strong>Hạn chế của Classical Models</strong></h3>
+
+<h4 id="1-correlation-modeling"><strong>1. Correlation Modeling:</strong></h4>
+<ul>
+  <li><strong>Linear Correlations</strong>: Không phù hợp với extreme events</li>
+  <li><strong>Gaussian Assumptions</strong>: Không capture fat tails</li>
+  <li><strong>Static Correlations</strong>: Không thay đổi theo thời gian</li>
+  <li><strong>Pairwise Correlations</strong>: Không capture higher-order dependencies</li>
+</ul>
+
+<h4 id="2-computational-limitations"><strong>2. Computational Limitations:</strong></h4>
+<ul>
+  <li><strong>Monte Carlo Complexity</strong>: Exponential với portfolio size</li>
+  <li><strong>Correlation Matrix</strong>: N² parameters cho N assets</li>
+  <li><strong>Real-time Updates</strong>: Không thể cập nhật real-time</li>
+  <li><strong>Large Portfolios</strong>: Computational bottlenecks</li>
+</ul>
+
+<h4 id="3-model-assumptions"><strong>3. Model Assumptions:</strong></h4>
+<ul>
+  <li><strong>Stationarity</strong>: Markets không stationary</li>
+  <li><strong>Normality</strong>: Returns không normal</li>
+  <li><strong>Independence</strong>: Defaults không independent</li>
+  <li><strong>Homogeneity</strong>: Assets không homogeneous</li>
+</ul>
+
+<h3 id="quantum-advantages-cho-portfolio-credit-risk"><strong>Quantum Advantages cho Portfolio Credit Risk</strong></h3>
+
+<h4 id="1-quantum-correlation-modeling"><strong>1. Quantum Correlation Modeling:</strong></h4>
+<ul>
+  <li><strong>Entanglement</strong>: Natural modeling of correlations</li>
+  <li><strong>Superposition</strong>: Parallel processing of scenarios</li>
+  <li><strong>Quantum Randomness</strong>: True randomness cho Monte Carlo</li>
+</ul>
+
+<h4 id="2-quantum-optimization"><strong>2. Quantum Optimization:</strong></h4>
+<ul>
+  <li><strong>Portfolio Optimization</strong>: Quantum algorithms cho optimal weights</li>
+  <li><strong>Risk Minimization</strong>: Quantum algorithms cho risk measures</li>
+  <li><strong>Capital Allocation</strong>: Quantum optimization cho capital</li>
+</ul>
+
+<h4 id="3-quantum-monte-carlo"><strong>3. Quantum Monte Carlo:</strong></h4>
+<ul>
+  <li><strong>Exponential Speedup</strong>: Cho certain simulations</li>
+  <li><strong>Parallel Scenarios</strong>: Process multiple scenarios simultaneously</li>
+  <li><strong>Quantum Random Walks</strong>: Advanced simulation techniques</li>
+</ul>
+
+<h2 id="-thực-hành">💻 Thực hành</h2>
+
+<h3 id="project-4-quantum-portfolio-credit-risk-model"><strong>Project 4: Quantum Portfolio Credit Risk Model</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">norm</span><span class="p">,</span> <span class="n">multivariate_normal</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">minimize</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms</span> <span class="kn">import</span> <span class="n">VQE</span><span class="p">,</span> <span class="n">QAOA</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">TwoLocal</span>
+<span class="kn">import</span> <span class="nn">pennylane</span> <span class="k">as</span> <span class="n">qml</span>
+
+<span class="k">class</span> <span class="nc">ClassicalPortfolioCreditRisk</span><span class="p">:</span>
+    <span class="s">"""Classical portfolio credit risk model"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">correlation_matrix</span> <span class="o">=</span> <span class="bp">None</span>
+        
+    <span class="k">def</span> <span class="nf">create_portfolio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_assets</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="s">"""
+        Create synthetic credit portfolio
+        """</span>
+        <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+        
+        <span class="n">portfolio_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_assets</span><span class="p">):</span>
+            <span class="n">asset</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">'asset_id'</span><span class="p">:</span> <span class="sa">f</span><span class="s">'Asset_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">'</span><span class="p">,</span>
+                <span class="s">'exposure'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="mi">1000000</span><span class="p">),</span>
+                <span class="s">'pd'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">),</span>
+                <span class="s">'lgd'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">uniform</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">),</span>
+                <span class="s">'rating'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="s">'AAA'</span><span class="p">,</span> <span class="s">'AA'</span><span class="p">,</span> <span class="s">'A'</span><span class="p">,</span> <span class="s">'BBB'</span><span class="p">,</span> <span class="s">'BB'</span><span class="p">,</span> <span class="s">'B'</span><span class="p">]),</span>
+                <span class="s">'sector'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">([</span><span class="s">'Banking'</span><span class="p">,</span> <span class="s">'Technology'</span><span class="p">,</span> <span class="s">'Energy'</span><span class="p">,</span> <span class="s">'Healthcare'</span><span class="p">,</span> <span class="s">'Consumer'</span><span class="p">])</span>
+            <span class="p">}</span>
+            <span class="n">portfolio_data</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">asset</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">portfolio_data</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span>
+    
+    <span class="k">def</span> <span class="nf">create_correlation_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">):</span>
+        <span class="s">"""
+        Create correlation matrix for portfolio
+        """</span>
+        <span class="c1"># Generate random correlation matrix
+</span>        <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">randn</span><span class="p">(</span><span class="n">n_assets</span><span class="p">,</span> <span class="n">n_assets</span><span class="p">)</span>
+        <span class="n">correlation_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">A</span><span class="p">.</span><span class="n">T</span><span class="p">)</span>
+        
+        <span class="c1"># Normalize to get correlation matrix
+</span>        <span class="n">diag_sqrt</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">diag</span><span class="p">(</span><span class="n">correlation_matrix</span><span class="p">))</span>
+        <span class="n">correlation_matrix</span> <span class="o">=</span> <span class="n">correlation_matrix</span> <span class="o">/</span> <span class="n">np</span><span class="p">.</span><span class="n">outer</span><span class="p">(</span><span class="n">diag_sqrt</span><span class="p">,</span> <span class="n">diag_sqrt</span><span class="p">)</span>
+        
+        <span class="c1"># Ensure positive definiteness
+</span>        <span class="n">correlation_matrix</span> <span class="o">=</span> <span class="p">(</span><span class="n">correlation_matrix</span> <span class="o">+</span> <span class="n">correlation_matrix</span><span class="p">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">np</span><span class="p">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">correlation_matrix</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="p">.</span><span class="n">correlation_matrix</span> <span class="o">=</span> <span class="n">correlation_matrix</span>
+        <span class="k">return</span> <span class="n">correlation_matrix</span>
+    
+    <span class="k">def</span> <span class="nf">calculate_expected_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""
+        Calculate expected loss for portfolio
+        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"Portfolio chưa được tạo"</span><span class="p">)</span>
+        
+        <span class="n">expected_loss</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'exposure'</span><span class="p">]</span> <span class="o">*</span> 
+                              <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'pd'</span><span class="p">]</span> <span class="o">*</span> 
+                              <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'lgd'</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="n">expected_loss</span>
+    
+    <span class="k">def</span> <span class="nf">calculate_unexpected_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""
+        Calculate unexpected loss using correlation matrix
+        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">correlation_matrix</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"Correlation matrix chưa được tạo"</span><span class="p">)</span>
+        
+        <span class="c1"># Calculate individual unexpected losses
+</span>        <span class="n">individual_uls</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'exposure'</span><span class="p">]</span> <span class="o">*</span> \
+                        <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'pd'</span><span class="p">]</span> <span class="o">*</span> \
+                        <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'lgd'</span><span class="p">]</span> <span class="o">*</span> \
+                        <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'pd'</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'pd'</span><span class="p">]))</span>
+        
+        <span class="c1"># Calculate portfolio unexpected loss
+</span>        <span class="n">portfolio_ul</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="n">individual_uls</span><span class="p">.</span><span class="n">T</span><span class="p">,</span> 
+                                     <span class="n">np</span><span class="p">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">correlation_matrix</span><span class="p">,</span> <span class="n">individual_uls</span><span class="p">)))</span>
+        
+        <span class="k">return</span> <span class="n">portfolio_ul</span>
+    
+    <span class="k">def</span> <span class="nf">monte_carlo_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_simulations</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
+        <span class="s">"""
+        Monte Carlo simulation for portfolio loss distribution
+        """</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">correlation_matrix</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"Correlation matrix chưa được tạo"</span><span class="p">)</span>
+        
+        <span class="n">n_assets</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">)</span>
+        
+        <span class="c1"># Generate correlated random numbers
+</span>        <span class="n">correlated_randoms</span> <span class="o">=</span> <span class="n">multivariate_normal</span><span class="p">.</span><span class="n">rvs</span><span class="p">(</span>
+            <span class="n">mean</span><span class="o">=</span><span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_assets</span><span class="p">),</span>
+            <span class="n">cov</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">correlation_matrix</span><span class="p">,</span>
+            <span class="n">size</span><span class="o">=</span><span class="n">n_simulations</span>
+        <span class="p">)</span>
+        
+        <span class="c1"># Convert to default indicators
+</span>        <span class="n">default_thresholds</span> <span class="o">=</span> <span class="n">norm</span><span class="p">.</span><span class="n">ppf</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'pd'</span><span class="p">].</span><span class="n">values</span><span class="p">)</span>
+        <span class="n">defaults</span> <span class="o">=</span> <span class="p">(</span><span class="n">correlated_randoms</span> <span class="o">&lt;</span> <span class="n">default_thresholds</span><span class="p">).</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        
+        <span class="c1"># Calculate portfolio losses
+</span>        <span class="n">portfolio_losses</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">defaults</span> <span class="o">*</span> 
+                                 <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'exposure'</span><span class="p">].</span><span class="n">values</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> 
+                                 <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'lgd'</span><span class="p">].</span><span class="n">values</span><span class="p">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">portfolio_losses</span>
+    
+    <span class="k">def</span> <span class="nf">calculate_risk_measures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">portfolio_losses</span><span class="p">):</span>
+        <span class="s">"""
+        Calculate risk measures from loss distribution
+        """</span>
+        <span class="n">risk_measures</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'expected_loss'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">portfolio_losses</span><span class="p">),</span>
+            <span class="s">'unexpected_loss'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">portfolio_losses</span><span class="p">),</span>
+            <span class="s">'var_95'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">portfolio_losses</span><span class="p">,</span> <span class="mi">95</span><span class="p">),</span>
+            <span class="s">'var_99'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">portfolio_losses</span><span class="p">,</span> <span class="mi">99</span><span class="p">),</span>
+            <span class="s">'cvar_95'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">portfolio_losses</span><span class="p">[</span><span class="n">portfolio_losses</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="p">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">portfolio_losses</span><span class="p">,</span> <span class="mi">95</span><span class="p">)]),</span>
+            <span class="s">'cvar_99'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">portfolio_losses</span><span class="p">[</span><span class="n">portfolio_losses</span> <span class="o">&gt;=</span> <span class="n">np</span><span class="p">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">portfolio_losses</span><span class="p">,</span> <span class="mi">99</span><span class="p">)]),</span>
+            <span class="s">'max_loss'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="nb">max</span><span class="p">(</span><span class="n">portfolio_losses</span><span class="p">)</span>
+        <span class="p">}</span>
+        
+        <span class="k">return</span> <span class="n">risk_measures</span>
+
+<span class="k">class</span> <span class="nc">QuantumPortfolioCreditRisk</span><span class="p">:</span>
+    <span class="s">"""Quantum-enhanced portfolio credit risk model"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_qubits</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span> <span class="o">=</span> <span class="n">num_qubits</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">portfolio</span> <span class="o">=</span> <span class="bp">None</span>
+        
+    <span class="k">def</span> <span class="nf">create_quantum_portfolio_circuit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">):</span>
+        <span class="s">"""
+        Create quantum circuit for portfolio credit risk
+        """</span>
+        <span class="n">n_assets</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">portfolio</span><span class="p">)</span>
+        <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Encode portfolio information
+</span>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">asset</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">portfolio</span><span class="p">.</span><span class="n">iterrows</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">:</span>
+                <span class="c1"># Encode exposure
+</span>                <span class="n">exposure_norm</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">asset</span><span class="p">[</span><span class="s">'exposure'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+                <span class="n">circuit</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">exposure_norm</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                
+                <span class="c1"># Encode PD
+</span>                <span class="n">circuit</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">asset</span><span class="p">[</span><span class="s">'pd'</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                
+                <span class="c1"># Encode LGD
+</span>                <span class="n">circuit</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">asset</span><span class="p">[</span><span class="s">'lgd'</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Add quantum correlations (entanglement)
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">circuit</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Add additional entanglement for complex correlations
+</span>        <span class="n">circuit</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">circuit</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">circuit</span>
+    
+    <span class="k">def</span> <span class="nf">quantum_monte_carlo_simulation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">,</span> <span class="n">n_simulations</span><span class="o">=</span><span class="mi">1000</span><span class="p">):</span>
+        <span class="s">"""
+        Quantum Monte Carlo simulation
+        """</span>
+        <span class="n">circuit</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_quantum_portfolio_circuit</span><span class="p">(</span><span class="n">portfolio</span><span class="p">)</span>
+        <span class="n">circuit</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="c1"># Execute quantum simulation
+</span>        <span class="n">losses</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">sim</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_simulations</span><span class="p">):</span>
+            <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+            
+            <span class="c1"># Calculate loss from measurement
+</span>            <span class="n">loss</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_calculate_loss_from_measurement</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">)</span>
+            <span class="n">losses</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">losses</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_calculate_loss_from_measurement</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">):</span>
+        <span class="s">"""
+        Calculate portfolio loss from quantum measurement
+        """</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">counts</span><span class="p">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+        
+        <span class="n">loss</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">portfolio</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>  <span class="c1"># Default occurred
+</span>                    <span class="n">asset</span> <span class="o">=</span> <span class="n">portfolio</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                    <span class="n">loss</span> <span class="o">+=</span> <span class="n">asset</span><span class="p">[</span><span class="s">'exposure'</span><span class="p">]</span> <span class="o">*</span> <span class="n">asset</span><span class="p">[</span><span class="s">'lgd'</span><span class="p">]</span>
+        
+        <span class="k">return</span> <span class="n">loss</span>
+    
+    <span class="k">def</span> <span class="nf">quantum_correlation_analysis</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">):</span>
+        <span class="s">"""
+        Quantum correlation analysis
+        """</span>
+        <span class="c1"># Create quantum circuit for correlation analysis
+</span>        <span class="n">n_assets</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">portfolio</span><span class="p">)</span>
+        <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">)</span>
+        
+        <span class="c1"># Encode asset characteristics
+</span>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">asset</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">portfolio</span><span class="p">.</span><span class="n">iterrows</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">:</span>
+                <span class="c1"># Encode sector information
+</span>                <span class="n">sector_encoding</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">asset</span><span class="p">[</span><span class="s">'sector'</span><span class="p">])</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">/</span> <span class="mf">4.0</span>
+                <span class="n">circuit</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">sector_encoding</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+                
+                <span class="c1"># Encode rating information
+</span>                <span class="n">rating_encoding</span> <span class="o">=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">asset</span><span class="p">[</span><span class="s">'rating'</span><span class="p">])</span> <span class="o">%</span> <span class="mi">4</span> <span class="o">/</span> <span class="mf">4.0</span>
+                <span class="n">circuit</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">rating_encoding</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Add entanglement for correlation modeling
+</span>        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">circuit</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="c1"># Measure correlations
+</span>        <span class="n">circuit</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+        
+        <span class="c1"># Execute circuit
+</span>        <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+        
+        <span class="c1"># Analyze correlation patterns
+</span>        <span class="n">correlation_analysis</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_analyze_quantum_correlations</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">correlation_analysis</span>
+    
+    <span class="k">def</span> <span class="nf">_analyze_quantum_correlations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">counts</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">):</span>
+        <span class="s">"""
+        Analyze quantum correlation patterns
+        """</span>
+        <span class="n">correlation_patterns</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="k">for</span> <span class="n">state</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">:</span>  <span class="c1"># Significant patterns
+</span>                <span class="c1"># Analyze which assets default together
+</span>                <span class="n">defaulting_assets</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">portfolio</span><span class="p">)</span> <span class="ow">and</span> <span class="n">bit</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>
+                        <span class="n">defaulting_assets</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">portfolio</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s">'asset_id'</span><span class="p">])</span>
+                
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">defaulting_assets</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">pattern_key</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">defaulting_assets</span><span class="p">))</span>
+                    <span class="n">correlation_patterns</span><span class="p">[</span><span class="n">pattern_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">count</span>
+        
+        <span class="k">return</span> <span class="n">correlation_patterns</span>
+
+<span class="k">def</span> <span class="nf">compare_portfolio_models</span><span class="p">():</span>
+    <span class="s">"""
+    Compare classical and quantum portfolio credit risk models
+    """</span>
+    <span class="c1"># Create portfolio
+</span>    <span class="n">classical_model</span> <span class="o">=</span> <span class="n">ClassicalPortfolioCreditRisk</span><span class="p">()</span>
+    <span class="n">portfolio</span> <span class="o">=</span> <span class="n">classical_model</span><span class="p">.</span><span class="n">create_portfolio</span><span class="p">(</span><span class="n">n_assets</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">correlation_matrix</span> <span class="o">=</span> <span class="n">classical_model</span><span class="p">.</span><span class="n">create_correlation_matrix</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">portfolio</span><span class="p">))</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Portfolio Overview:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">portfolio</span><span class="p">[[</span><span class="s">'asset_id'</span><span class="p">,</span> <span class="s">'exposure'</span><span class="p">,</span> <span class="s">'pd'</span><span class="p">,</span> <span class="s">'lgd'</span><span class="p">,</span> <span class="s">'sector'</span><span class="p">]])</span>
+    
+    <span class="c1"># Classical analysis
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== Classical Portfolio Analysis ==="</span><span class="p">)</span>
+    <span class="n">expected_loss</span> <span class="o">=</span> <span class="n">classical_model</span><span class="p">.</span><span class="n">calculate_expected_loss</span><span class="p">()</span>
+    <span class="n">unexpected_loss</span> <span class="o">=</span> <span class="n">classical_model</span><span class="p">.</span><span class="n">calculate_unexpected_loss</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Expected Loss: $</span><span class="si">{</span><span class="n">expected_loss</span><span class="si">:</span><span class="p">,.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Unexpected Loss: $</span><span class="si">{</span><span class="n">unexpected_loss</span><span class="si">:</span><span class="p">,.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Classical Monte Carlo
+</span>    <span class="n">classical_losses</span> <span class="o">=</span> <span class="n">classical_model</span><span class="p">.</span><span class="n">monte_carlo_simulation</span><span class="p">(</span><span class="n">n_simulations</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+    <span class="n">classical_risk_measures</span> <span class="o">=</span> <span class="n">classical_model</span><span class="p">.</span><span class="n">calculate_risk_measures</span><span class="p">(</span><span class="n">classical_losses</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Classical Risk Measures:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">measure</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">classical_risk_measures</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">measure</span><span class="si">}</span><span class="s">: $</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="p">,.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Quantum analysis
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== Quantum Portfolio Analysis ==="</span><span class="p">)</span>
+    <span class="n">quantum_model</span> <span class="o">=</span> <span class="n">QuantumPortfolioCreditRisk</span><span class="p">(</span><span class="n">num_qubits</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">quantum_losses</span> <span class="o">=</span> <span class="n">quantum_model</span><span class="p">.</span><span class="n">quantum_monte_carlo_simulation</span><span class="p">(</span><span class="n">portfolio</span><span class="p">,</span> <span class="n">n_simulations</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">quantum_risk_measures</span> <span class="o">=</span> <span class="n">classical_model</span><span class="p">.</span><span class="n">calculate_risk_measures</span><span class="p">(</span><span class="n">quantum_losses</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Quantum Risk Measures:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">measure</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">quantum_risk_measures</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">measure</span><span class="si">}</span><span class="s">: $</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="p">,.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Quantum correlation analysis
+</span>    <span class="n">quantum_correlations</span> <span class="o">=</span> <span class="n">quantum_model</span><span class="p">.</span><span class="n">quantum_correlation_analysis</span><span class="p">(</span><span class="n">portfolio</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Quantum Correlation Patterns:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">quantum_correlations</span><span class="p">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="bp">True</span><span class="p">)[:</span><span class="mi">5</span><span class="p">]:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Assets </span><span class="si">{</span><span class="n">pattern</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">count</span><span class="si">}</span><span class="s"> occurrences"</span><span class="p">)</span>
+    
+    <span class="c1"># Compare results
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">=== Comparison ==="</span><span class="p">)</span>
+    <span class="n">comparison_data</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">measure</span> <span class="ow">in</span> <span class="p">[</span><span class="s">'expected_loss'</span><span class="p">,</span> <span class="s">'unexpected_loss'</span><span class="p">,</span> <span class="s">'var_95'</span><span class="p">,</span> <span class="s">'var_99'</span><span class="p">]:</span>
+        <span class="n">classical_value</span> <span class="o">=</span> <span class="n">classical_risk_measures</span><span class="p">[</span><span class="n">measure</span><span class="p">]</span>
+        <span class="n">quantum_value</span> <span class="o">=</span> <span class="n">quantum_risk_measures</span><span class="p">[</span><span class="n">measure</span><span class="p">]</span>
+        
+        <span class="n">diff_pct</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">classical_value</span> <span class="o">-</span> <span class="n">quantum_value</span><span class="p">)</span> <span class="o">/</span> <span class="n">classical_value</span> <span class="o">*</span> <span class="mi">100</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">measure</span><span class="si">}</span><span class="s">:"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Classical: $</span><span class="si">{</span><span class="n">classical_value</span><span class="si">:</span><span class="p">,.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Quantum: $</span><span class="si">{</span><span class="n">quantum_value</span><span class="si">:</span><span class="p">,.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Difference: </span><span class="si">{</span><span class="n">diff_pct</span><span class="si">:</span><span class="p">.</span><span class="mi">2</span><span class="n">f</span><span class="si">}</span><span class="s">%"</span><span class="p">)</span>
+        
+        <span class="n">comparison_data</span><span class="p">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s">'measure'</span><span class="p">:</span> <span class="n">measure</span><span class="p">,</span>
+            <span class="s">'classical'</span><span class="p">:</span> <span class="n">classical_value</span><span class="p">,</span>
+            <span class="s">'quantum'</span><span class="p">:</span> <span class="n">quantum_value</span><span class="p">,</span>
+            <span class="s">'difference_pct'</span><span class="p">:</span> <span class="n">diff_pct</span>
+        <span class="p">})</span>
+    
+    <span class="c1"># Plot comparison
+</span>    <span class="n">plot_portfolio_comparison</span><span class="p">(</span><span class="n">comparison_data</span><span class="p">,</span> <span class="n">classical_losses</span><span class="p">,</span> <span class="n">quantum_losses</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">classical_risk_measures</span><span class="p">,</span> <span class="n">quantum_risk_measures</span><span class="p">,</span> <span class="n">quantum_correlations</span>
+
+<span class="k">def</span> <span class="nf">plot_portfolio_comparison</span><span class="p">(</span><span class="n">comparison_data</span><span class="p">,</span> <span class="n">classical_losses</span><span class="p">,</span> <span class="n">quantum_losses</span><span class="p">):</span>
+    <span class="s">"""
+    Plot portfolio comparison results
+    """</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="p">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+    
+    <span class="c1"># Plot 1: Risk measures comparison
+</span>    <span class="n">measures</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s">'measure'</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">comparison_data</span><span class="p">]</span>
+    <span class="n">classical_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s">'classical'</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">comparison_data</span><span class="p">]</span>
+    <span class="n">quantum_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s">'quantum'</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">comparison_data</span><span class="p">]</span>
+    
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">measures</span><span class="p">))</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="mf">0.35</span>
+    
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">classical_values</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Classical'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">quantum_values</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Quantum'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'Risk Measures'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'Value ($)'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Risk Measures: Classical vs Quantum'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">measures</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># Plot 2: Loss distributions
+</span>    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="n">hist</span><span class="p">(</span><span class="n">classical_losses</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Classical'</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="n">hist</span><span class="p">(</span><span class="n">quantum_losses</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Quantum'</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'Portfolio Loss'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'Density'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Portfolio Loss Distribution'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># Plot 3: Difference analysis
+</span>    <span class="n">differences</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="p">[</span><span class="s">'difference_pct'</span><span class="p">]</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">comparison_data</span><span class="p">]</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">bar</span><span class="p">(</span><span class="n">measures</span><span class="p">,</span> <span class="n">differences</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'orange'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'Risk Measures'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'Difference (%)'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Quantum vs Classical Difference'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">set_xticklabels</span><span class="p">(</span><span class="n">measures</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">].</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># Plot 4: Correlation heatmap (simplified)
+</span>    <span class="n">correlation_data</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>  <span class="c1"># Simplified for demo
+</span>    <span class="n">correlation_data</span> <span class="o">=</span> <span class="p">(</span><span class="n">correlation_data</span> <span class="o">+</span> <span class="n">correlation_data</span><span class="p">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">np</span><span class="p">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">correlation_data</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+    
+    <span class="n">im</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="n">imshow</span><span class="p">(</span><span class="n">correlation_data</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s">'coolwarm'</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="n">set_title</span><span class="p">(</span><span class="s">'Quantum Correlation Matrix'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s">'Asset Index'</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">].</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s">'Asset Index'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># Exercise: Quantum Portfolio Optimization
+</span><span class="k">def</span> <span class="nf">quantum_portfolio_optimization_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Exercise: Implement quantum portfolio optimization
+    """</span>
+    <span class="c1"># Create portfolio
+</span>    <span class="n">classical_model</span> <span class="o">=</span> <span class="n">ClassicalPortfolioCreditRisk</span><span class="p">()</span>
+    <span class="n">portfolio</span> <span class="o">=</span> <span class="n">classical_model</span><span class="p">.</span><span class="n">create_portfolio</span><span class="p">(</span><span class="n">n_assets</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"=== Quantum Portfolio Optimization ==="</span><span class="p">)</span>
+    
+    <span class="c1"># Define optimization problem
+</span>    <span class="c1"># Objective: Minimize risk while maintaining expected return
+</span>    <span class="n">target_return</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># 5% target return
+</span>    
+    <span class="c1"># Quantum optimization using QAOA
+</span>    <span class="n">num_qubits</span> <span class="o">=</span> <span class="mi">6</span>
+    
+    <span class="c1"># Create cost function
+</span>    <span class="k">def</span> <span class="nf">cost_function</span><span class="p">(</span><span class="n">weights</span><span class="p">):</span>
+        <span class="c1"># Calculate portfolio risk
+</span>        <span class="n">portfolio_risk</span> <span class="o">=</span> <span class="n">calculate_portfolio_risk</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">)</span>
+        
+        <span class="c1"># Calculate portfolio return
+</span>        <span class="n">portfolio_return</span> <span class="o">=</span> <span class="n">calculate_portfolio_return</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">)</span>
+        
+        <span class="c1"># Penalty for not meeting target return
+</span>        <span class="n">return_penalty</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">target_return</span> <span class="o">-</span> <span class="n">portfolio_return</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1000</span>
+        
+        <span class="k">return</span> <span class="n">portfolio_risk</span> <span class="o">+</span> <span class="n">return_penalty</span>
+    
+    <span class="c1"># Quantum optimization
+</span>    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    
+    <span class="c1"># Initial weights
+</span>    <span class="n">initial_weights</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span> <span class="o">/</span> <span class="mi">6</span>
+    
+    <span class="c1"># Optimize
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span>
+        <span class="n">cost_function</span><span class="p">,</span>
+        <span class="n">initial_weights</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s">'SLSQP'</span><span class="p">,</span>
+        <span class="n">constraints</span><span class="o">=</span><span class="p">{</span><span class="s">'type'</span><span class="p">:</span> <span class="s">'eq'</span><span class="p">,</span> <span class="s">'fun'</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">},</span>
+        <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">6</span>
+    <span class="p">)</span>
+    
+    <span class="n">optimal_weights</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">x</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Optimal Portfolio Weights:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">optimal_weights</span><span class="p">):</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Asset </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">weight</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="se">\n</span><span class="s">Portfolio Risk: </span><span class="si">{</span><span class="n">cost_function</span><span class="p">(</span><span class="n">optimal_weights</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Portfolio Return: </span><span class="si">{</span><span class="n">calculate_portfolio_return</span><span class="p">(</span><span class="n">optimal_weights</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">optimal_weights</span>
+
+<span class="k">def</span> <span class="nf">calculate_portfolio_risk</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">):</span>
+    <span class="s">"""
+    Calculate portfolio risk
+    """</span>
+    <span class="c1"># Simplified risk calculation
+</span>    <span class="n">individual_risks</span> <span class="o">=</span> <span class="n">portfolio</span><span class="p">[</span><span class="s">'pd'</span><span class="p">]</span> <span class="o">*</span> <span class="n">portfolio</span><span class="p">[</span><span class="s">'lgd'</span><span class="p">]</span> <span class="o">*</span> <span class="n">portfolio</span><span class="p">[</span><span class="s">'exposure'</span><span class="p">]</span>
+    <span class="n">portfolio_risk</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">weights</span> <span class="o">*</span> <span class="n">individual_risks</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">portfolio_risk</span>
+
+<span class="k">def</span> <span class="nf">calculate_portfolio_return</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">):</span>
+    <span class="s">"""
+    Calculate portfolio return
+    """</span>
+    <span class="c1"># Simplified return calculation
+</span>    <span class="c1"># Assume return is inversely related to risk
+</span>    <span class="n">individual_returns</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">portfolio</span><span class="p">[</span><span class="s">'pd'</span><span class="p">]</span> <span class="o">*</span> <span class="n">portfolio</span><span class="p">[</span><span class="s">'lgd'</span><span class="p">])</span>
+    <span class="n">portfolio_return</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">sum</span><span class="p">(</span><span class="n">weights</span> <span class="o">*</span> <span class="n">individual_returns</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">portfolio_return</span>
+
+<span class="c1"># Exercise: Quantum Risk Decomposition
+</span><span class="k">def</span> <span class="nf">quantum_risk_decomposition_exercise</span><span class="p">():</span>
+    <span class="s">"""
+    Exercise: Implement quantum risk decomposition
+    """</span>
+    <span class="c1"># Create portfolio
+</span>    <span class="n">classical_model</span> <span class="o">=</span> <span class="n">ClassicalPortfolioCreditRisk</span><span class="p">()</span>
+    <span class="n">portfolio</span> <span class="o">=</span> <span class="n">classical_model</span><span class="p">.</span><span class="n">create_portfolio</span><span class="p">(</span><span class="n">n_assets</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"=== Quantum Risk Decomposition ==="</span><span class="p">)</span>
+    
+    <span class="c1"># Quantum circuit for risk decomposition
+</span>    <span class="n">num_qubits</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">QuantumCircuit</span><span class="p">(</span><span class="n">num_qubits</span><span class="p">,</span> <span class="n">num_qubits</span><span class="p">)</span>
+    
+    <span class="c1"># Encode risk factors
+</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">_</span><span class="p">,</span> <span class="n">asset</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">portfolio</span><span class="p">.</span><span class="n">iterrows</span><span class="p">()):</span>
+        <span class="c1"># Encode default risk
+</span>        <span class="n">default_risk</span> <span class="o">=</span> <span class="n">asset</span><span class="p">[</span><span class="s">'pd'</span><span class="p">]</span>
+        <span class="n">circuit</span><span class="p">.</span><span class="n">rx</span><span class="p">(</span><span class="n">default_risk</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Encode loss severity
+</span>        <span class="n">loss_severity</span> <span class="o">=</span> <span class="n">asset</span><span class="p">[</span><span class="s">'lgd'</span><span class="p">]</span>
+        <span class="n">circuit</span><span class="p">.</span><span class="n">ry</span><span class="p">(</span><span class="n">loss_severity</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="c1"># Encode exposure
+</span>        <span class="n">exposure_risk</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">asset</span><span class="p">[</span><span class="s">'exposure'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000000</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">circuit</span><span class="p">.</span><span class="n">rz</span><span class="p">(</span><span class="n">exposure_risk</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+    
+    <span class="c1"># Add risk factor interactions
+</span>    <span class="n">circuit</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Default risk correlation
+</span>    <span class="n">circuit</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># Loss severity correlation
+</span>    <span class="n">circuit</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># Exposure correlation
+</span>    <span class="n">circuit</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>  <span class="c1"># Cross-factor correlation
+</span>    <span class="n">circuit</span><span class="p">.</span><span class="n">cx</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>  <span class="c1"># Systemic correlation
+</span>    
+    <span class="c1"># Measure risk components
+</span>    <span class="n">circuit</span><span class="p">.</span><span class="n">measure_all</span><span class="p">()</span>
+    
+    <span class="c1"># Execute circuit
+</span>    <span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+    <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+    
+    <span class="c1"># Analyze risk decomposition
+</span>    <span class="n">risk_components</span> <span class="o">=</span> <span class="n">analyze_risk_components</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">)</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"Risk Decomposition Results:"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">component</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">risk_components</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">component</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">risk_components</span>
+
+<span class="k">def</span> <span class="nf">analyze_risk_components</span><span class="p">(</span><span class="n">counts</span><span class="p">,</span> <span class="n">portfolio</span><span class="p">):</span>
+    <span class="s">"""
+    Analyze risk components from quantum measurements
+    """</span>
+    <span class="n">risk_components</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'default_risk'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s">'loss_severity_risk'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s">'exposure_risk'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s">'correlation_risk'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s">'systemic_risk'</span><span class="p">:</span> <span class="mi">0</span>
+    <span class="p">}</span>
+    
+    <span class="n">total_shots</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">counts</span><span class="p">.</span><span class="n">values</span><span class="p">())</span>
+    
+    <span class="k">for</span> <span class="n">state</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="c1"># Analyze each qubit for different risk types
+</span>        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">bit</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">state</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">portfolio</span><span class="p">):</span>
+                <span class="n">asset</span> <span class="o">=</span> <span class="n">portfolio</span><span class="p">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                
+                <span class="k">if</span> <span class="n">bit</span> <span class="o">==</span> <span class="s">'1'</span><span class="p">:</span>
+                    <span class="c1"># Default risk contribution
+</span>                    <span class="n">risk_components</span><span class="p">[</span><span class="s">'default_risk'</span><span class="p">]</span> <span class="o">+=</span> <span class="n">asset</span><span class="p">[</span><span class="s">'pd'</span><span class="p">]</span> <span class="o">*</span> <span class="n">count</span> <span class="o">/</span> <span class="n">total_shots</span>
+                    
+                    <span class="c1"># Loss severity contribution
+</span>                    <span class="n">risk_components</span><span class="p">[</span><span class="s">'loss_severity_risk'</span><span class="p">]</span> <span class="o">+=</span> <span class="n">asset</span><span class="p">[</span><span class="s">'lgd'</span><span class="p">]</span> <span class="o">*</span> <span class="n">count</span> <span class="o">/</span> <span class="n">total_shots</span>
+                    
+                    <span class="c1"># Exposure contribution
+</span>                    <span class="n">exposure_norm</span> <span class="o">=</span> <span class="n">asset</span><span class="p">[</span><span class="s">'exposure'</span><span class="p">]</span> <span class="o">/</span> <span class="mi">1000000</span>
+                    <span class="n">risk_components</span><span class="p">[</span><span class="s">'exposure_risk'</span><span class="p">]</span> <span class="o">+=</span> <span class="n">exposure_norm</span> <span class="o">*</span> <span class="n">count</span> <span class="o">/</span> <span class="n">total_shots</span>
+    
+    <span class="c1"># Calculate correlation and systemic risk
+</span>    <span class="n">risk_components</span><span class="p">[</span><span class="s">'correlation_risk'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">risk_components</span><span class="p">.</span><span class="n">values</span><span class="p">())[:</span><span class="mi">3</span><span class="p">])</span> <span class="o">*</span> <span class="mf">0.3</span>
+    <span class="n">risk_components</span><span class="p">[</span><span class="s">'systemic_risk'</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">risk_components</span><span class="p">.</span><span class="n">values</span><span class="p">())[:</span><span class="mi">3</span><span class="p">])</span> <span class="o">*</span> <span class="mf">0.2</span>
+    
+    <span class="k">return</span> <span class="n">risk_components</span>
+
+<span class="c1"># Run the main comparison
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Comparing Classical vs Quantum Portfolio Credit Risk Models..."</span><span class="p">)</span>
+    <span class="n">classical_measures</span><span class="p">,</span> <span class="n">quantum_measures</span><span class="p">,</span> <span class="n">quantum_correlations</span> <span class="o">=</span> <span class="n">compare_portfolio_models</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Quantum Portfolio Optimization Exercise:"</span><span class="p">)</span>
+    <span class="n">optimal_weights</span> <span class="o">=</span> <span class="n">quantum_portfolio_optimization_exercise</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Quantum Risk Decomposition Exercise:"</span><span class="p">)</span>
+    <span class="n">risk_components</span> <span class="o">=</span> <span class="n">quantum_risk_decomposition_exercise</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-kết-quả-và-phân-tích">📊 Kết quả và Phân tích</h2>
+
+<h3 id="performance-comparison"><strong>Performance Comparison:</strong></h3>
+
+<h4 id="classical-portfolio-models"><strong>Classical Portfolio Models:</strong></h4>
+<ul>
+  <li><strong>CreditMetrics</strong>: Industry standard, well-understood</li>
+  <li><strong>Credit Risk+</strong>: Analytical solution, fast computation</li>
+  <li><strong>Monte Carlo</strong>: Flexible, computationally intensive</li>
+  <li><strong>Correlation Matrix</strong>: N² parameters, static assumptions</li>
+</ul>
+
+<h4 id="quantum-portfolio-models"><strong>Quantum Portfolio Models:</strong></h4>
+<ul>
+  <li><strong>Quantum Monte Carlo</strong>: Potential speedup, true randomness</li>
+  <li><strong>Quantum Optimization</strong>: Better solutions cho complex problems</li>
+  <li><strong>Quantum Correlation</strong>: Natural modeling of dependencies</li>
+  <li><strong>Quantum Risk Decomposition</strong>: Granular risk analysis</li>
+</ul>
+
+<h3 id="key-insights"><strong>Key Insights:</strong></h3>
+
+<h4 id="1-quantum-advantages"><strong>1. Quantum Advantages:</strong></h4>
+<ul>
+  <li><strong>Correlation Modeling</strong>: Entanglement naturally captures dependencies</li>
+  <li><strong>Optimization</strong>: Quantum algorithms find better solutions</li>
+  <li><strong>Risk Decomposition</strong>: Quantum measurements provide detailed risk breakdown</li>
+  <li><strong>Uncertainty</strong>: Quantum measurements provide uncertainty estimates</li>
+</ul>
+
+<h4 id="2-classical-advantages"><strong>2. Classical Advantages:</strong></h4>
+<ul>
+  <li><strong>Maturity</strong>: Well-established methods và tools</li>
+  <li><strong>Interpretability</strong>: Clear risk decomposition</li>
+  <li><strong>Speed</strong>: Fast computation cho simple models</li>
+  <li><strong>Regulatory Acceptance</strong>: Accepted by regulators</li>
+</ul>
+
+<h4 id="3-hybrid-approach"><strong>3. Hybrid Approach:</strong></h4>
+<ul>
+  <li>Use quantum cho complex correlations</li>
+  <li>Use classical cho simple calculations</li>
+  <li>Combine both approaches cho optimal results</li>
+</ul>
+
+<h2 id="-bài-tập-về-nhà">🎯 Bài tập về nhà</h2>
+
+<h3 id="exercise-1-quantum-capital-allocation"><strong>Exercise 1: Quantum Capital Allocation</strong></h3>
+<p>Implement quantum capital allocation system cho portfolio management.</p>
+
+<h3 id="exercise-2-quantum-portfolio-rebalancing"><strong>Exercise 2: Quantum Portfolio Rebalancing</strong></h3>
+<p>Build quantum portfolio rebalancing algorithm.</p>
+
+<h3 id="exercise-3-quantum-regulatory-compliance"><strong>Exercise 3: Quantum Regulatory Compliance</strong></h3>
+<p>Implement quantum models cho regulatory requirements.</p>
+
+<h3 id="exercise-4-quantum-portfolio-stress-testing"><strong>Exercise 4: Quantum Portfolio Stress Testing</strong></h3>
+<p>Create quantum stress testing framework cho portfolios.</p>
+
+<hr />
+
+<blockquote>
+  <p><em>“Quantum computing enables more sophisticated portfolio risk modeling by naturally capturing complex correlations and dependencies.”</em> - Quantum Finance Research</p>
+</blockquote>
+
+<blockquote>
+  <p>Ngày tiếp theo: <a href="/quantum-mathematics/credit-risk/Day5.html">Stress Testing và Scenario Analysis</a></p>
+</blockquote>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>📧 Email: nguyenngocbinhneu@gmail.com | 🌟 65 ngày từ Toán học đến Quantum Finance</p>
+            <p>🎯 <strong>Tiến độ học tập:</strong> Fundamental (1-15) → Advanced (16-35) → Credit Risk (1-30)</p>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            dropdowns.forEach(dropdown => {
+                const toggle = dropdown.querySelector('.dropdown-toggle');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Close other dropdowns
+                    dropdowns.forEach(other => {
+                        if (other !== dropdown) {
+                            other.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current dropdown
+                    dropdown.classList.toggle('active');
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    dropdowns.forEach(dropdown => {
+                        dropdown.classList.remove('active');
+                    });
+                }
+            });
+        });
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Enhanced reading progress bar
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 4px;
+                    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+
+        // Add learning progress tracker
+        function updateLearningProgress() {
+            const currentPage = window.location.pathname;
+            let currentDay = 0;
+            let totalDays = 65;
+            let curriculum = '';
+            
+            // Check which curriculum we're in
+            if (currentPage.includes('/fundamental/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]);
+                    curriculum = 'Fundamental';
+                }
+            } else if (currentPage.includes('/advanced/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]) + 15; // Add fundamental days
+                    curriculum = 'Advanced';
+                }
+            } else if (currentPage.includes('/credit-risk/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]) + 35; // Add fundamental + advanced days
+                    curriculum = 'Credit Risk';
+                }
+            }
+            
+            if (currentDay > 0) {
+                const progressPercent = (currentDay / totalDays) * 100;
+                
+                // Create or update progress indicator
+                let progressIndicator = document.querySelector('.learning-progress');
+                if (!progressIndicator) {
+                    progressIndicator = document.createElement('div');
+                    progressIndicator.className = 'learning-progress';
+                    progressIndicator.style.cssText = `
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        background: rgba(102, 126, 234, 0.9);
+                        color: white;
+                        padding: 10px 15px;
+                        border-radius: 25px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                        z-index: 999;
+                    `;
+                    document.body.appendChild(progressIndicator);
+                }
+                
+                progressIndicator.textContent = `📚 ${curriculum} - Ngày ${currentDay}/65 (${progressPercent.toFixed(0)}%)`;
+            }
+        }
+        
+        // Initialize learning progress tracker
+        updateLearningProgress();
+    </script>
+
+    <style>
+        /* Enhanced dropdown styles */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 300px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 8px 0;
+            z-index: 1000;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-menu li {
+            list-style: none;
+            margin: 0;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: #f5f5f5;
+            color: #667eea;
+        }
+        
+        .submenu-header {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 8px 16px 4px 16px;
+            margin: 4px 0;
+        }
+        
+        .divider {
+            border-top: 1px solid #e0e0e0;
+            margin: 4px 0;
+        }
+        
+        .dropdown-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .dropdown-toggle:after {
+            content: ' ▼';
+            font-size: 10px;
+            margin-left: 5px;
+        }
+        
+        .dropdown.active .dropdown-toggle:after {
+            content: ' ▲';
+        }
+        
+        /* Responsive navigation */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                border: none;
+                background: #f8f9fa;
+                margin-top: 8px;
+            }
+            
+            .nav-links > li {
+                margin: 4px 0;
+            }
+        }
+        
+        /* Enhanced site subtitle */
+        .site-subtitle {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+    </style>
+</body>
+</html>

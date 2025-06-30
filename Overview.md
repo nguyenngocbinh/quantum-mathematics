@@ -1,3 +1,4 @@
+# Quantum Mathematics - Tổng quan
 
 ## **Quantum Mathematics là gì?**
 
@@ -52,9 +53,33 @@ Toán học bình thường (số học, hình học, giải tích) áp dụng t
 
 ## **Ứng dụng thực tế:**
 
-* Máy tính lượng tử (Quantum Computer)
-* Mô hình hóa vật liệu siêu dẫn, hạt cơ bản
-* Mã hóa lượng tử, truyền tin bảo mật tuyệt đối
+* **Máy tính lượng tử (Quantum Computer)**
+* **Mô hình hóa vật liệu siêu dẫn, hạt cơ bản**
+* **Mã hóa lượng tử, truyền tin bảo mật tuyệt đối**
+* **Quantum Finance và Credit Risk Management**
+* **Quantum Machine Learning và AI**
+
+---
+
+## **Lộ trình học 65 ngày toàn diện:**
+
+### **🎯 Giai đoạn 1: Nền tảng Toán học (Ngày 1-15)**
+- Vector và đại số tuyến tính
+- Xác suất và không gian Hilbert
+- Trạng thái lượng tử và phép đo
+- Toán tử và nguyên lý lượng tử
+
+### **🚀 Giai đoạn 2: Lập trình Quantum (Ngày 16-35)**
+- Python và Qiskit framework
+- Quantum circuits và gates
+- Thuật toán lượng tử cơ bản và nâng cao
+- Ứng dụng thực tế và dự án
+
+### **💼 Giai đoạn 3: Quantum Credit Risk (Ngày 1-30)**
+- Nền tảng Credit Risk Management
+- Quantum algorithms cho finance
+- Ứng dụng thực tế trong ngành tài chính
+- End-to-end quantum credit risk platform
 
 ---
 
@@ -65,7 +90,20 @@ Toán học bình thường (số học, hình học, giải tích) áp dụng t
 | Cơ bản     | Toán tuyến tính (vector, ma trận), Xác suất cơ bản      | Học lại toán lớp 12 + tài liệu nhập môn               |
 | Trung bình | Không gian Hilbert, Hàm sóng, Siêu vị                   | Đọc sách đơn giản như "Quantum Physics for Beginners" |
 | Nâng cao   | Phép toán trên không gian trừu tượng, Toán tử Hermitian | Theo tài liệu chuyên sâu hoặc khóa học lượng tử       |
+| Chuyên sâu | Quantum Finance, Credit Risk, Machine Learning          | Ứng dụng thực tế trong ngành tài chính                |
 
 ---
+
+## **Kết quả sau 65 ngày:**
+
+✅ **Nền tảng toán học vững chắc** - Hiểu sâu về vector, ma trận, không gian Hilbert
+✅ **Kỹ năng lập trình lượng tử chuyên nghiệp** - Thành thạo Qiskit và quantum algorithms
+✅ **Chuyên môn Quantum Finance** - Ứng dụng quantum computing trong credit risk management
+✅ **Portfolio projects hoàn chỉnh** - Có thể xây dựng quantum applications thực tế
+✅ **Sẵn sàng cho sự nghiệp** - Quantum computing professional với chuyên môn tài chính
+
+---
+
+> *"Quantum computing will revolutionize finance by solving complex risk management problems that are currently intractable."* - Quantum Finance Research
 
 

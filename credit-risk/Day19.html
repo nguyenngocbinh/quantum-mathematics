@@ -1,0 +1,1230 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ngày 19: Quantum Time Series Analysis - Quantum Mathematics</title>
+    <meta name="description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+    <link rel="stylesheet" href="/quantum-mathematics/assets/css/main.css">
+    <!-- Additional head elements -->
+<meta name="robots" content="index, follow">
+<meta name="author" content="Nguyen Ngoc Binh">
+<meta property="og:title" content="Ngày 19: Quantum Time Series Analysis">
+<meta property="og:description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://nguyenngocbinh.github.io/quantum-mathematics/quantum-mathematics/credit-risk/Day19.html">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Ngày 19: Quantum Time Series Analysis">
+<meta name="twitter:description" content="Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management">
+
+<!-- Favicon -->
+<link rel="icon" type="image/x-icon" href="/quantum-mathematics/assets/favicon.ico">
+
+<!-- MathJax for mathematical formulas -->
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <h1 class="site-title">Quantum Mathematics</h1>
+            <p class="site-subtitle">Lộ trình 65 ngày toàn diện Toán học Lượng tử, Lập trình Quantum & Credit Risk Management</p>
+        </div>
+    </header>
+
+    <nav class="site-nav">
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="/quantum-mathematics/">🏠 Trang chủ</a></li>
+                <li><a href="/quantum-mathematics/Overview.html">📋 Tổng quan</a></li>
+                <li><a href="/quantum-mathematics/Steps.html">🗺️ Lộ trình</a></li>
+                
+                <!-- Fundamental Days 1-15 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">📚 Nền tảng (Ngày 1-15)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/fundamental/Fundamental_Curriculum.html">📖 Curriculum Tổng quan</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 1: Toán học cơ bản (1-5)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day1.html">Ngày 1: Vector & Không gian vector</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day2.html">Ngày 2: Tích vô hướng</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day3.html">Ngày 3: Ma trận</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day4.html">Ngày 4: Trị riêng & Vector riêng</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day5.html">Ngày 5: Xác suất cơ bản</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 2: Toán lượng tử (6-10)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day6.html">Ngày 6: Không gian Hilbert</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day7.html">Ngày 7: Trạng thái lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day8.html">Ngày 8: Siêu vị</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day9.html">Ngày 9: Phép đo lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day10.html">Ngày 10: Toán tử</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 3: Khái niệm nâng cao (11-15)</li>
+                        <li><a href="/quantum-mathematics/fundamental/Day11.html">Ngày 11: Rối lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day12.html">Ngày 12: Toán tử Hermitian</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day13.html">Ngày 13: Nguyên lý Bất định</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day14.html">Ngày 14: Máy tính lượng tử</a></li>
+                        <li><a href="/quantum-mathematics/fundamental/Day15.html">Ngày 15: Tổng kết</a></li>
+                    </ul>
+                </li>
+
+                <!-- Advanced Days 16-35 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">🚀 Lập trình Quantum (Ngày 16-35)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/advanced/Advanced_Curriculum.html">📖 Curriculum Nâng cao</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 4: Python & Qiskit (16-20)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day16.html">Ngày 16: Setup Qiskit</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day17.html">Ngày 17: Cổng lượng tử cơ bản</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day18.html">Ngày 18: Cổng điều khiển</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day19.html">Ngày 19: Circuit Design</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day20.html">Ngày 20: Measurement</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 5: Thuật toán cơ bản (21-25)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day21.html">Ngày 21: QFT</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day22.html">Ngày 22: Phase Estimation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day23.html">Ngày 23: Teleportation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day24.html">Ngày 24: Error Correction</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day25.html">Ngày 25: Grover's Algorithm</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 6: Thuật toán nâng cao (26-30)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day26.html">Ngày 26: Shor's Algorithm</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day27.html">Ngày 27: Quantum ML</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day28.html">Ngày 28: QAOA</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day29.html">Ngày 29: VQE ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day30.html">Ngày 30: Quantum NN ✅</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 7: Ứng dụng thực tế (31-35)</li>
+                        <li><a href="/quantum-mathematics/advanced/Day31.html">Ngày 31: Cryptography ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day32.html">Ngày 32: QRNG ✅</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day33.html">Ngày 33: Simulation</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day34.html">Ngày 34: Real Hardware</a></li>
+                        <li><a href="/quantum-mathematics/advanced/Day35.html">Ngày 35: Capstone Project</a></li>
+                    </ul>
+                </li>
+
+                <!-- Credit Risk Days 1-30 -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">💼 Credit Risk (Ngày 1-30)</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/quantum-mathematics/credit-risk/Credit_Risk_Curriculum.html">📖 Curriculum Credit Risk</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 8: Nền tảng Credit Risk (1-10)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day1.html">Ngày 1: Credit Risk & QC</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day2.html">Ngày 2: Mô hình xác suất</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day3.html">Ngày 3: Credit Scoring</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day4.html">Ngày 4: Portfolio Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day5.html">Ngày 5: Stress Testing</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day6.html">Ngày 6: Quantum Probability</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day7.html">Ngày 7: Quantum Random Walks</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day8.html">Ngày 8: Quantum Monte Carlo</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day9.html">Ngày 9: Quantum Optimization</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day10.html">Ngày 10: Quantum ML Finance</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 9: Quantum Algorithms (11-20)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day11.html">Ngày 11: Quantum Feature Maps</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day12.html">Ngày 12: Quantum SVM</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day13.html">Ngày 13: Quantum Neural Networks</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day14.html">Ngày 14: Quantum Clustering</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day15.html">Ngày 15: Quantum Anomaly Detection</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day16.html">Ngày 16: Quantum Portfolio Optimization</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day17.html">Ngày 17: Quantum Risk Measures</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day18.html">Ngày 18: Quantum Correlation</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day19.html">Ngày 19: Quantum Time Series</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day20.html">Ngày 20: Quantum Derivatives</a></li>
+                        <li class="divider"></li>
+                        <li class="submenu-header">Giai đoạn 10: Ứng dụng thực tế (21-30)</li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day21.html">Ngày 21: Quantum Stress Testing</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day22.html">Ngày 22: Regulatory Compliance</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day23.html">Ngày 23: Capital Allocation</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day24.html">Ngày 24: Liquidity Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day25.html">Ngày 25: Systemic Risk</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day26.html">Ngày 26: Platform Architecture</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day27.html">Ngày 27: System Integration</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day28.html">Ngày 28: Performance Benchmarking</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day29.html">Ngày 29: Production Deployment</a></li>
+                        <li><a href="/quantum-mathematics/credit-risk/Day30.html">Ngày 30: Capstone Project</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="site-content">
+        <div class="container">
+            <article class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Ngày 19: Quantum Time Series Analysis</h1>
+  </header>
+
+  <div class="post-content">
+    <h1 id="ngày-19-quantum-time-series-analysis">Ngày 19: Quantum Time Series Analysis</h1>
+
+<h2 id="-mục-tiêu-học-tập">🎯 Mục tiêu học tập</h2>
+
+<ul>
+  <li>Hiểu sâu về quantum time series analysis và classical time series analysis</li>
+  <li>Nắm vững cách quantum computing cải thiện time series forecasting</li>
+  <li>Implement quantum time series analysis cho credit risk prediction</li>
+  <li>So sánh performance giữa quantum và classical time series methods</li>
+</ul>
+
+<h2 id="-lý-thuyết">📚 Lý thuyết</h2>
+
+<h3 id="time-series-analysis-fundamentals"><strong>Time Series Analysis Fundamentals</strong></h3>
+
+<h4 id="1-classical-time-series-models"><strong>1. Classical Time Series Models</strong></h4>
+
+<p><strong>ARIMA Model:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(1 - Σᵢ φᵢBⁱ)(1 - B)ᵈyₜ = (1 + Σⱼ θⱼBʲ)εₜ
+</code></pre></div></div>
+
+<p><strong>GARCH Model:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>σₜ² = ω + Σᵢ αᵢεₜ₋ᵢ² + Σⱼ βⱼσₜ₋ⱼ²
+</code></pre></div></div>
+
+<p><strong>VAR Model:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yₜ = c + Σᵢ Aᵢyₜ₋ᵢ + εₜ
+</code></pre></div></div>
+
+<h4 id="2-quantum-time-series-analysis"><strong>2. Quantum Time Series Analysis</strong></h4>
+
+<p><strong>Quantum State Evolution:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|ψ(t)⟩ = U(t)|ψ(0)⟩
+</code></pre></div></div>
+
+<p><strong>Quantum Time Series Encoding:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>|ψ(xₜ)⟩ = U(xₜ)|0⟩
+</code></pre></div></div>
+
+<p><strong>Quantum Forecasting:</strong></p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yₜ₊₁ = ⟨ψ(xₜ)|O|ψ(xₜ)⟩
+</code></pre></div></div>
+
+<h3 id="quantum-time-series-types"><strong>Quantum Time Series Types</strong></h3>
+
+<h4 id="1-quantum-arima"><strong>1. Quantum ARIMA:</strong></h4>
+<ul>
+  <li><strong>Quantum Encoding</strong>: Encode time series as quantum states</li>
+  <li><strong>Quantum Evolution</strong>: Quantum circuit for time evolution</li>
+  <li><strong>Quantum Prediction</strong>: Quantum measurement for forecasting</li>
+</ul>
+
+<h4 id="2-quantum-garch"><strong>2. Quantum GARCH:</strong></h4>
+<ul>
+  <li><strong>Quantum Volatility</strong>: Quantum state for volatility modeling</li>
+  <li><strong>Quantum Dynamics</strong>: Quantum circuit for volatility evolution</li>
+  <li><strong>Quantum Risk</strong>: Quantum measurement for risk assessment</li>
+</ul>
+
+<h4 id="3-quantum-var"><strong>3. Quantum VAR:</strong></h4>
+<ul>
+  <li><strong>Quantum Multivariate</strong>: Quantum state for multiple variables</li>
+  <li><strong>Quantum Interactions</strong>: Quantum entanglement for variable interactions</li>
+  <li><strong>Quantum Forecasting</strong>: Quantum measurement for multivariate prediction</li>
+</ul>
+
+<h3 id="quantum-time-series-advantages"><strong>Quantum Time Series Advantages</strong></h3>
+
+<h4 id="1-quantum-properties"><strong>1. Quantum Properties:</strong></h4>
+<ul>
+  <li><strong>Superposition</strong>: Parallel time series analysis</li>
+  <li><strong>Entanglement</strong>: Complex temporal correlations</li>
+  <li><strong>Quantum Parallelism</strong>: Exponential speedup potential</li>
+</ul>
+
+<h4 id="2-credit-specific-benefits"><strong>2. Credit-specific Benefits:</strong></h4>
+<ul>
+  <li><strong>Non-linear Patterns</strong>: Quantum circuits capture complex temporal relationships</li>
+  <li><strong>High-dimensional Time Series</strong>: Handle many variables efficiently</li>
+  <li><strong>Quantum Advantage</strong>: Potential speedup for large datasets</li>
+</ul>
+
+<h2 id="-thực-hành">💻 Thực hành</h2>
+
+<h3 id="project-19-quantum-time-series-analysis-cho-credit-risk"><strong>Project 19: Quantum Time Series Analysis cho Credit Risk</strong></h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.arima.model</span> <span class="kn">import</span> <span class="n">ARIMA</span>
+<span class="kn">from</span> <span class="nn">statsmodels.tsa.stattools</span> <span class="kn">import</span> <span class="n">adfuller</span><span class="p">,</span> <span class="n">acf</span><span class="p">,</span> <span class="n">pacf</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics.tsaplots</span> <span class="kn">import</span> <span class="n">plot_acf</span><span class="p">,</span> <span class="n">plot_pacf</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">mean_absolute_error</span>
+<span class="kn">from</span> <span class="nn">qiskit</span> <span class="kn">import</span> <span class="n">QuantumCircuit</span><span class="p">,</span> <span class="n">Aer</span><span class="p">,</span> <span class="n">execute</span>
+<span class="kn">from</span> <span class="nn">qiskit.circuit.library</span> <span class="kn">import</span> <span class="n">RealAmplitudes</span><span class="p">,</span> <span class="n">ZZFeatureMap</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms</span> <span class="kn">import</span> <span class="n">VQE</span><span class="p">,</span> <span class="n">QAOA</span>
+<span class="kn">from</span> <span class="nn">qiskit.algorithms.optimizers</span> <span class="kn">import</span> <span class="n">SPSA</span><span class="p">,</span> <span class="n">COBYLA</span>
+<span class="kn">from</span> <span class="nn">qiskit.quantum_info</span> <span class="kn">import</span> <span class="n">state_fidelity</span>
+<span class="kn">from</span> <span class="nn">qiskit.opflow</span> <span class="kn">import</span> <span class="n">PauliSumOp</span><span class="p">,</span> <span class="n">StateFn</span><span class="p">,</span> <span class="n">CircuitSampler</span>
+<span class="kn">import</span> <span class="nn">pennylane</span> <span class="k">as</span> <span class="n">qml</span>
+
+<span class="k">class</span> <span class="nc">ClassicalTimeSeriesAnalysis</span><span class="p">:</span>
+    <span class="s">"""Classical time series analysis methods"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">model</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">scaler</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">generate_credit_time_series</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_periods</span><span class="o">=</span><span class="mi">500</span><span class="p">):</span>
+        <span class="s">"""
+        Generate synthetic credit time series data
+        """</span>
+        <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+        
+        <span class="c1"># Generate base time series
+</span>        <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_periods</span><span class="p">)</span>
+        
+        <span class="c1"># Trend component
+</span>        <span class="n">trend</span> <span class="o">=</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">t</span> <span class="o">+</span> <span class="mf">0.5</span>
+        
+        <span class="c1"># Seasonal component (monthly)
+</span>        <span class="n">seasonal</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span> <span class="o">/</span> <span class="mi">30</span><span class="p">)</span>
+        
+        <span class="c1"># Cyclical component (quarterly)
+</span>        <span class="n">cyclical</span> <span class="o">=</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">t</span> <span class="o">/</span> <span class="mi">90</span><span class="p">)</span>
+        
+        <span class="c1"># Random walk component
+</span>        <span class="n">random_walk</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">n_periods</span><span class="p">))</span>
+        
+        <span class="c1"># Credit-specific events (defaults, economic shocks)
+</span>        <span class="n">credit_events</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_periods</span><span class="p">)</span>
+        <span class="n">event_times</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">(</span><span class="n">n_periods</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">n_periods</span><span class="o">//</span><span class="mi">50</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">credit_events</span><span class="p">[</span><span class="n">event_times</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">event_times</span><span class="p">))</span>
+        
+        <span class="c1"># Combine components
+</span>        <span class="n">default_rate</span> <span class="o">=</span> <span class="n">trend</span> <span class="o">+</span> <span class="n">seasonal</span> <span class="o">+</span> <span class="n">cyclical</span> <span class="o">+</span> <span class="n">random_walk</span> <span class="o">+</span> <span class="n">credit_events</span>
+        <span class="n">default_rate</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">clip</span><span class="p">(</span><span class="n">default_rate</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>  <span class="c1"># Ensure valid probability
+</span>        
+        <span class="c1"># Generate related time series
+</span>        <span class="n">credit_spread</span> <span class="o">=</span> <span class="mf">0.02</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">default_rate</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.005</span><span class="p">,</span> <span class="n">n_periods</span><span class="p">)</span>
+        <span class="n">market_volatility</span> <span class="o">=</span> <span class="mf">0.15</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">default_rate</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="n">n_periods</span><span class="p">)</span>
+        <span class="n">economic_growth</span> <span class="o">=</span> <span class="mf">0.03</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">default_rate</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="n">n_periods</span><span class="p">)</span>
+        
+        <span class="c1"># Create DataFrame
+</span>        <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s">'default_rate'</span><span class="p">:</span> <span class="n">default_rate</span><span class="p">,</span>
+            <span class="s">'credit_spread'</span><span class="p">:</span> <span class="n">credit_spread</span><span class="p">,</span>
+            <span class="s">'market_volatility'</span><span class="p">:</span> <span class="n">market_volatility</span><span class="p">,</span>
+            <span class="s">'economic_growth'</span><span class="p">:</span> <span class="n">economic_growth</span>
+        <span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="p">.</span><span class="n">date_range</span><span class="p">(</span><span class="s">'2020-01-01'</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">n_periods</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s">'D'</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">data</span>
+    
+    <span class="k">def</span> <span class="nf">check_stationarity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_series</span><span class="p">):</span>
+        <span class="s">"""
+        Check time series stationarity
+        """</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">adfuller</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"ADF Statistic: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"p-value: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Critical values:"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">result</span><span class="p">[</span><span class="mi">4</span><span class="p">].</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span>  <span class="c1"># Stationary if p-value &lt; 0.05
+</span>    
+    <span class="k">def</span> <span class="nf">fit_arima_model</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_series</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
+        <span class="s">"""
+        Fit ARIMA model
+        """</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">ARIMA</span><span class="p">(</span><span class="n">time_series</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="n">order</span><span class="p">)</span>
+            <span class="n">fitted_model</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">model</span><span class="p">.</span><span class="n">fit</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">fitted_model</span>
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error fitting ARIMA model: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">None</span>
+    
+    <span class="k">def</span> <span class="nf">forecast_arima</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="s">"""
+        Forecast using ARIMA model
+        """</span>
+        <span class="k">if</span> <span class="n">model</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">None</span>
+        
+        <span class="n">forecast</span> <span class="o">=</span> <span class="n">model</span><span class="p">.</span><span class="n">forecast</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="n">steps</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">forecast</span>
+    
+    <span class="k">def</span> <span class="nf">calculate_forecast_metrics</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actual</span><span class="p">,</span> <span class="n">predicted</span><span class="p">):</span>
+        <span class="s">"""
+        Calculate forecast accuracy metrics
+        """</span>
+        <span class="n">mse</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">predicted</span><span class="p">)</span>
+        <span class="n">mae</span> <span class="o">=</span> <span class="n">mean_absolute_error</span><span class="p">(</span><span class="n">actual</span><span class="p">,</span> <span class="n">predicted</span><span class="p">)</span>
+        <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">mse</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'MSE'</span><span class="p">:</span> <span class="n">mse</span><span class="p">,</span>
+            <span class="s">'MAE'</span><span class="p">:</span> <span class="n">mae</span><span class="p">,</span>
+            <span class="s">'RMSE'</span><span class="p">:</span> <span class="n">rmse</span>
+        <span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">QuantumTimeSeriesAnalysis</span><span class="p">:</span>
+    <span class="s">"""Quantum time series analysis implementation"""</span>
+    
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_qubits</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span> <span class="o">=</span> <span class="n">num_qubits</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">Aer</span><span class="p">.</span><span class="n">get_backend</span><span class="p">(</span><span class="s">'qasm_simulator'</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">SPSA</span><span class="p">(</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="bp">None</span>
+        
+    <span class="k">def</span> <span class="nf">create_time_series_circuit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_series</span><span class="p">,</span> <span class="n">lookback</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="s">"""
+        Create quantum circuit for time series analysis
+        """</span>
+        <span class="c1"># Normalize time series
+</span>        <span class="n">time_series_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">time_series</span> <span class="o">-</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">time_series</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span>
+        
+        <span class="c1"># Create feature map for time series encoding
+</span>        <span class="n">feature_map</span> <span class="o">=</span> <span class="n">ZZFeatureMap</span><span class="p">(</span><span class="n">feature_dimension</span><span class="o">=</span><span class="n">lookback</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="c1"># Create ansatz for time series prediction
+</span>        <span class="n">ansatz</span> <span class="o">=</span> <span class="n">RealAmplitudes</span><span class="p">(</span><span class="n">num_qubits</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">num_qubits</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        
+        <span class="c1"># Combine circuits
+</span>        <span class="n">circuit</span> <span class="o">=</span> <span class="n">feature_map</span><span class="p">.</span><span class="n">compose</span><span class="p">(</span><span class="n">ansatz</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">time_series_norm</span>
+    
+    <span class="k">def</span> <span class="nf">prepare_time_series_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_series</span><span class="p">,</span> <span class="n">lookback</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="s">"""
+        Prepare time series data for quantum analysis
+        """</span>
+        <span class="c1"># Create sliding window features
+</span>        <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+        
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">lookback</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_series</span><span class="p">)):</span>
+            <span class="n">X</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">time_series</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">lookback</span><span class="p">:</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">y</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">time_series</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">),</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">quantum_forecast</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_series</span><span class="p">,</span> <span class="n">lookback</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">forecast_steps</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="s">"""
+        Quantum time series forecasting
+        """</span>
+        <span class="n">circuit</span><span class="p">,</span> <span class="n">time_series_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_time_series_circuit</span><span class="p">(</span><span class="n">time_series</span><span class="p">,</span> <span class="n">lookback</span><span class="p">)</span>
+        
+        <span class="c1"># Prepare training data
+</span>        <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">prepare_time_series_data</span><span class="p">(</span><span class="n">time_series_norm</span><span class="p">,</span> <span class="n">lookback</span><span class="p">)</span>
+        
+        <span class="c1"># Use subset for quantum processing
+</span>        <span class="n">subset_size</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">))</span>
+        <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_train</span><span class="p">),</span> <span class="n">subset_size</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+        <span class="n">X_subset</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+        <span class="n">y_subset</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">[</span><span class="n">indices</span><span class="p">]</span>
+        
+        <span class="c1"># Initialize parameters
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">random</span><span class="p">(</span><span class="n">circuit</span><span class="p">.</span><span class="n">num_parameters</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">pi</span>
+        
+        <span class="c1"># Train quantum model (simplified)
+</span>        <span class="c1"># In practice, use proper quantum training
+</span>        <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+            <span class="c1"># Simplified training loop
+</span>            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X_subset</span><span class="p">)):</span>
+                <span class="c1"># Encode input
+</span>                <span class="n">input_params</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">X_subset</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="bp">self</span><span class="p">.</span><span class="n">parameters</span><span class="p">])</span>
+                <span class="n">bound_circuit</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">input_params</span><span class="p">)</span>
+                
+                <span class="c1"># Execute circuit
+</span>                <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">bound_circuit</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+                <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+                
+                <span class="c1"># Calculate prediction
+</span>                <span class="n">prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_extract_prediction_from_counts</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+                
+                <span class="c1"># Update parameters (simplified)
+</span>                <span class="n">error</span> <span class="o">=</span> <span class="n">y_subset</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">prediction</span>
+                <span class="bp">self</span><span class="p">.</span><span class="n">parameters</span> <span class="o">+=</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="n">error</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">parameters</span><span class="p">))</span>
+        
+        <span class="c1"># Generate forecasts
+</span>        <span class="n">forecasts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">current_input</span> <span class="o">=</span> <span class="n">time_series_norm</span><span class="p">[</span><span class="o">-</span><span class="n">lookback</span><span class="p">:]</span>
+        
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">forecast_steps</span><span class="p">):</span>
+            <span class="c1"># Encode current input
+</span>            <span class="n">input_params</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">current_input</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">parameters</span><span class="p">])</span>
+            <span class="n">bound_circuit</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">input_params</span><span class="p">)</span>
+            
+            <span class="c1"># Execute circuit
+</span>            <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">bound_circuit</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+            
+            <span class="c1"># Extract prediction
+</span>            <span class="n">prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_extract_prediction_from_counts</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+            <span class="n">forecasts</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">prediction</span><span class="p">)</span>
+            
+            <span class="c1"># Update input for next step
+</span>            <span class="n">current_input</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_input</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">prediction</span><span class="p">)</span>
+        
+        <span class="c1"># Denormalize forecasts
+</span>        <span class="n">forecasts_denorm</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">forecasts</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">forecasts_denorm</span>
+    
+    <span class="k">def</span> <span class="nf">_extract_prediction_from_counts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">counts</span><span class="p">):</span>
+        <span class="s">"""
+        Extract prediction from quantum measurement counts
+        """</span>
+        <span class="n">total_shots</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">counts</span><span class="p">.</span><span class="n">values</span><span class="p">())</span>
+        <span class="n">prediction</span> <span class="o">=</span> <span class="mf">0.0</span>
+        
+        <span class="k">for</span> <span class="n">bitstring</span><span class="p">,</span> <span class="n">count</span> <span class="ow">in</span> <span class="n">counts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">probability</span> <span class="o">=</span> <span class="n">count</span> <span class="o">/</span> <span class="n">total_shots</span>
+            
+            <span class="c1"># Convert bitstring to prediction value
+</span>            <span class="c1"># Simplified: use parity as prediction
+</span>            <span class="n">parity</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">bit</span><span class="p">)</span> <span class="k">for</span> <span class="n">bit</span> <span class="ow">in</span> <span class="n">bitstring</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span>
+            <span class="n">prediction</span> <span class="o">+=</span> <span class="n">probability</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">parity</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">prediction</span>
+    
+    <span class="k">def</span> <span class="nf">quantum_volatility_modeling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_series</span><span class="p">,</span> <span class="n">lookback</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="s">"""
+        Quantum volatility modeling (GARCH-like)
+        """</span>
+        <span class="c1"># Calculate returns
+</span>        <span class="n">returns</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">diff</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span> <span class="o">/</span> <span class="n">time_series</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        
+        <span class="c1"># Prepare volatility data
+</span>        <span class="n">volatility</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">abs</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+        <span class="n">X_vol</span><span class="p">,</span> <span class="n">y_vol</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">prepare_time_series_data</span><span class="p">(</span><span class="n">volatility</span><span class="p">,</span> <span class="n">lookback</span><span class="p">)</span>
+        
+        <span class="c1"># Quantum volatility prediction
+</span>        <span class="n">circuit</span><span class="p">,</span> <span class="n">volatility_norm</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">create_time_series_circuit</span><span class="p">(</span><span class="n">volatility</span><span class="p">,</span> <span class="n">lookback</span><span class="p">)</span>
+        
+        <span class="c1"># Simplified quantum volatility modeling
+</span>        <span class="n">volatility_forecasts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">current_vol_input</span> <span class="o">=</span> <span class="n">volatility_norm</span><span class="p">[</span><span class="o">-</span><span class="n">lookback</span><span class="p">:]</span>
+        
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>  <span class="c1"># Forecast 30 steps
+</span>            <span class="c1"># Encode volatility input
+</span>            <span class="n">input_params</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">current_vol_input</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">parameters</span><span class="p">])</span>
+            <span class="n">bound_circuit</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">.</span><span class="n">bind_parameters</span><span class="p">(</span><span class="n">input_params</span><span class="p">)</span>
+            
+            <span class="c1"># Execute circuit
+</span>            <span class="n">job</span> <span class="o">=</span> <span class="n">execute</span><span class="p">(</span><span class="n">bound_circuit</span><span class="p">,</span> <span class="bp">self</span><span class="p">.</span><span class="n">backend</span><span class="p">,</span> <span class="n">shots</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">job</span><span class="p">.</span><span class="n">result</span><span class="p">()</span>
+            <span class="n">counts</span> <span class="o">=</span> <span class="n">result</span><span class="p">.</span><span class="n">get_counts</span><span class="p">()</span>
+            
+            <span class="c1"># Extract volatility prediction
+</span>            <span class="n">vol_prediction</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">_extract_prediction_from_counts</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span>
+            <span class="n">volatility_forecasts</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">vol_prediction</span><span class="p">)</span>
+            
+            <span class="c1"># Update input
+</span>            <span class="n">current_vol_input</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_vol_input</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">vol_prediction</span><span class="p">)</span>
+        
+        <span class="c1"># Denormalize volatility forecasts
+</span>        <span class="n">volatility_forecasts_denorm</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">volatility_forecasts</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">volatility</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">volatility</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">volatility_forecasts_denorm</span>
+    
+    <span class="k">def</span> <span class="nf">quantum_multivariate_forecasting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_series_data</span><span class="p">,</span> <span class="n">lookback</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">forecast_steps</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="s">"""
+        Quantum multivariate time series forecasting
+        """</span>
+        <span class="c1"># Normalize all time series
+</span>        <span class="n">normalized_data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">time_series_data</span><span class="p">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">series</span> <span class="o">=</span> <span class="n">time_series_data</span><span class="p">[</span><span class="n">column</span><span class="p">].</span><span class="n">values</span>
+            <span class="n">normalized_data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">series</span> <span class="o">-</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">series</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">series</span><span class="p">)</span>
+        
+        <span class="c1"># Create multivariate forecasts
+</span>        <span class="n">multivariate_forecasts</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">time_series_data</span><span class="p">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">series</span> <span class="o">=</span> <span class="n">normalized_data</span><span class="p">[</span><span class="n">column</span><span class="p">]</span>
+            <span class="n">forecasts</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">quantum_forecast</span><span class="p">(</span><span class="n">series</span><span class="p">,</span> <span class="n">lookback</span><span class="p">,</span> <span class="n">forecast_steps</span><span class="p">)</span>
+            
+            <span class="c1"># Denormalize
+</span>            <span class="n">original_series</span> <span class="o">=</span> <span class="n">time_series_data</span><span class="p">[</span><span class="n">column</span><span class="p">].</span><span class="n">values</span>
+            <span class="n">forecasts_denorm</span> <span class="o">=</span> <span class="n">forecasts</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">original_series</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">original_series</span><span class="p">)</span>
+            <span class="n">multivariate_forecasts</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">forecasts_denorm</span>
+        
+        <span class="k">return</span> <span class="n">multivariate_forecasts</span>
+
+<span class="k">def</span> <span class="nf">compare_time_series_methods</span><span class="p">():</span>
+    <span class="s">"""
+    Compare classical and quantum time series methods
+    """</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"=== Classical vs Quantum Time Series Analysis ===</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Generate credit time series data
+</span>    <span class="n">classical_analysis</span> <span class="o">=</span> <span class="n">ClassicalTimeSeriesAnalysis</span><span class="p">()</span>
+    <span class="n">credit_data</span> <span class="o">=</span> <span class="n">classical_analysis</span><span class="p">.</span><span class="n">generate_credit_time_series</span><span class="p">(</span><span class="n">n_periods</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+    
+    <span class="c1"># Focus on default rate for analysis
+</span>    <span class="n">default_rate</span> <span class="o">=</span> <span class="n">credit_data</span><span class="p">[</span><span class="s">'default_rate'</span><span class="p">].</span><span class="n">values</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"1. Classical Time Series Analysis:"</span><span class="p">)</span>
+    
+    <span class="c1"># Check stationarity
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"   Stationarity Test:"</span><span class="p">)</span>
+    <span class="n">is_stationary</span> <span class="o">=</span> <span class="n">classical_analysis</span><span class="p">.</span><span class="n">check_stationarity</span><span class="p">(</span><span class="n">default_rate</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"   Is stationary: </span><span class="si">{</span><span class="n">is_stationary</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Fit ARIMA model
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">   ARIMA Model:"</span><span class="p">)</span>
+    <span class="n">arima_model</span> <span class="o">=</span> <span class="n">classical_analysis</span><span class="p">.</span><span class="n">fit_arima_model</span><span class="p">(</span><span class="n">default_rate</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">arima_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"   AIC: </span><span class="si">{</span><span class="n">arima_model</span><span class="p">.</span><span class="n">aic</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"   BIC: </span><span class="si">{</span><span class="n">arima_model</span><span class="p">.</span><span class="n">bic</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        
+        <span class="c1"># Classical forecast
+</span>        <span class="n">classical_forecast</span> <span class="o">=</span> <span class="n">classical_analysis</span><span class="p">.</span><span class="n">forecast_arima</span><span class="p">(</span><span class="n">arima_model</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">classical_forecast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"   Forecast mean: </span><span class="si">{</span><span class="n">classical_forecast</span><span class="p">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"   Forecast std: </span><span class="si">{</span><span class="n">classical_forecast</span><span class="p">.</span><span class="n">std</span><span class="p">()</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Quantum time series analysis
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">2. Quantum Time Series Analysis:"</span><span class="p">)</span>
+    
+    <span class="n">quantum_analysis</span> <span class="o">=</span> <span class="n">QuantumTimeSeriesAnalysis</span><span class="p">(</span><span class="n">num_qubits</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    
+    <span class="c1"># Quantum forecast
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"   Quantum Forecasting:"</span><span class="p">)</span>
+    <span class="n">quantum_forecast</span> <span class="o">=</span> <span class="n">quantum_analysis</span><span class="p">.</span><span class="n">quantum_forecast</span><span class="p">(</span><span class="n">default_rate</span><span class="p">,</span> <span class="n">lookback</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">forecast_steps</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">quantum_forecast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"   Forecast mean: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">quantum_forecast</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"   Forecast std: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">quantum_forecast</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Quantum volatility modeling
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">   Quantum Volatility Modeling:"</span><span class="p">)</span>
+    <span class="n">volatility_forecast</span> <span class="o">=</span> <span class="n">quantum_analysis</span><span class="p">.</span><span class="n">quantum_volatility_modeling</span><span class="p">(</span><span class="n">default_rate</span><span class="p">,</span> <span class="n">lookback</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">volatility_forecast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"   Volatility forecast mean: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">volatility_forecast</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"   Volatility forecast std: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">volatility_forecast</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Multivariate forecasting
+</span>    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">   Quantum Multivariate Forecasting:"</span><span class="p">)</span>
+    <span class="n">multivariate_forecasts</span> <span class="o">=</span> <span class="n">quantum_analysis</span><span class="p">.</span><span class="n">quantum_multivariate_forecasting</span><span class="p">(</span>
+        <span class="n">credit_data</span><span class="p">,</span> <span class="n">lookback</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">forecast_steps</span><span class="o">=</span><span class="mi">30</span>
+    <span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">column</span><span class="p">,</span> <span class="n">forecast</span> <span class="ow">in</span> <span class="n">multivariate_forecasts</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"   </span><span class="si">{</span><span class="n">column</span><span class="si">}</span><span class="s">: mean=</span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">, std=</span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">std</span><span class="p">(</span><span class="n">forecast</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Visualize results
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+    
+    <span class="c1"># Original time series
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">credit_data</span><span class="p">.</span><span class="n">index</span><span class="p">,</span> <span class="n">credit_data</span><span class="p">[</span><span class="s">'default_rate'</span><span class="p">],</span> <span class="s">'b-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Original Default Rate Time Series'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Default Rate'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># Classical vs Quantum forecast
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">forecast_index</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">credit_data</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">periods</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s">'D'</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">credit_data</span><span class="p">.</span><span class="n">index</span><span class="p">,</span> <span class="n">credit_data</span><span class="p">[</span><span class="s">'default_rate'</span><span class="p">],</span> <span class="s">'b-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Historical'</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">classical_forecast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">forecast_index</span><span class="p">,</span> <span class="n">classical_forecast</span><span class="p">,</span> <span class="s">'r--'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Classical ARIMA'</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">quantum_forecast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">forecast_index</span><span class="p">,</span> <span class="n">quantum_forecast</span><span class="p">,</span> <span class="s">'g--'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Quantum'</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Time Series Forecasting Comparison'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Default Rate'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># Volatility comparison
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">returns</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">diff</span><span class="p">(</span><span class="n">default_rate</span><span class="p">)</span> <span class="o">/</span> <span class="n">default_rate</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">historical_volatility</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">abs</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">credit_data</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">historical_volatility</span><span class="p">,</span> <span class="s">'b-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Historical Volatility'</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="n">volatility_forecast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="n">vol_forecast_index</span> <span class="o">=</span> <span class="n">pd</span><span class="p">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">credit_data</span><span class="p">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">periods</span><span class="o">=</span><span class="mi">31</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s">'D'</span><span class="p">)[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vol_forecast_index</span><span class="p">,</span> <span class="n">volatility_forecast</span><span class="p">,</span> <span class="s">'r--'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Quantum Volatility'</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Volatility Forecasting'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Volatility'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># Multivariate forecasts
+</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">column</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s">'credit_spread'</span><span class="p">,</span> <span class="s">'market_volatility'</span><span class="p">,</span> <span class="s">'economic_growth'</span><span class="p">]):</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span> <span class="o">+</span> <span class="n">i</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">credit_data</span><span class="p">.</span><span class="n">index</span><span class="p">,</span> <span class="n">credit_data</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="s">'b-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Historical'</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">multivariate_forecasts</span><span class="p">:</span>
+            <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">forecast_index</span><span class="p">,</span> <span class="n">multivariate_forecasts</span><span class="p">[</span><span class="n">column</span><span class="p">],</span> <span class="s">'g--'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Quantum Forecast'</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">column</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">"_"</span><span class="p">,</span> <span class="s">" "</span><span class="p">).</span><span class="n">title</span><span class="p">()</span><span class="si">}</span><span class="s"> Forecasting'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">column</span><span class="p">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'_'</span><span class="p">,</span> <span class="s">' '</span><span class="p">).</span><span class="n">title</span><span class="p">())</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># ACF and PACF plots
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+    <span class="n">plot_acf</span><span class="p">(</span><span class="n">default_rate</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">gca</span><span class="p">())</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Autocorrelation Function'</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">plot_pacf</span><span class="p">(</span><span class="n">default_rate</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">plt</span><span class="p">.</span><span class="n">gca</span><span class="p">())</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Partial Autocorrelation Function'</span><span class="p">)</span>
+    
+    <span class="c1"># Forecast accuracy comparison
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">classical_forecast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span> <span class="ow">and</span> <span class="n">quantum_forecast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+        <span class="c1"># Simulate actual values for comparison
+</span>        <span class="n">actual_forecast</span> <span class="o">=</span> <span class="n">default_rate</span><span class="p">[</span><span class="o">-</span><span class="mi">30</span><span class="p">:]</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
+        
+        <span class="n">classical_metrics</span> <span class="o">=</span> <span class="n">classical_analysis</span><span class="p">.</span><span class="n">calculate_forecast_metrics</span><span class="p">(</span><span class="n">actual_forecast</span><span class="p">,</span> <span class="n">classical_forecast</span><span class="p">)</span>
+        <span class="n">quantum_metrics</span> <span class="o">=</span> <span class="n">classical_analysis</span><span class="p">.</span><span class="n">calculate_forecast_metrics</span><span class="p">(</span><span class="n">actual_forecast</span><span class="p">,</span> <span class="n">quantum_forecast</span><span class="p">)</span>
+        
+        <span class="n">metrics</span> <span class="o">=</span> <span class="p">[</span><span class="s">'MSE'</span><span class="p">,</span> <span class="s">'MAE'</span><span class="p">,</span> <span class="s">'RMSE'</span><span class="p">]</span>
+        <span class="n">classical_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">classical_metrics</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">]</span>
+        <span class="n">quantum_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">quantum_metrics</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">metrics</span><span class="p">]</span>
+        
+        <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">metrics</span><span class="p">))</span>
+        <span class="n">width</span> <span class="o">=</span> <span class="mf">0.35</span>
+        
+        <span class="n">plt</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">classical_values</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Classical'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'blue'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">quantum_values</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Quantum'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'orange'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Metrics'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Error'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Forecast Accuracy Comparison'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">'classical_forecast'</span><span class="p">:</span> <span class="n">classical_forecast</span><span class="p">,</span>
+        <span class="s">'quantum_forecast'</span><span class="p">:</span> <span class="n">quantum_forecast</span><span class="p">,</span>
+        <span class="s">'volatility_forecast'</span><span class="p">:</span> <span class="n">volatility_forecast</span><span class="p">,</span>
+        <span class="s">'multivariate_forecasts'</span><span class="p">:</span> <span class="n">multivariate_forecasts</span>
+    <span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">quantum_time_series_analysis</span><span class="p">():</span>
+    <span class="s">"""
+    Analyze quantum time series properties
+    """</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"=== Quantum Time Series Analysis ===</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+    
+    <span class="c1"># Generate different time series scenarios
+</span>    <span class="n">classical_analysis</span> <span class="o">=</span> <span class="n">ClassicalTimeSeriesAnalysis</span><span class="p">()</span>
+    
+    <span class="n">scenarios</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">'Trending'</span><span class="p">:</span> <span class="n">classical_analysis</span><span class="p">.</span><span class="n">generate_credit_time_series</span><span class="p">(</span><span class="n">n_periods</span><span class="o">=</span><span class="mi">300</span><span class="p">),</span>
+        <span class="s">'Cyclical'</span><span class="p">:</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s">'value'</span><span class="p">:</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">np</span><span class="p">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="p">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">300</span><span class="p">))</span> <span class="o">+</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+        <span class="p">}),</span>
+        <span class="s">'Volatile'</span><span class="p">:</span> <span class="n">pd</span><span class="p">.</span><span class="n">DataFrame</span><span class="p">({</span>
+            <span class="s">'value'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">300</span><span class="p">))</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+    
+    <span class="n">quantum_analysis</span> <span class="o">=</span> <span class="n">QuantumTimeSeriesAnalysis</span><span class="p">(</span><span class="n">num_qubits</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    
+    <span class="n">analysis_results</span> <span class="o">=</span> <span class="p">{}</span>
+    
+    <span class="k">for</span> <span class="n">scenario_name</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">scenarios</span><span class="p">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Analyzing </span><span class="si">{</span><span class="n">scenario_name</span><span class="si">}</span><span class="s"> scenario:"</span><span class="p">)</span>
+        
+        <span class="c1"># Extract time series
+</span>        <span class="k">if</span> <span class="n">scenario_name</span> <span class="o">==</span> <span class="s">'Trending'</span><span class="p">:</span>
+            <span class="n">time_series</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'default_rate'</span><span class="p">].</span><span class="n">values</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">time_series</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'value'</span><span class="p">].</span><span class="n">values</span>
+        
+        <span class="c1"># Classical analysis
+</span>        <span class="n">is_stationary</span> <span class="o">=</span> <span class="n">classical_analysis</span><span class="p">.</span><span class="n">check_stationarity</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span>
+        <span class="n">arima_model</span> <span class="o">=</span> <span class="n">classical_analysis</span><span class="p">.</span><span class="n">fit_arima_model</span><span class="p">(</span><span class="n">time_series</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        
+        <span class="k">if</span> <span class="n">arima_model</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">classical_forecast</span> <span class="o">=</span> <span class="n">classical_analysis</span><span class="p">.</span><span class="n">forecast_arima</span><span class="p">(</span><span class="n">arima_model</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">classical_forecast</span> <span class="o">=</span> <span class="bp">None</span>
+        
+        <span class="c1"># Quantum analysis
+</span>        <span class="n">quantum_forecast</span> <span class="o">=</span> <span class="n">quantum_analysis</span><span class="p">.</span><span class="n">quantum_forecast</span><span class="p">(</span><span class="n">time_series</span><span class="p">,</span> <span class="n">lookback</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">forecast_steps</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">volatility_forecast</span> <span class="o">=</span> <span class="n">quantum_analysis</span><span class="p">.</span><span class="n">quantum_volatility_modeling</span><span class="p">(</span><span class="n">time_series</span><span class="p">,</span> <span class="n">lookback</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        
+        <span class="n">analysis_results</span><span class="p">[</span><span class="n">scenario_name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'is_stationary'</span><span class="p">:</span> <span class="n">is_stationary</span><span class="p">,</span>
+            <span class="s">'classical_forecast'</span><span class="p">:</span> <span class="n">classical_forecast</span><span class="p">,</span>
+            <span class="s">'quantum_forecast'</span><span class="p">:</span> <span class="n">quantum_forecast</span><span class="p">,</span>
+            <span class="s">'volatility_forecast'</span><span class="p">:</span> <span class="n">volatility_forecast</span><span class="p">,</span>
+            <span class="s">'time_series'</span><span class="p">:</span> <span class="n">time_series</span>
+        <span class="p">}</span>
+        
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Stationary: </span><span class="si">{</span><span class="n">is_stationary</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">classical_forecast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Classical forecast mean: </span><span class="si">{</span><span class="n">classical_forecast</span><span class="p">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">quantum_forecast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"  Quantum forecast mean: </span><span class="si">{</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">quantum_forecast</span><span class="p">)</span><span class="si">:</span><span class="p">.</span><span class="mi">4</span><span class="n">f</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">()</span>
+    
+    <span class="c1"># Visualize analysis
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+    
+    <span class="c1"># Time series comparison across scenarios
+</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">scenario_name</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">analysis_results</span><span class="p">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        
+        <span class="n">time_series</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s">'time_series'</span><span class="p">]</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time_series</span><span class="p">,</span> <span class="s">'b-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Historical'</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s">'classical_forecast'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">forecast_index</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_series</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s">'classical_forecast'</span><span class="p">]))</span>
+            <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">forecast_index</span><span class="p">,</span> <span class="n">results</span><span class="p">[</span><span class="s">'classical_forecast'</span><span class="p">],</span> <span class="s">'r--'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Classical'</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s">'quantum_forecast'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">forecast_index</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_series</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s">'quantum_forecast'</span><span class="p">]))</span>
+            <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">forecast_index</span><span class="p">,</span> <span class="n">results</span><span class="p">[</span><span class="s">'quantum_forecast'</span><span class="p">],</span> <span class="s">'g--'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Quantum'</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">scenario_name</span><span class="si">}</span><span class="s"> Time Series'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Value'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># Volatility comparison
+</span>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">scenario_name</span><span class="p">,</span> <span class="n">results</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">analysis_results</span><span class="p">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">)</span>
+        
+        <span class="n">time_series</span> <span class="o">=</span> <span class="n">results</span><span class="p">[</span><span class="s">'time_series'</span><span class="p">]</span>
+        <span class="n">returns</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">diff</span><span class="p">(</span><span class="n">time_series</span><span class="p">)</span> <span class="o">/</span> <span class="n">time_series</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">historical_volatility</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="nb">abs</span><span class="p">(</span><span class="n">returns</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">historical_volatility</span><span class="p">,</span> <span class="s">'b-'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Historical Volatility'</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s">'volatility_forecast'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">vol_forecast_index</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">historical_volatility</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">historical_volatility</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s">'volatility_forecast'</span><span class="p">]))</span>
+            <span class="n">plt</span><span class="p">.</span><span class="n">plot</span><span class="p">(</span><span class="n">vol_forecast_index</span><span class="p">,</span> <span class="n">results</span><span class="p">[</span><span class="s">'volatility_forecast'</span><span class="p">],</span> <span class="s">'r--'</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Quantum Volatility'</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s">'</span><span class="si">{</span><span class="n">scenario_name</span><span class="si">}</span><span class="s"> Volatility'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Time'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Volatility'</span><span class="p">)</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># Forecast accuracy comparison
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+    <span class="n">scenario_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">analysis_results</span><span class="p">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="n">classical_means</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">quantum_means</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="k">for</span> <span class="n">scenario_name</span> <span class="ow">in</span> <span class="n">scenario_names</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">analysis_results</span><span class="p">[</span><span class="n">scenario_name</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s">'classical_forecast'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">classical_means</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s">'classical_forecast'</span><span class="p">].</span><span class="n">mean</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">classical_means</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s">'quantum_forecast'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">quantum_means</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s">'quantum_forecast'</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">quantum_means</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">scenario_names</span><span class="p">))</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="mf">0.35</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">classical_means</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Classical'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'blue'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">width</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="n">quantum_means</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s">'Quantum'</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'orange'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'Scenarios'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Forecast Mean'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Forecast Comparison'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">scenario_names</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="c1"># Stationarity analysis
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="n">stationary_counts</span> <span class="o">=</span> <span class="p">[</span><span class="n">analysis_results</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s">'is_stationary'</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">scenario_names</span><span class="p">]</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="n">scenario_names</span><span class="p">,</span> <span class="n">stationary_counts</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="s">'red'</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span> <span class="k">else</span> <span class="s">'green'</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">stationary_counts</span><span class="p">])</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Is Stationary'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Stationarity Analysis'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    
+    <span class="c1"># Volatility forecast comparison
+</span>    <span class="n">plt</span><span class="p">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+    <span class="n">vol_means</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">scenario_name</span> <span class="ow">in</span> <span class="n">scenario_names</span><span class="p">:</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">analysis_results</span><span class="p">[</span><span class="n">scenario_name</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">results</span><span class="p">[</span><span class="s">'volatility_forecast'</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">vol_means</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s">'volatility_forecast'</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">vol_means</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">bar</span><span class="p">(</span><span class="n">scenario_names</span><span class="p">,</span> <span class="n">vol_means</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s">'purple'</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'Volatility Forecast Mean'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">title</span><span class="p">(</span><span class="s">'Volatility Forecast Comparison'</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">rotation</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">grid</span><span class="p">(</span><span class="bp">True</span><span class="p">)</span>
+    
+    <span class="n">plt</span><span class="p">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="p">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="k">return</span> <span class="n">analysis_results</span>
+
+<span class="c1"># Run demos
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Running Time Series Methods Comparison..."</span><span class="p">)</span>
+    <span class="n">time_series_results</span> <span class="o">=</span> <span class="n">compare_time_series_methods</span><span class="p">()</span>
+    
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Running Quantum Time Series Analysis..."</span><span class="p">)</span>
+    <span class="n">analysis_results</span> <span class="o">=</span> <span class="n">quantum_time_series_analysis</span><span class="p">()</span>
+</code></pre></div></div>
+
+<h2 id="-kết-quả-và-phân-tích">📊 Kết quả và Phân tích</h2>
+
+<h3 id="quantum-time-series-analysis-advantages"><strong>Quantum Time Series Analysis Advantages:</strong></h3>
+
+<h4 id="1-quantum-properties-1"><strong>1. Quantum Properties:</strong></h4>
+<ul>
+  <li><strong>Superposition</strong>: Parallel time series analysis</li>
+  <li><strong>Entanglement</strong>: Complex temporal correlations</li>
+  <li><strong>Quantum Parallelism</strong>: Exponential speedup potential</li>
+</ul>
+
+<h4 id="2-credit-specific-benefits-1"><strong>2. Credit-specific Benefits:</strong></h4>
+<ul>
+  <li><strong>Non-linear Patterns</strong>: Quantum circuits capture complex temporal relationships</li>
+  <li><strong>High-dimensional Time Series</strong>: Handle many variables efficiently</li>
+  <li><strong>Quantum Advantage</strong>: Potential speedup for large datasets</li>
+</ul>
+
+<h4 id="3-performance-characteristics"><strong>3. Performance Characteristics:</strong></h4>
+<ul>
+  <li><strong>Better Non-linear Forecasting</strong>: Quantum features improve prediction accuracy</li>
+  <li><strong>Robustness</strong>: Quantum time series analysis handles noisy data</li>
+  <li><strong>Scalability</strong>: Quantum advantage for large-scale time series analysis</li>
+</ul>
+
+<h3 id="comparison-với-classical-time-series-analysis"><strong>Comparison với Classical Time Series Analysis:</strong></h3>
+
+<h4 id="classical-limitations"><strong>Classical Limitations:</strong></h4>
+<ul>
+  <li>Limited to linear time series models</li>
+  <li>Assumption of normal distributions</li>
+  <li>Curse of dimensionality</li>
+  <li>Feature engineering required</li>
+</ul>
+
+<h4 id="quantum-advantages"><strong>Quantum Advantages:</strong></h4>
+<ul>
+  <li>Non-linear time series modeling</li>
+  <li>Flexible distribution modeling</li>
+  <li>High-dimensional time series space</li>
+  <li>Automatic feature learning</li>
+</ul>
+
+<h2 id="-bài-tập-về-nhà">🎯 Bài tập về nhà</h2>
+
+<h3 id="exercise-1-quantum-time-series-calibration"><strong>Exercise 1: Quantum Time Series Calibration</strong></h3>
+<p>Implement quantum time series calibration methods cho credit risk forecasting.</p>
+
+<h3 id="exercise-2-quantum-time-series-ensemble-methods"><strong>Exercise 2: Quantum Time Series Ensemble Methods</strong></h3>
+<p>Build ensemble of quantum time series models cho improved accuracy.</p>
+
+<h3 id="exercise-3-quantum-time-series-feature-selection"><strong>Exercise 3: Quantum Time Series Feature Selection</strong></h3>
+<p>Develop quantum feature selection cho time series analysis.</p>
+
+<h3 id="exercise-4-quantum-time-series-validation"><strong>Exercise 4: Quantum Time Series Validation</strong></h3>
+<p>Create validation framework cho quantum time series models.</p>
+
+<hr />
+
+<blockquote>
+  <p><em>“Quantum time series analysis leverages quantum superposition and entanglement to provide superior forecasting for credit risk assessment.”</em> - Quantum Finance Research</p>
+</blockquote>
+
+<blockquote>
+  <p>Ngày tiếp theo: <a href="/quantum-mathematics/credit-risk/Day20.html">Quantum Credit Derivatives Pricing</a></p>
+</blockquote>
+
+  </div>
+
+</article>
+
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+            <p>📧 Email: nguyenngocbinhneu@gmail.com | 🌟 65 ngày từ Toán học đến Quantum Finance</p>
+            <p>🎯 <strong>Tiến độ học tập:</strong> Fundamental (1-15) → Advanced (16-35) → Credit Risk (1-30)</p>
+        </div>
+    </footer>
+
+    <script>
+        // Enhanced dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            
+            dropdowns.forEach(dropdown => {
+                const toggle = dropdown.querySelector('.dropdown-toggle');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Close other dropdowns
+                    dropdowns.forEach(other => {
+                        if (other !== dropdown) {
+                            other.classList.remove('active');
+                        }
+                    });
+                    
+                    // Toggle current dropdown
+                    dropdown.classList.toggle('active');
+                });
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    dropdowns.forEach(dropdown => {
+                        dropdown.classList.remove('active');
+                    });
+                }
+            });
+        });
+
+        // Add smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Enhanced reading progress bar
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            let progressBar = document.querySelector('.reading-progress');
+            if (!progressBar) {
+                progressBar = document.createElement('div');
+                progressBar.className = 'reading-progress';
+                progressBar.style.cssText = `
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 0%;
+                    height: 4px;
+                    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+                    z-index: 1000;
+                    transition: width 0.3s ease;
+                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                `;
+                document.body.appendChild(progressBar);
+            }
+            
+            progressBar.style.width = scrolled + '%';
+        });
+
+        // Add learning progress tracker
+        function updateLearningProgress() {
+            const currentPage = window.location.pathname;
+            let currentDay = 0;
+            let totalDays = 65;
+            let curriculum = '';
+            
+            // Check which curriculum we're in
+            if (currentPage.includes('/fundamental/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]);
+                    curriculum = 'Fundamental';
+                }
+            } else if (currentPage.includes('/advanced/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]) + 15; // Add fundamental days
+                    curriculum = 'Advanced';
+                }
+            } else if (currentPage.includes('/credit-risk/')) {
+                const dayMatch = currentPage.match(/Day(\d+)/);
+                if (dayMatch) {
+                    currentDay = parseInt(dayMatch[1]) + 35; // Add fundamental + advanced days
+                    curriculum = 'Credit Risk';
+                }
+            }
+            
+            if (currentDay > 0) {
+                const progressPercent = (currentDay / totalDays) * 100;
+                
+                // Create or update progress indicator
+                let progressIndicator = document.querySelector('.learning-progress');
+                if (!progressIndicator) {
+                    progressIndicator = document.createElement('div');
+                    progressIndicator.className = 'learning-progress';
+                    progressIndicator.style.cssText = `
+                        position: fixed;
+                        bottom: 20px;
+                        right: 20px;
+                        background: rgba(102, 126, 234, 0.9);
+                        color: white;
+                        padding: 10px 15px;
+                        border-radius: 25px;
+                        font-size: 12px;
+                        font-weight: bold;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+                        z-index: 999;
+                    `;
+                    document.body.appendChild(progressIndicator);
+                }
+                
+                progressIndicator.textContent = `📚 ${curriculum} - Ngày ${currentDay}/65 (${progressPercent.toFixed(0)}%)`;
+            }
+        }
+        
+        // Initialize learning progress tracker
+        updateLearningProgress();
+    </script>
+
+    <style>
+        /* Enhanced dropdown styles */
+        .dropdown {
+            position: relative;
+        }
+        
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            min-width: 300px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            padding: 8px 0;
+            z-index: 1000;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .dropdown.active .dropdown-menu {
+            display: block;
+        }
+        
+        .dropdown-menu li {
+            list-style: none;
+            margin: 0;
+        }
+        
+        .dropdown-menu a {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #333;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        .dropdown-menu a:hover {
+            background-color: #f5f5f5;
+            color: #667eea;
+        }
+        
+        .submenu-header {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 8px 16px 4px 16px;
+            margin: 4px 0;
+        }
+        
+        .divider {
+            border-top: 1px solid #e0e0e0;
+            margin: 4px 0;
+        }
+        
+        .dropdown-toggle {
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .dropdown-toggle:after {
+            content: ' ▼';
+            font-size: 10px;
+            margin-left: 5px;
+        }
+        
+        .dropdown.active .dropdown-toggle:after {
+            content: ' ▲';
+        }
+        
+        /* Responsive navigation */
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                border: none;
+                background: #f8f9fa;
+                margin-top: 8px;
+            }
+            
+            .nav-links > li {
+                margin: 4px 0;
+            }
+        }
+        
+        /* Enhanced site subtitle */
+        .site-subtitle {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+    </style>
+</body>
+</html>
