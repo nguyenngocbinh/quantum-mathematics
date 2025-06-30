@@ -1,6 +1,6 @@
 # Quantum Mathematics
 
-Chào mừng bạn đến với lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum!
+Chào mừng bạn đến với lộ trình 65 ngày toàn diện về Toán học Lượng tử, Lập trình Quantum và Ứng dụng trong Credit Risk Management!
 
 ## Tổng quan
 - [Giới thiệu & Mục tiêu](Overview.md)
@@ -57,6 +57,46 @@ Chào mừng bạn đến với lộ trình 35 ngày toàn diện về Toán h�
 - [Ngày 34: Quantum Computing on Real Hardware](advanced/Day34.md)
 - [Ngày 35: Capstone Project và Portfolio Building](advanced/Day35.md)
 
+## 💼 Giai đoạn 3: Ứng dụng Quantum trong Credit Risk (Ngày 1-30)
+
+📚 **[Lộ trình Credit Risk đầy đủ](credit-risk/Credit_Risk_Curriculum.md)**
+
+### Giai đoạn 3a: Nền tảng Credit Risk (Ngày 1-10)
+- [Ngày 1: Giới thiệu Credit Risk và Quantum Computing](credit-risk/Day1.md)
+- [Ngày 2: Mô hình xác suất vỡ nợ truyền thống](credit-risk/Day2.md)
+- [Ngày 3: Credit Scoring và Machine Learning](credit-risk/Day3.md)
+- [Ngày 4: Portfolio Credit Risk](credit-risk/Day4.md)
+- [Ngày 5: Stress Testing và Scenario Analysis](credit-risk/Day5.md)
+- [Ngày 6: Quantum Probability và Finance](credit-risk/Day6.md)
+- [Ngày 7: Quantum Random Walks cho Market Modeling](credit-risk/Day7.md)
+- [Ngày 8: Quantum Monte Carlo Methods](credit-risk/Day8.md)
+- [Ngày 9: Quantum Optimization cho Portfolio](credit-risk/Day9.md)
+- [Ngày 10: Quantum Machine Learning Basics cho Finance](credit-risk/Day10.md)
+
+### Giai đoạn 3b: Quantum Algorithms cho Credit Risk (Ngày 11-20)
+- [Ngày 11: Quantum Feature Maps cho Credit Data](credit-risk/Day11.md)
+- [Ngày 12: Quantum Support Vector Machines](credit-risk/Day12.md)
+- [Ngày 13: Quantum Neural Networks cho Credit Scoring](credit-risk/Day13.md)
+- [Ngày 14: Quantum Clustering cho Customer Segmentation](credit-risk/Day14.md)
+- [Ngày 15: Quantum Anomaly Detection cho Fraud](credit-risk/Day15.md)
+- [Ngày 16: Quantum Portfolio Optimization](credit-risk/Day16.md)
+- [Ngày 17: Quantum Risk Measures (VaR, CVaR)](credit-risk/Day17.md)
+- [Ngày 18: Quantum Correlation Analysis](credit-risk/Day18.md)
+- [Ngày 19: Quantum Time Series Analysis](credit-risk/Day19.md)
+- [Ngày 20: Quantum Credit Derivatives Pricing](credit-risk/Day20.md)
+
+### Giai đoạn 3c: Ứng dụng thực tế (Ngày 21-30)
+- [Ngày 21: Quantum Stress Testing Framework](credit-risk/Day21.md)
+- [Ngày 22: Quantum Regulatory Compliance](credit-risk/Day22.md)
+- [Ngày 23: Quantum Capital Allocation](credit-risk/Day23.md)
+- [Ngày 24: Quantum Liquidity Risk Modeling](credit-risk/Day24.md)
+- [Ngày 25: Quantum Systemic Risk Analysis](credit-risk/Day25.md)
+- [Ngày 26: Quantum Credit Risk Platform Architecture](credit-risk/Day26.md)
+- [Ngày 27: Integration với Classical Systems](credit-risk/Day27.md)
+- [Ngày 28: Performance Benchmarking](credit-risk/Day28.md)
+- [Ngày 29: Production Deployment Strategies](credit-risk/Day29.md)
+- [Ngày 30: Capstone Project: End-to-End Quantum Credit Risk System](credit-risk/Day30.md)
+
 ---
 
 ## 📚 Tài nguyên học tập
@@ -74,12 +114,21 @@ Chào mừng bạn đến với lộ trình 35 ngày toàn diện về Toán h�
 - **"Programming Quantum Computers"** - Johnston, Harrigan, Gimeno-Segovia
 - **"Quantum Computing: An Applied Approach"** - Hidary
 
+### Quantum Finance (Credit Risk):
+- **[Qiskit Finance](https://qiskit.org/ecosystem/finance/)** - IBM's quantum finance library
+- **[PennyLane Finance](https://pennylane.ai/qml/demos/)** - Quantum machine learning cho finance
+- **"Quantum Computing for Finance"** - Orús, Mugel, Lizaso
+- **"Credit Risk Modeling"** - Lando
+- **"Quantitative Risk Management"** - McNeil, Frey, Embrechts
+
 ### Tools và Frameworks:
 - **Qiskit**: IBM's quantum computing framework
 - **PennyLane**: Xanadu's quantum machine learning library  
 - **Cirq**: Google's quantum computing framework
 - **Q#**: Microsoft's quantum programming language
 - **PyQuil**: Rigetti's quantum computing library
+- **Qiskit Finance**: Quantum finance applications
+- **QuantLib**: Quantitative finance library
 
 ### Cộng đồng và Support:
 - **[Qiskit Community](https://qiskit.org/community/)** - Slack, events, tutorials
@@ -90,7 +139,7 @@ Chào mừng bạn đến với lộ trình 35 ngày toàn diện về Toán h�
 
 ---
 
-## 🎯 Kết quả sau 35 ngày:
+## 🎯 Kết quả sau 65 ngày (35 + 30 ngày Credit Risk):
 
 ### **Nền tảng toán học vững chắc (Day 1-15):**
 * ✅ **Hiểu rõ các khái niệm**: Vector, ma trận, không gian Hilbert, trạng thái lượng tử
@@ -128,12 +177,33 @@ Chào mừng bạn đến với lộ trình 35 ngày toàn diện về Toán h�
 * ✅ **Real hardware**: NISQ devices, noise mitigation, error handling
 * ✅ **Portfolio project**: End-to-end quantum application
 
+### **Kỹ năng Quantum Finance chuyên nghiệp (Credit Risk Day 1-30):**
+
+#### **Credit Risk Fundamentals (Day 1-10):**
+* ✅ **Credit risk modeling**: Traditional models và quantum alternatives
+* ✅ **Quantum probability**: Financial applications và quantum randomness
+* ✅ **Quantum optimization**: Portfolio optimization algorithms
+* ✅ **Quantum ML basics**: Feature maps và kernels cho finance
+
+#### **Quantum Credit Risk Algorithms (Day 11-20):**
+* ✅ **Quantum credit scoring**: Feature maps và neural networks
+* ✅ **Quantum portfolio optimization**: Risk-return optimization
+* ✅ **Quantum risk measures**: VaR, CVaR calculation
+* ✅ **Quantum derivatives**: Pricing và risk assessment
+
+#### **Real-world Applications (Day 21-30):**
+* ✅ **Quantum stress testing**: Framework development
+* ✅ **Regulatory compliance**: Quantum-enhanced reporting
+* ✅ **System integration**: Classical-quantum hybrid systems
+* ✅ **Production deployment**: End-to-end quantum credit risk platform
+
 ### **Kỹ năng chuyên nghiệp:**
 * ✅ **Problem solving**: Quantum advantage identification
 * ✅ **Code quality**: Clean, documented, và optimized quantum code
 * ✅ **Project management**: From concept to implementation
 * ✅ **Communication**: Technical writing và presentation skills
 * ✅ **Community engagement**: Open source contributions
+* ✅ **Financial expertise**: Credit risk management và quantum finance
 
 ---
 
@@ -161,6 +231,12 @@ Quantum Mathematics/
 │   ├── Day33.md          # Quantum Simulation
 │   ├── Day34.md          # Real Hardware
 │   └── Day35.md          # Capstone Project
+├── credit-risk/          # Day 1-30: Quantum Credit Risk
+│   ├── Credit_Risk_Curriculum.md  # Credit risk curriculum overview
+│   ├── Day1.md           # Credit Risk và Quantum Computing
+│   ├── Day2.md           # Default probability models
+│   ├── ...               # Day 3-29
+│   └── Day30.md          # Capstone Project
 ├── _config.yml           # Jekyll configuration
 ├── _layouts/             # Jekyll layouts
 ├── _includes/            # Jekyll includes
@@ -179,8 +255,10 @@ Quantum Mathematics/
 ### **Setup môi trường:**
 1. **Python 3.8+** và pip
 2. **Qiskit framework**: `pip install qiskit[visualization]`
-3. **Jupyter Notebook** cho interactive learning
-4. **IBM Quantum account** (free) cho real hardware access
+3. **Qiskit Finance**: `pip install qiskit-finance`
+4. **PennyLane**: `pip install pennylane`
+5. **Jupyter Notebook** cho interactive learning
+6. **IBM Quantum account** (free) cho real hardware access
 
 ### **Lộ trình học đề xuất:**
 - **Weekdays**: 2-3 hours per day
@@ -191,5 +269,7 @@ Quantum Mathematics/
 ---
 
 > *"Quantum computing is not just about faster computation, it's about solving problems that are impossible for classical computers."* - IBM Research
+
+> *"The future of finance lies at the intersection of quantum computing and risk management."* - Quantum Finance Research
 
 > Website này được tạo tự động bằng Jekyll và GitHub Pages.
