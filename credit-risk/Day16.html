@@ -36,135 +36,292 @@
 <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> 
 </head>
 <body>
-    <header class="site-header">
-        <div class="container">
-            <h1 class="site-title">Quantum Mathematics</h1>
-            <p class="site-subtitle">Lộ trình 65 ngày toàn diện Toán học Lượng tử, Lập trình Quantum & Credit Risk Management</p>
-        </div>
-    </header>
-
-    <nav class="site-nav">
-        <div class="container">
-            <ul class="nav-links">
-                <li><a href="/quantum-mathematics/">🏠 Trang chủ</a></li>
-                <li><a href="/quantum-mathematics/Overview.html">📋 Tổng quan</a></li>
-                <li><a href="/quantum-mathematics/Steps.html">🗺️ Lộ trình</a></li>
+    <div class="site-container">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="/quantum-mathematics/" class="site-title">Quantum Mathematics</a>
+                <p class="site-subtitle">Lộ trình 65 ngày toàn diện</p>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <!-- Search -->
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Tìm kiếm..." id="search-input">
+                </div>
+                
+                <!-- Main Navigation -->
+                <div class="nav-section">
+                    <div class="nav-section-title">Trang chính</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/" class="nav-link">🏠 Trang chủ</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/Overview.html" class="nav-link">📋 Tổng quan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/Steps.html" class="nav-link">🗺️ Lộ trình</a>
+                        </li>
+                    </ul>
+                </div>
                 
                 <!-- Fundamental Days 1-15 -->
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle">📚 Nền tảng (Ngày 1-15)</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/quantum-mathematics/fundamental/Fundamental_Curriculum.html">📖 Curriculum Tổng quan</a></li>
-                        <li class="divider"></li>
-                        <li class="submenu-header">Giai đoạn 1: Toán học cơ bản (1-5)</li>
-                        <li><a href="/quantum-mathematics/fundamental/Day1.html">Ngày 1: Vector & Không gian vector</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day2.html">Ngày 2: Tích vô hướng</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day3.html">Ngày 3: Ma trận</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day4.html">Ngày 4: Trị riêng & Vector riêng</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day5.html">Ngày 5: Xác suất cơ bản</a></li>
-                        <li class="divider"></li>
-                        <li class="submenu-header">Giai đoạn 2: Toán lượng tử (6-10)</li>
-                        <li><a href="/quantum-mathematics/fundamental/Day6.html">Ngày 6: Không gian Hilbert</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day7.html">Ngày 7: Trạng thái lượng tử</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day8.html">Ngày 8: Siêu vị</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day9.html">Ngày 9: Phép đo lượng tử</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day10.html">Ngày 10: Toán tử</a></li>
-                        <li class="divider"></li>
-                        <li class="submenu-header">Giai đoạn 3: Khái niệm nâng cao (11-15)</li>
-                        <li><a href="/quantum-mathematics/fundamental/Day11.html">Ngày 11: Rối lượng tử</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day12.html">Ngày 12: Toán tử Hermitian</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day13.html">Ngày 13: Nguyên lý Bất định</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day14.html">Ngày 14: Máy tính lượng tử</a></li>
-                        <li><a href="/quantum-mathematics/fundamental/Day15.html">Ngày 15: Tổng kết</a></li>
+                <div class="nav-section">
+                    <div class="nav-section-title">📚 Nền tảng (Ngày 1-15)</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Fundamental_Curriculum.html" class="nav-link">📖 Curriculum Tổng quan</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day1.html" class="nav-link">Ngày 1: Vector & Không gian vector</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day2.html" class="nav-link">Ngày 2: Tích vô hướng</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day3.html" class="nav-link">Ngày 3: Ma trận</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day4.html" class="nav-link">Ngày 4: Trị riêng & Vector riêng</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day5.html" class="nav-link">Ngày 5: Xác suất cơ bản</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day6.html" class="nav-link">Ngày 6: Không gian Hilbert</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day7.html" class="nav-link">Ngày 7: Trạng thái lượng tử</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day8.html" class="nav-link">Ngày 8: Siêu vị</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day9.html" class="nav-link">Ngày 9: Phép đo lượng tử</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day10.html" class="nav-link">Ngày 10: Toán tử</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day11.html" class="nav-link">Ngày 11: Rối lượng tử</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day12.html" class="nav-link">Ngày 12: Toán tử Hermitian</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day13.html" class="nav-link">Ngày 13: Nguyên lý Bất định</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day14.html" class="nav-link">Ngày 14: Máy tính lượng tử</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/fundamental/Day15.html" class="nav-link">Ngày 15: Tổng kết</a>
+                        </li>
                     </ul>
-                </li>
-
+                </div>
+                
                 <!-- Advanced Days 16-35 -->
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle">🚀 Lập trình Quantum (Ngày 16-35)</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/quantum-mathematics/advanced/Advanced_Curriculum.html">📖 Curriculum Nâng cao</a></li>
-                        <li class="divider"></li>
-                        <li class="submenu-header">Giai đoạn 4: Python & Qiskit (16-20)</li>
-                        <li><a href="/quantum-mathematics/advanced/Day16.html">Ngày 16: Setup Qiskit</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day17.html">Ngày 17: Cổng lượng tử cơ bản</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day18.html">Ngày 18: Cổng điều khiển</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day19.html">Ngày 19: Circuit Design</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day20.html">Ngày 20: Measurement</a></li>
-                        <li class="divider"></li>
-                        <li class="submenu-header">Giai đoạn 5: Thuật toán cơ bản (21-25)</li>
-                        <li><a href="/quantum-mathematics/advanced/Day21.html">Ngày 21: QFT</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day22.html">Ngày 22: Phase Estimation</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day23.html">Ngày 23: Teleportation</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day24.html">Ngày 24: Error Correction</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day25.html">Ngày 25: Grover's Algorithm</a></li>
-                        <li class="divider"></li>
-                        <li class="submenu-header">Giai đoạn 6: Thuật toán nâng cao (26-30)</li>
-                        <li><a href="/quantum-mathematics/advanced/Day26.html">Ngày 26: Shor's Algorithm</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day27.html">Ngày 27: Quantum ML</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day28.html">Ngày 28: QAOA</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day29.html">Ngày 29: VQE ✅</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day30.html">Ngày 30: Quantum NN ✅</a></li>
-                        <li class="divider"></li>
-                        <li class="submenu-header">Giai đoạn 7: Ứng dụng thực tế (31-35)</li>
-                        <li><a href="/quantum-mathematics/advanced/Day31.html">Ngày 31: Cryptography ✅</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day32.html">Ngày 32: QRNG ✅</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day33.html">Ngày 33: Simulation</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day34.html">Ngày 34: Real Hardware</a></li>
-                        <li><a href="/quantum-mathematics/advanced/Day35.html">Ngày 35: Capstone Project</a></li>
+                <div class="nav-section">
+                    <div class="nav-section-title">🚀 Lập trình Quantum (Ngày 16-35)</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Advanced_Curriculum.html" class="nav-link">📖 Curriculum Nâng cao</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day16.html" class="nav-link">Ngày 16: Setup Qiskit</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day17.html" class="nav-link">Ngày 17: Cổng lượng tử cơ bản</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day18.html" class="nav-link">Ngày 18: Cổng điều khiển</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day19.html" class="nav-link">Ngày 19: Circuit Design</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day20.html" class="nav-link">Ngày 20: Measurement</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day21.html" class="nav-link">Ngày 21: QFT</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day22.html" class="nav-link">Ngày 22: Phase Estimation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day23.html" class="nav-link">Ngày 23: Teleportation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day24.html" class="nav-link">Ngày 24: Error Correction</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day25.html" class="nav-link">Ngày 25: Grover's Algorithm</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day26.html" class="nav-link">Ngày 26: Shor's Algorithm</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day27.html" class="nav-link">Ngày 27: Quantum ML</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day28.html" class="nav-link">Ngày 28: QAOA</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day29.html" class="nav-link">Ngày 29: VQE ✅</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day30.html" class="nav-link">Ngày 30: Quantum NN ✅</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day31.html" class="nav-link">Ngày 31: Cryptography ✅</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day32.html" class="nav-link">Ngày 32: QRNG ✅</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day33.html" class="nav-link">Ngày 33: Simulation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day34.html" class="nav-link">Ngày 34: Real Hardware</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/advanced/Day35.html" class="nav-link">Ngày 35: Capstone Project</a>
+                        </li>
                     </ul>
-                </li>
-
+                </div>
+                
                 <!-- Credit Risk Days 1-30 -->
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle">💼 Credit Risk (Ngày 1-30)</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/quantum-mathematics/credit-risk/Credit_Risk_Curriculum.html">📖 Curriculum Credit Risk</a></li>
-                        <li class="divider"></li>
-                        <li class="submenu-header">Giai đoạn 8: Nền tảng Credit Risk (1-10)</li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day1.html">Ngày 1: Credit Risk & QC</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day2.html">Ngày 2: Mô hình xác suất</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day3.html">Ngày 3: Credit Scoring</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day4.html">Ngày 4: Portfolio Risk</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day5.html">Ngày 5: Stress Testing</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day6.html">Ngày 6: Quantum Probability</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day7.html">Ngày 7: Quantum Random Walks</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day8.html">Ngày 8: Quantum Monte Carlo</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day9.html">Ngày 9: Quantum Optimization</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day10.html">Ngày 10: Quantum ML Finance</a></li>
-                        <li class="divider"></li>
-                        <li class="submenu-header">Giai đoạn 9: Quantum Algorithms (11-20)</li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day11.html">Ngày 11: Quantum Feature Maps</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day12.html">Ngày 12: Quantum SVM</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day13.html">Ngày 13: Quantum Neural Networks</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day14.html">Ngày 14: Quantum Clustering</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day15.html">Ngày 15: Quantum Anomaly Detection</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day16.html">Ngày 16: Quantum Portfolio Optimization</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day17.html">Ngày 17: Quantum Risk Measures</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day18.html">Ngày 18: Quantum Correlation</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day19.html">Ngày 19: Quantum Time Series</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day20.html">Ngày 20: Quantum Derivatives</a></li>
-                        <li class="divider"></li>
-                        <li class="submenu-header">Giai đoạn 10: Ứng dụng thực tế (21-30)</li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day21.html">Ngày 21: Quantum Stress Testing</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day22.html">Ngày 22: Regulatory Compliance</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day23.html">Ngày 23: Capital Allocation</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day24.html">Ngày 24: Liquidity Risk</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day25.html">Ngày 25: Systemic Risk</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day26.html">Ngày 26: Platform Architecture</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day27.html">Ngày 27: System Integration</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day28.html">Ngày 28: Performance Benchmarking</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day29.html">Ngày 29: Production Deployment</a></li>
-                        <li><a href="/quantum-mathematics/credit-risk/Day30.html">Ngày 30: Capstone Project</a></li>
+                <div class="nav-section">
+                    <div class="nav-section-title">💼 Credit Risk (Ngày 1-30)</div>
+                    <ul class="nav-list">
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Credit_Risk_Curriculum.html" class="nav-link">📖 Curriculum Credit Risk</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day1.html" class="nav-link">Ngày 1: Credit Risk & QC</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day2.html" class="nav-link">Ngày 2: Mô hình xác suất</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day3.html" class="nav-link">Ngày 3: Credit Scoring</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day4.html" class="nav-link">Ngày 4: Portfolio Risk</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day5.html" class="nav-link">Ngày 5: Stress Testing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day6.html" class="nav-link">Ngày 6: Quantum Probability</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day7.html" class="nav-link">Ngày 7: Quantum Random Walks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day8.html" class="nav-link">Ngày 8: Quantum Monte Carlo</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day9.html" class="nav-link">Ngày 9: Quantum Optimization</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day10.html" class="nav-link">Ngày 10: Quantum ML Finance</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day11.html" class="nav-link">Ngày 11: Quantum Feature Maps</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day12.html" class="nav-link">Ngày 12: Quantum SVM</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day13.html" class="nav-link">Ngày 13: Quantum Neural Networks</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day14.html" class="nav-link">Ngày 14: Quantum Clustering</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day15.html" class="nav-link">Ngày 15: Quantum Anomaly Detection</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day16.html" class="nav-link">Ngày 16: Quantum Portfolio Optimization</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day17.html" class="nav-link">Ngày 17: Quantum Risk Measures</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day18.html" class="nav-link">Ngày 18: Quantum Correlation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day19.html" class="nav-link">Ngày 19: Quantum Time Series</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day20.html" class="nav-link">Ngày 20: Quantum Derivatives</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day21.html" class="nav-link">Ngày 21: Quantum Stress Testing</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day22.html" class="nav-link">Ngày 22: Regulatory Compliance</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day23.html" class="nav-link">Ngày 23: Capital Allocation</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day24.html" class="nav-link">Ngày 24: Liquidity Risk</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day25.html" class="nav-link">Ngày 25: Systemic Risk</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day26.html" class="nav-link">Ngày 26: Platform Architecture</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day27.html" class="nav-link">Ngày 27: System Integration</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day28.html" class="nav-link">Ngày 28: Performance Benchmarking</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day29.html" class="nav-link">Ngày 29: Production Deployment</a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="/quantum-mathematics/credit-risk/Day30.html" class="nav-link">Ngày 30: Capstone Project</a>
+                        </li>
                     </ul>
-                </li>
-            </ul>
-        </div>
-    </nav>
+                </div>
+            </nav>
+        </aside>
 
-    <main class="site-content">
-        <div class="container">
-            <article class="post">
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Navigation -->
+            <nav class="top-nav">
+                <button class="mobile-menu-toggle" id="mobile-menu-toggle">
+                    ☰
+                </button>
+                <div class="breadcrumb">
+                    <div class="breadcrumb-item">
+                        <a href="/quantum-mathematics/" class="breadcrumb-link">Trang chủ</a>
+                    </div>
+                    
+                    <div class="breadcrumb-item">
+                        <span>Ngày 16: Quantum Portfolio Optimization</span>
+                    </div>
+                    
+                </div>
+            </nav>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                
+                <header class="page-header">
+                    <h1 class="page-title">Ngày 16: Quantum Portfolio Optimization</h1>
+                    
+                </header>
+                
+
+                <article class="post">
 
   <header class="post-header">
     <h1 class="post-title">Ngày 16: Quantum Portfolio Optimization</h1>
@@ -817,47 +974,60 @@ s.t. w^T μ = r_target
 
 </article>
 
-        </div>
-    </main>
+            </div>
 
-    <footer class="site-footer">
-        <div class="container">
-            <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
-            <p>📧 Email: nguyenngocbinhneu@gmail.com | 🌟 65 ngày từ Toán học đến Quantum Finance</p>
-            <p>🎯 <strong>Tiến độ học tập:</strong> Fundamental (1-15) → Advanced (16-35) → Credit Risk (1-30)</p>
-        </div>
-    </footer>
+            <!-- Footer -->
+            <footer class="site-footer">
+                <p>&copy; 2025 Nguyen Ngoc Binh. Được tạo bởi Jekyll và GitHub Pages.</p>
+                <p>📧 Email: nguyenngocbinhneu@gmail.com | 🌟 65 ngày từ Toán học đến Quantum Finance</p>
+                <p>🎯 <strong>Tiến độ học tập:</strong> Fundamental (1-15) → Advanced (16-35) → Credit Risk (1-30)</p>
+            </footer>
+        </main>
+    </div>
 
     <script>
-        // Enhanced dropdown functionality
+        // Mobile menu toggle
         document.addEventListener('DOMContentLoaded', function() {
-            const dropdowns = document.querySelectorAll('.dropdown');
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const sidebar = document.getElementById('sidebar');
             
-            dropdowns.forEach(dropdown => {
-                const toggle = dropdown.querySelector('.dropdown-toggle');
-                const menu = dropdown.querySelector('.dropdown-menu');
+            mobileMenuToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('open');
+            });
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 1024) {
+                    if (!sidebar.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            });
+            
+            // Search functionality
+            const searchInput = document.getElementById('search-input');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
                 
-                toggle.addEventListener('click', function(e) {
-                    e.preventDefault();
+                navLinks.forEach(link => {
+                    const text = link.textContent.toLowerCase();
+                    const navItem = link.closest('.nav-item');
                     
-                    // Close other dropdowns
-                    dropdowns.forEach(other => {
-                        if (other !== dropdown) {
-                            other.classList.remove('active');
-                        }
-                    });
-                    
-                    // Toggle current dropdown
-                    dropdown.classList.toggle('active');
+                    if (text.includes(searchTerm)) {
+                        navItem.style.display = 'block';
+                    } else {
+                        navItem.style.display = 'none';
+                    }
                 });
             });
             
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.dropdown')) {
-                    dropdowns.forEach(dropdown => {
-                        dropdown.classList.remove('active');
-                    });
+            // Set active navigation link
+            const currentPath = window.location.pathname;
+            navLinks.forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
                 }
             });
         });
@@ -875,195 +1045,6 @@ s.t. w^T μ = r_target
                 }
             });
         });
-
-        // Enhanced reading progress bar
-        window.addEventListener('scroll', function() {
-            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            const scrolled = (winScroll / height) * 100;
-            
-            let progressBar = document.querySelector('.reading-progress');
-            if (!progressBar) {
-                progressBar = document.createElement('div');
-                progressBar.className = 'reading-progress';
-                progressBar.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 0%;
-                    height: 4px;
-                    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-                    z-index: 1000;
-                    transition: width 0.3s ease;
-                    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                `;
-                document.body.appendChild(progressBar);
-            }
-            
-            progressBar.style.width = scrolled + '%';
-        });
-
-        // Add learning progress tracker
-        function updateLearningProgress() {
-            const currentPage = window.location.pathname;
-            let currentDay = 0;
-            let totalDays = 65;
-            let curriculum = '';
-            
-            // Check which curriculum we're in
-            if (currentPage.includes('/fundamental/')) {
-                const dayMatch = currentPage.match(/Day(\d+)/);
-                if (dayMatch) {
-                    currentDay = parseInt(dayMatch[1]);
-                    curriculum = 'Fundamental';
-                }
-            } else if (currentPage.includes('/advanced/')) {
-                const dayMatch = currentPage.match(/Day(\d+)/);
-                if (dayMatch) {
-                    currentDay = parseInt(dayMatch[1]) + 15; // Add fundamental days
-                    curriculum = 'Advanced';
-                }
-            } else if (currentPage.includes('/credit-risk/')) {
-                const dayMatch = currentPage.match(/Day(\d+)/);
-                if (dayMatch) {
-                    currentDay = parseInt(dayMatch[1]) + 35; // Add fundamental + advanced days
-                    curriculum = 'Credit Risk';
-                }
-            }
-            
-            if (currentDay > 0) {
-                const progressPercent = (currentDay / totalDays) * 100;
-                
-                // Create or update progress indicator
-                let progressIndicator = document.querySelector('.learning-progress');
-                if (!progressIndicator) {
-                    progressIndicator = document.createElement('div');
-                    progressIndicator.className = 'learning-progress';
-                    progressIndicator.style.cssText = `
-                        position: fixed;
-                        bottom: 20px;
-                        right: 20px;
-                        background: rgba(102, 126, 234, 0.9);
-                        color: white;
-                        padding: 10px 15px;
-                        border-radius: 25px;
-                        font-size: 12px;
-                        font-weight: bold;
-                        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-                        z-index: 999;
-                    `;
-                    document.body.appendChild(progressIndicator);
-                }
-                
-                progressIndicator.textContent = `📚 ${curriculum} - Ngày ${currentDay}/65 (${progressPercent.toFixed(0)}%)`;
-            }
-        }
-        
-        // Initialize learning progress tracker
-        updateLearningProgress();
     </script>
-
-    <style>
-        /* Enhanced dropdown styles */
-        .dropdown {
-            position: relative;
-        }
-        
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: white;
-            min-width: 300px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            padding: 8px 0;
-            z-index: 1000;
-            border: 1px solid #e0e0e0;
-        }
-        
-        .dropdown.active .dropdown-menu {
-            display: block;
-        }
-        
-        .dropdown-menu li {
-            list-style: none;
-            margin: 0;
-        }
-        
-        .dropdown-menu a {
-            display: block;
-            padding: 8px 16px;
-            text-decoration: none;
-            color: #333;
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
-        
-        .dropdown-menu a:hover {
-            background-color: #f5f5f5;
-            color: #667eea;
-        }
-        
-        .submenu-header {
-            font-weight: bold;
-            color: #667eea;
-            font-size: 12px;
-            text-transform: uppercase;
-            padding: 8px 16px 4px 16px;
-            margin: 4px 0;
-        }
-        
-        .divider {
-            border-top: 1px solid #e0e0e0;
-            margin: 4px 0;
-        }
-        
-        .dropdown-toggle {
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        .dropdown-toggle:after {
-            content: ' ▼';
-            font-size: 10px;
-            margin-left: 5px;
-        }
-        
-        .dropdown.active .dropdown-toggle:after {
-            content: ' ▲';
-        }
-        
-        /* Responsive navigation */
-        @media (max-width: 768px) {
-            .nav-links {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .dropdown-menu {
-                position: static;
-                box-shadow: none;
-                border: none;
-                background: #f8f9fa;
-                margin-top: 8px;
-            }
-            
-            .nav-links > li {
-                margin: 4px 0;
-            }
-        }
-        
-        /* Enhanced site subtitle */
-        .site-subtitle {
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-weight: 600;
-            margin-top: 8px;
-        }
-    </style>
 </body>
 </html>
