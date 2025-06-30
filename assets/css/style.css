@@ -429,7 +429,7 @@ pre::before {
   background: var(--bg-color);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
-  padding: var(--spacing-xs) var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
   cursor: pointer;
   font-size: 0.75rem;
   color: var(--text-secondary);
@@ -437,16 +437,20 @@ pre::before {
   display: flex;
   align-items: center;
   gap: var(--spacing-xs);
-  opacity: 0.7;
+  font-family: var(--font-family);
+  min-width: 70px;
+  justify-content: center;
   z-index: 10;
+  box-shadow: var(--shadow);
+  opacity: 1; /* Always visible now */
 }
 
 .copy-button:hover {
-  background: var(--bg-secondary);
-  color: var(--text-color);
-  opacity: 1;
+  background: var(--primary-color);
+  color: var(--primary-inverse);
+  border-color: var(--primary-color);
   transform: translateY(-1px);
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-lg);
 }
 
 .copy-button.copied {
