@@ -1,7 +1,7 @@
 title: Quantum Mathematics
 lang: vi
 markdown: kramdown
-theme: minima
+# theme: minima  # Commented out to use custom layout
 exclude: [".github", "README.md"]
 collections:
   days:
