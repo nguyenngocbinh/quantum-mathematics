@@ -19,7 +19,7 @@ plugins:
   - jekyll-seo-tag
 
 # Site settings
-description: "Lộ trình 35 ngày toàn diện về Toán học Lượng tử và Lập trình Quantum với Python & Qiskit"
+description: "Lộ trình 65 ngày học về Toán học Lượng tử, Lập trình Quantum với Python & Qiskit, và Ứng dụng Quantum trong Credit Risk Management"
 author: "Nguyen Ngoc Binh"
 email: "nguyenngocbinhneu@gmail.com"
 url: "https://nguyenngocbinh.github.io/quantum-mathematics"
@@ -27,4 +27,21 @@ url: "https://nguyenngocbinh.github.io/quantum-mathematics"
 # Social media
 social_media:
   - name: GitHub
-    url: https://github.com/nguyenngocbinh 
+    url: https://github.com/nguyenngocbinh
+
+# Curriculum information
+curriculum:
+  fundamental_days: 15
+  advanced_days: 35
+  credit_risk_days: 30
+  total_days: 65
+  specializations:
+    - name: "Quantum Computing Fundamentals"
+      path: "/fundamental/"
+      days: "1-15"
+    - name: "Advanced Quantum Programming"
+      path: "/advanced/"
+      days: "16-35"
+    - name: "Quantum Credit Risk Management"
+      path: "/credit-risk/"
+      days: "1-30" 
